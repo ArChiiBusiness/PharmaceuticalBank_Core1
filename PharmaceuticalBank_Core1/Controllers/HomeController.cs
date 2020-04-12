@@ -14,7 +14,7 @@ namespace PharmaceuticalBank_Core1.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private excelpro_pharmabankContext db = new excelpro_pharmabankContext();
+        private pharmabank1Context db = new pharmabank1Context();
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -26,10 +26,13 @@ namespace PharmaceuticalBank_Core1.Controllers
             return View();
         }
 
-        public IActionResult SearchSuppliers(string searchtext = default(string))
+        public IActionResult SearchSuppliers(string searchtext = default(string), int page = 1)
         {
-            var SuppliersBOL = db.Suppliers.Where(s => EF.Functions.Like(s.SupplierName,"% " + searchtext + " %")).Take(200).ToList();
-            return Json(SuppliersBOL);
+            var CompaniesQuery = db.Companies.Where(c => EF.Functions.Like(c.Name,"%" + searchtext + "%"));
+            var pageSize = 10;
+            var skip = (page - 1) * pageSize;
+            var CompaniesDAL = CompaniesQuery.Skip(skip).Take(pageSize).ToList();
+            return Json(CompaniesDAL);
         }
 
         public IActionResult Privacy()

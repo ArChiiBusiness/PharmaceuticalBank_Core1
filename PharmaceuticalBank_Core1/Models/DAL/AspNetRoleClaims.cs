@@ -9,7 +9,5 @@ namespace PharmaceuticalBank_Core1.Models.DAL
         public string RoleId { get; set; }
         public string ClaimType { get; set; }
         public string ClaimValue { get; set; }
-
-        public virtual AspNetRoles Role { get; set; }
     }
 }

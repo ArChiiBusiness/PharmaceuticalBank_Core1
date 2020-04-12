@@ -231,3 +231,12 @@ span.historyOpened {
 i.historyOpened {
     background: rgba(66,133,244,0.2);
 }
+
+.search-result-item:hover {
+    background-color:#eaeaea;
+    cursor:pointer;
+}
+
+.search-input {
+    font-size:20px;
+}

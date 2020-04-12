@@ -15,7 +15,7 @@ namespace PharmaceuticalBank_Core1.Controllers
 
         public IActionResult GetValue() {
 
-            using (var context = new excelpro_pharmabankContext()) {
+            using (var context = new pharmabank1Context()) {
                 return new JsonResult(context.AspNetUsers.ToList());
             }
         }
