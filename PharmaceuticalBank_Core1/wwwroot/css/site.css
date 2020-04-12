@@ -1,0 +1,233 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+a.navbar-brand {
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+}
+
+/* Provide sufficient contrast against white background */
+a {
+  color: #0366d6;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  font-size: 14px;
+}
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.border-top {
+  border-top: 1px solid #e5e5e5;
+}
+.border-bottom {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy {
+  font-size: 1rem;
+  line-height: inherit;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  line-height: 60px; /* Vertically center the text there */
+}
+
+.country-selector:hover, .country-selector.active, .single-country:hover, .single-country.active {
+    border-bottom: 3px solid #4285f4;
+    color: #4285f4;
+    cursor: pointer;
+}
+
+/*.CountryMenu .list-group-item:hover {
+    color: #4285f4;
+    background-color:#FAFAFA;
+}*/
+
+.CountryMenu .activecountry {
+    color: #4285f4 !important;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+/*.EmailBlock textarea {
+    min-height: 400px !important;
+}*/
+
+.EmailBlock .btn:hover {
+    background-color: #EAEAEA;
+}
+
+.SingleItem.selected {
+    color: #4285f4 !important;
+}
+
+.CountryMenu .list-group-item.activecountry:hover {
+    background-color: #fafafa;
+    cursor: pointer;
+}
+
+#MainFrame:before {
+    background: #fafafa;
+    border-bottom: 1px solid rgba(0,0,0,0.12);
+    content: '';
+    display: block;
+    height: 162px;
+    overflow: hidden;
+    width: 100%;
+    z-index: -1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin-top: 56px;
+}
+
+.tab-btn {
+    background-color: rgba(0,0,0,0) !important;
+    border-radius: 4px !important;
+    box-sizing: border-box !important;
+    color: #1a73e8 !important;
+    cursor: pointer !important;
+    display: inline-block !important;
+    /*font-family: 'Google Sans',sans-serif !important;*/
+    font-size: 15px !important;
+    font-weight: 500 !important;
+    height: 36px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+}
+
+    .tab-btn.active {
+        background-color: rgba(66,133,244,0.12) !important;
+    }
+
+#MainFrame .tab-content {
+    border-radius: 8px !important;
+    border: 0 !important;
+    box-shadow: 0 1px 4px 0 rgba(0,0,0,0.37);
+}
+
+#SearchText {
+    resize: none;
+    font-size: 18px;
+}
+
+    #SearchText:hover,
+    #SearchText:focus {
+        outline: 0px !important;
+        -webkit-appearance: none;
+        box-shadow: none !important;
+    }
+
+.search-clear-icon {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    cursor: pointer;
+}
+
+.fa-times-thin:before {
+    content: '\00d7';
+}
+
+.CountryMenu li.selected:before {
+    content: '✓ ';
+}
+
+.productBadge, .item-action-icon {
+    cursor: pointer;
+}
+
+    .productBadge:hover {
+        border: 1px solid #4285f4 !important;
+    }
+
+.fa-angle-up, .fa-angle-down {
+    font-size: 25px;
+}
+
+    .fa-angle-up[disabled], .fa-angle-down[disabled] {
+        display: none;
+    }
+
+.EmailTextArea {
+    font-size: 18px;
+}
+
+    .EmailTextArea:hover,
+    .EmailTextArea:focus {
+        outline: 0px !important;
+        -webkit-appearance: none;
+        box-shadow: none !important;
+    }
+
+#History {
+    position: absolute;
+    right: 0;
+    top: 58px;
+    width: 356px;
+    background: #ffffff;
+    height: calc(100% - 58px);
+    padding: 10px;
+    border-left: 1px solid rgba(0,0,0,0.12);
+}
+
+.close-history-icon {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    cursor: pointer;
+}
+
+.historySpan:hover {
+    color: rgba(66,133,244,1);
+}
+
+.historyIcon:hover {
+    background: rgba(66,133,244,0.2);
+}
+
+span.historyOpened {
+    color: rgba(66,133,244,1);
+}
+
+i.historyOpened {
+    background: rgba(66,133,244,0.2);
+}

@@ -1,0 +1,112 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div id="MainFrame">
+    <div class="row mb-5">
+        <div class="col-md-12 mt-3">
+            <ul class="nav nav-tabs border-0" role="tablist">
+                <li class="nav-item">
+                    <a class="btn tab-btn tab-btn-primary active border mr-2" data-toggle="tab" href="#Text"><i class="fa fa-edit mr-2"></i>Supplier (6,495)</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn tab-btn tab-btn-primary border mr-2" data-toggle="tab" href="#Documents"><i class="fa fa-file mr-2"></i>Buyer (4.551)</a>
+                </li>
+            </ul>
+
+            <div class="tab-content bg-white rounded-lg shadow mt-3">
+                <div id="Text" class="container-fluid tab-pane active">
+                    <div class="row">
+                        <div class="col-6 p-2 border">
+                            <div class="row">
+                                <div class="col-12 border-bottom pb-2">
+                                    <input v-model="searchText" v-on:input="searchSuppliers()" type="text" class="form-control border-0" />
+                                </div>
+                                <div class="col-12">
+                                    <textarea rows="6" class="form-control border-0"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 p-2 border">
+                            <div class="row">
+                                <div class="col-12 border-bottom pb-2">
+                                    <a href="#" class="border-primary pb-2 pt-2 pl-2 pr-2" style="border-bottom:3px solid black;">Found in 118 countries</a>
+                                    <a href="#" class="btn border float-right">2017</a>
+                                    <a href="#" class="btn border float-right mr-1">2018</a>
+                                    <a href="#" class="btn border float-right mr-1">2019</a>
+                                    <a href="#" class="btn border float-right mr-1">2020</a>
+                                </div>
+                                <div class="col-12">
+                                    <textarea rows="6" class="form-control"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="Documents" class="container tab-pane fade">
+                    <br>
+                    <h3>Documents</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <ul class="list-group">
+                <li class="list-group-item" v-for="supplier in suppliers">{{supplier.supplierName}}</li>
+            </ul>
+        </div>
+    </div>
+
+    @*<div class="row">
+        <div class="col-12 text-center">
+            <span v-on:click="openHistory" v-bind:class="{ historyOpened:historyOpened}" class="historySpan">
+                <i v-bind:class="{ historyOpened:historyOpened}" class="fa fa-history fa-3x p-3 rounded-circle historyIcon"></i>
+                <br />
+                History
+            </span>
+        </div>
+    </div>*@
+
+    @*<div style="overflow:scroll" id="History" v-if="historyOpened">
+        <div v-if="historyOpened" v-on:click="closeHistory()" class="close-history-icon"><i class="fa fa-times-thin fa-2x"></i></div>
+        <h2>History</h2>
+        <p class="border-bottom m-0 pt-2 pb-2">{{historyData.length}} searches <span v-on:click="clearHistory()" class="float-right mr-2" style="cursor:pointer"><b>CLEAR HISTORY</b></span></p>
+        <p v-if="!updatingHistory" class="border-bottom m-0 pt-2 pb-2" v-for="history in historyData">
+            Searched {{history.Text.length}} symbols<br />
+            Found 3 products
+        </p>
+        <p v-if="updatingHistory" class="border-bottom m-0 pt-2 pb-2" v>
+            <i class="fa fa-spinner fa-spin fa-2x"></i>
+        </p>
+    </div>*@
+</div>
+
+@section scripts {
+
+    <script>
+        var App = new Vue({
+            el: '#MainFrame',
+            data: {
+                searchText: null,
+                suppliers: []
+            },
+            methods: {
+                searchSuppliers: function () {
+                    let self = this;
+                    $.ajax({
+                        url: "home/searchSuppliers",
+                        data: { searchtext: self.searchText},
+                        success: function (result) {
+                            self.suppliers = result;
+                        }
+                    });
+                }
+            },
+            created: function () {
+            }
+        });
+    </script>
+}
+
