@@ -18,7 +18,7 @@
     "PharmaceuticalBank_Core1": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:5001;http://localhost:5000",
+      "applicationUrl": "https://localhost:5001;http://localhost:5000;https://pharmabank.excelpro.business/",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
