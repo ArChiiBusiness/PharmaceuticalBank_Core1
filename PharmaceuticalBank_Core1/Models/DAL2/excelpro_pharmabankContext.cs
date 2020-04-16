@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace PharmaceuticalBank_Core1.Models.DAL
+namespace PharmaceuticalBank_Core1.Models.DAL2
 {
     public partial class excelpro_pharmabankContext : DbContext
     {

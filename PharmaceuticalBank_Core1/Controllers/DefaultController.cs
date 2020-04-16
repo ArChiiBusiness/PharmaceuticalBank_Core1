@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using PharmaceuticalBank_Core1.Models.DAL;
+using PharmaceuticalBank_Core1.Models.DAL2;
 
 namespace PharmaceuticalBank_Core1.Controllers
 {
@@ -13,10 +13,10 @@ namespace PharmaceuticalBank_Core1.Controllers
     public class DefaultController : ControllerBase
     {
 
-        public IActionResult GetValue() {
+        public IActionResult Index() {
 
-            using (var context = new excelpro_pharmabankContext()) {
-                return new JsonResult(context.AspNetUsers.ToList());
+            using (var db = new excelpro_pharmabankContext()) {
+                return new JsonResult(db.Shipments.Take(100).ToList());
             }
         }
 
