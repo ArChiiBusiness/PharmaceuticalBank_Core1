@@ -6,9 +6,9 @@
     <div class="row mt-3 mb-3">
         <div class="col-12">
             I am looking for...
-            <div class="btn-group" role="group" aria-label="Basic example">
-                <button type="button" v-on:click="searchMode = 'supplier'" v-bind:class="{'btn-primary': searchMode == 'supplier'}" class="btn btn-secondary border">Supplier (5890)</button>
-                <button type="button" v-on:click="searchMode = 'buyer'" v-bind:class="{'btn-primary': searchMode == 'buyer'}" class="btn btn-secondary border">Buyer (15895)</button>
+            <div class="btn-group" role="group">
+                <button type="button" v-on:click="searchMode = 'supplier'" v-bind:class="{'btn-primary': searchMode == 'supplier'}" class="btn btn-secondary border">Suppliers (@ViewData["Suppliers"])</button>
+                <button type="button" v-on:click="searchMode = 'buyer'" v-bind:class="{'btn-primary': searchMode == 'buyer'}" class="btn btn-secondary border">Buyers (@ViewData["Buyers"])</button>
             </div>
         </div>
     </div>
@@ -21,65 +21,90 @@
     <div class="row">
         <div class="col-12 p-0">
             <ul class="list-group">
-                <li class="list-group-item search-result-item" v-on:click="toggleResult(result.shipment.id);" v-for="(result, index) in searchResults">
-                    <div v-html="'<span class=\'badge badge-success\'>' + result.shipment.date + '</span> '+ '<span class=\'badge badge-primary mr-1\'>' + result.company.name + '</span> ' + getMarkedHTML(result.shipment.description, 150)"></div>
-                    <div class="border-top p-3" v-if="selectedItem == result.shipment.id">
+                <li class="list-group-item search-result-item" v-on:click="toggleResult(shipment.shipment.id);" v-for="shipment in searchResults.shipments">
+                    <div v-html="'<span class=\'badge badge-success\'>' + shipment.shipment.date + '</span> '+ '<span class=\'badge badge-primary mr-1\'>' + shipment.company.name + '</span> ' + getMarkedHTML(shipment.shipment.description, 150)"></div>
+                    <div class="border-top p-3" v-if="selectedItem == shipment.shipment.id">
 
                         <!-- Company Block -->
 
-                        <div class="row">
+                        <div class="row" v-on:click.stop="">
                             <div class="col-3">
-                                <img class="img-fluid" src="http://tiny.cc/dlrzmz" />
+                                <img class="img-fluid" src="https://images.pexels.com/photos/269077/pexels-photo-269077.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" />
                             </div>
                             <div class="col-9">
                                 <ul class="list-unstyled">
                                     <li><i class="fa fa-long-arrow-alt-right"></i> Company Name: {{selectedItemDetails.company.name}}</li>
                                     <li><i class="fa fa-long-arrow-alt-right"></i> Address: {{selectedItemDetails.company.address}}</li>
                                     <li><i class="fa fa-long-arrow-alt-right"></i> Country: {{selectedItemDetails.company.country}}</li>
-                                    <li><i class="fa fa-long-arrow-alt-right"></i> Shipment details: <span v-html="getMarkedHTML(result.shipment.description, -1)"></span></li>
-                                    <li><button v-on:click.stop="sendRequest()" class="btn btn-primary mt-3"><i class="fa fa-user"></i> Send request</button></li>
+                                    <li><i class="fa fa-long-arrow-alt-right"></i> Shipment details: <span v-html="getMarkedHTML(shipment.shipment.description, -1)"></span></li>
+                                    <li v-if="!isAuthenticated" class="mt-4 mr-3"><i class="fas fa-exclamation text-danger"></i> Please register <a href="/Identity/Account/Register">here</a> to send requests!</li>
+                                    <li v-if="isAuthenticated"><button v-on:click.stop="sendRequest()" class="btn btn-primary mt-3"><i class="fas fa-paper-plane"></i> Send request</button></li>
                                 </ul>
                             </div>
                         </div>
-
-                        <!-- /AAA -->
 
                     </div>
                 </li>
             </ul>
         </div>
+
+        <v-pagination v-model="currentPage" :page-count="totalPages" :classes="bootstrapPaginationClasses"></v-pagination>
+
+        @*<div class="col-12 mt-4" v-if="searchResults.count > 0">
+            <nav aria-label="...">
+                <ul class="pagination justify-content-center">
+                    <li v-on:click="currentPage = index + 1; search();" v-for="(page, index) in totalPages" class="page-item"><a class="page-link">{{index +1}}</a></li>
+                </ul>
+            </nav>
+        </div>*@
     </div>
 
 </div>
 
+<script src="//unpkg.com/vue-plain-pagination@0.2.1"></script>
+
 @section scripts {
 
     <script>
+
+        Vue.component('v-pagination', window['vue-plain-pagination']);
+
         var App = new Vue({
             el: '#MainFrame',
             data: {
                 searchText: null,
-                searchResults: [],
+                searchResults: { count: 0, shipments: [] },
+                totalPages: 1,
+                pageSize: 10,
+                currentPage: 1,
                 selectedItem: null,
                 searchMode: 'supplier',
-                selectedItemDetails: null
+                selectedItemDetails: null,
+                isAuthenticated: @(User.Identity.IsAuthenticated ? "true" : "false"),
+                bootstrapPaginationClasses: {
+                    ul: 'pagination mt-4',
+                    li: 'page-item',
+                    liActive: 'active',
+                    liDisable: 'disabled',
+                    button: 'page-link'
+                }
             },
             methods: {
                 search: function () {
                     let self = this;
                     self.selectedItem = null;
                     if (self.searchText.length == 0) {
-                        self.searchResults = [];
+                        self.searchResults = { count: 0, shipments: [] };
                     } else {
                         $.ajax({
                             method: "get",
                             url: "home/search",
-                            data: { searchtext: self.searchText, page: 1, mode: self.searchMode },
+                            data: { searchtext: self.searchText, page: self.currentPage, mode: self.searchMode },
                             success: function (result) {
                                 self.searchResults = result;
-                                console.dir(result);
+                                self.totalPages = Math.ceil(result.count / self.pageSize);
                                 if (self.searchText.length == 0) {
-                                    self.searchResults = [];
+                                    self.searchResults = { count: 0, shipments: [] };
                                 }
                             }
                         });
@@ -117,6 +142,12 @@
                 }
             },
             created: function () {
+                
+            },
+            watch: {
+                'currentPage': function () {
+                    this.search();
+                }
             }
         });
     </script>

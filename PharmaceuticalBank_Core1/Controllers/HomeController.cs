@@ -5,16 +5,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using PharmaceuticalBank_Core1.Models;
 using PharmaceuticalBank_Core1.Models.DAL;
 using Microsoft.EntityFrameworkCore;
+using PharmaceuticalBank_Core1.Models;
 
 namespace PharmaceuticalBank_Core1.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private pharmabank1Context db = new pharmabank1Context();
+        //private pharmabank1Context db = new pharmabank1Context();
+        private excelpro_pharmabankContext db = new excelpro_pharmabankContext();
+
+
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -23,6 +26,8 @@ namespace PharmaceuticalBank_Core1.Controllers
 
         public IActionResult Index()
         {
+            ViewData["Buyers"] = db.Shipments.AsNoTracking().Where(s => s.ConsigneeProfile != null).Distinct().Count();
+            ViewData["Suppliers"] = db.Shipments.AsNoTracking().Where(s => s.ShipperProfile != null).Distinct().Count();
             return View();
         }
 
@@ -36,10 +41,9 @@ namespace PharmaceuticalBank_Core1.Controllers
             {
                 case "supplier":
                     {
-                        var SearchQuery = db.Shipments.Where(s => s.Shipper != null);
+                        var SearchQuery = db.Shipments.AsNoTracking().Where(s => s.Shipper != null && s.ShipperProfile != null);
                         SearchQuery = SearchQuery.Where(s => EF.Functions.Like(s.Shipper, "%" + searchtext + "%") || EF.Functions.Like(s.GoodsShipped, "%" + searchtext + "%"));
-                        var ShipmentsDAL = SearchQuery.OrderByDescending(d => d.Date).Skip(skip).Take(pageSize).ToList();
-                        ShipmentsBOL = ShipmentsDAL.Select(s => new
+                        ShipmentsBOL = SearchQuery.OrderByDescending(d => d.Date).Select(s => new
                         {
                             Company = new
                             {
@@ -53,14 +57,20 @@ namespace PharmaceuticalBank_Core1.Controllers
                                 Description = s.GoodsShipped
                             }
                         });
-                        break;
+
+                        var ResultsObj = new
+                        {
+                            Count = ShipmentsBOL.Count(),
+                            Shipments = ShipmentsBOL.Skip(skip).Take(pageSize).ToList()
+                        };
+                        return Json(ResultsObj);
+
                     }
                 case "buyer":
                     {
-                        var SearchQuery = db.Shipments.Where(s => s.Consignee != null);
+                        var SearchQuery = db.Shipments.AsNoTracking().Where(s => s.Consignee != null && s.ConsigneeProfile != null);
                         SearchQuery = SearchQuery.Where(s => EF.Functions.Like(s.Consignee, "%" + searchtext + "%") || EF.Functions.Like(s.GoodsShipped, "%" + searchtext + "%"));
-                        var ShipmentsDAL = SearchQuery.Skip(skip).Take(pageSize).ToList();
-                        ShipmentsBOL = ShipmentsDAL.Select(s => new
+                        ShipmentsBOL = SearchQuery.OrderByDescending(d => d.Date).Select(s => new
                         {
                             Company = new
                             {
@@ -74,13 +84,19 @@ namespace PharmaceuticalBank_Core1.Controllers
                                 Description = s.GoodsShipped
                             }
                         });
-                        break;
+
+                        var ResultsObj = new
+                        {
+                            Count = ShipmentsBOL.Count(),
+                            Shipments = ShipmentsBOL.Skip(skip).Take(pageSize).ToList()
+                        };
+                        return Json(ResultsObj);
+
                     }
                 default:
                     return Json(new List<object>());
             };
 
-            return Json(ShipmentsBOL);
         }
 
         public IActionResult LoadShipment(System.Guid id, string mode = default(string))
@@ -89,31 +105,31 @@ namespace PharmaceuticalBank_Core1.Controllers
             {
                 case "supplier":
                     {
-                        var SupplierDAL = db.Shipments.Where(s => s.Id == id).First();
-                        var SupplierBOL = new
+                        var ShipmentDAL = db.Shipments.Where(s => s.Id == id).First();
+                        var ShipmentBOL = new
                         {
                             Company = new
                             {
-                                Name = SupplierDAL.Shipper,
-                                Address = SupplierDAL.ShipperAddress,
-                                Country = SupplierDAL.ShipperCountry
+                                Name = ShipmentDAL.Shipper,
+                                Address = ShipmentDAL.ShipperAddress,
+                                Country = ShipmentDAL.ShipperCountry
                             }
                         };
-                        return Json(SupplierBOL);
+                        return Json(ShipmentBOL);
                     }
                 case "buyer":
                     {
-                        var BuyerDAL = db.Shipments.Where(s => s.Id == id).First();
-                        var BuyerBOL = new
+                        var ShipmentDAL = db.Shipments.Where(s => s.Id == id).First();
+                        var ShipmentBOL = new
                         {
                             Company = new
                             {
-                                Name = BuyerDAL.Consignee,
-                                Address = BuyerDAL.ConsigneeAddress,
-                                Country = BuyerDAL.ConsigneeCountry
+                                Name = ShipmentDAL.Consignee,
+                                Address = ShipmentDAL.ConsigneeAddress,
+                                Country = ShipmentDAL.ConsigneeCountry
                             }
                         };
-                        return Json(BuyerBOL);
+                        return Json(ShipmentBOL);
                     }
                 default:
                     {

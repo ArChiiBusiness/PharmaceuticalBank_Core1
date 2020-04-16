@@ -22,7 +22,6 @@ namespace PharmaceuticalBank_Core1.Models.DAL
         public virtual DbSet<AspNetUserRoles> AspNetUserRoles { get; set; }
         public virtual DbSet<AspNetUserTokens> AspNetUserTokens { get; set; }
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
-        public virtual DbSet<Companies> Companies { get; set; }
         public virtual DbSet<Shipments> Shipments { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -135,76 +134,9 @@ namespace PharmaceuticalBank_Core1.Models.DAL
                 entity.Property(e => e.UserName).HasMaxLength(256);
             });
 
-            modelBuilder.Entity<Companies>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.Property(e => e.City).HasMaxLength(255);
-
-                entity.Property(e => e.ContactEmail).HasMaxLength(255);
-
-                entity.Property(e => e.ContactPerson).HasMaxLength(255);
-
-                entity.Property(e => e.ContactPhone).HasMaxLength(255);
-
-                entity.Property(e => e.Country).HasMaxLength(255);
-
-                entity.Property(e => e.DomesticHq)
-                    .HasColumnName("DomesticHQ")
-                    .HasMaxLength(255);
-
-                entity.Property(e => e.DomesticHqaddress)
-                    .HasColumnName("DomesticHQAddress")
-                    .HasMaxLength(255);
-
-                entity.Property(e => e.DomesticHqduns)
-                    .HasColumnName("DomesticHQDUNS")
-                    .HasMaxLength(255);
-
-                entity.Property(e => e.Email).HasMaxLength(255);
-
-                entity.Property(e => e.FullAddress).HasMaxLength(255);
-
-                entity.Property(e => e.GlobalHq)
-                    .HasColumnName("GlobalHQ")
-                    .HasMaxLength(255);
-
-                entity.Property(e => e.GlobalHqaddress)
-                    .HasColumnName("GlobalHQAddress")
-                    .HasMaxLength(255);
-
-                entity.Property(e => e.GlobalHqduns)
-                    .HasColumnName("GlobalHQDUNS")
-                    .HasMaxLength(255);
-
-                entity.Property(e => e.LastShipmentDateOfMatchedShipments).HasColumnType("smalldatetime");
-
-                entity.Property(e => e.Name).HasMaxLength(255);
-
-                entity.Property(e => e.PanjivaUrl)
-                    .HasColumnName("PanjivaURL")
-                    .HasMaxLength(255);
-
-                entity.Property(e => e.Phone).HasMaxLength(255);
-
-                entity.Property(e => e.PostalCode).HasMaxLength(255);
-
-                entity.Property(e => e.Route).HasMaxLength(255);
-
-                entity.Property(e => e.StateRegion).HasMaxLength(255);
-
-                entity.Property(e => e.Top3Customers).HasMaxLength(255);
-
-                entity.Property(e => e.Top5Products).HasMaxLength(255);
-
-                entity.Property(e => e.Type).HasMaxLength(255);
-
-                entity.Property(e => e.Website).HasMaxLength(255);
-            });
-
             modelBuilder.Entity<Shipments>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.HasNoKey();
 
                 entity.Property(e => e.Consignee).HasMaxLength(255);
 
