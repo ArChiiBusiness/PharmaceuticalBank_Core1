@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using PharmaceuticalBank_Core1.Models.DAL2;
+using PharmaceuticalBank_Core1.Models.DAL;
 using Microsoft.EntityFrameworkCore;
 using PharmaceuticalBank_Core1.Models;
 
@@ -14,10 +14,8 @@ namespace PharmaceuticalBank_Core1.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        //private pharmabank1Context db = new pharmabank1Context();
-        private excelpro_pharmabankContext db = new excelpro_pharmabankContext();
-
-
+        private pharmabank1Context db = new pharmabank1Context();
+        //private excelpro_pharmabankContext db = new excelpro_pharmabankContext();
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -26,8 +24,8 @@ namespace PharmaceuticalBank_Core1.Controllers
 
         public IActionResult Index()
         {
-            ViewData["Buyers"] = 5000; // db.Shipments.AsNoTracking().Where(s => s.ConsigneeProfile != null).Distinct().Count();
-            ViewData["Suppliers"] = 65000; // db.Shipments.AsNoTracking().Where(s => s.ShipperProfile != null).Distinct().Count();
+            ViewData["Buyers"] = db.Shipments.AsNoTracking().Where(s => s.ConsigneeProfile != null).Count();
+            ViewData["Suppliers"] = db.Shipments.AsNoTracking().Where(s => s.ShipperProfile != null).Count();
             return View();
         }
 
