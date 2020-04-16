@@ -41,9 +41,13 @@ namespace PharmaceuticalBank_Core1.Controllers
             {
                 case "supplier":
                     {
-                        var SearchQuery = db.Shipments.AsNoTracking().Where(s => s.Shipper != null && s.ShipperProfile != null);
-                        SearchQuery = SearchQuery.Where(s => EF.Functions.Like(s.Shipper, "%" + searchtext + "%") || EF.Functions.Like(s.GoodsShipped, "%" + searchtext + "%"));
-                        ShipmentsBOL = SearchQuery.OrderByDescending(d => d.Date).Select(s => new
+                        var SearchQuery = db.Shipments.AsNoTracking().Where(s => s.Shipper != null && s.ShipperProfile != null && s.GoodsShipped != null && s.Date != null); ;
+                        //SearchQuery = SearchQuery.Where(s => s.Shipper.Contains(searchtext) || s.GoodsShipped.Contains(searchtext));
+                        SearchQuery = SearchQuery.OrderByDescending(d => d.Date).Where(s => EF.Functions.Like(s.Shipper, "%" + searchtext + "%") || EF.Functions.Like(s.GoodsShipped, "%" + searchtext + "%"));
+                        //ShipmentsBOL = SearchQuery.OrderByDescending(d => d.Date).Select(s => new
+                        var ShipmentsDAL = SearchQuery.Skip(skip).Take(pageSize).ToList();
+
+                        ShipmentsBOL = ShipmentsDAL.Select(s => new
                         {
                             Company = new
                             {
@@ -60,8 +64,8 @@ namespace PharmaceuticalBank_Core1.Controllers
 
                         var ResultsObj = new
                         {
-                            Count = ShipmentsBOL.Count(),
-                            Shipments = ShipmentsBOL.Skip(skip).Take(pageSize).ToList()
+                            Count = ShipmentsDAL.Count(),
+                            Shipments = ShipmentsBOL
                         };
                         return Json(ResultsObj);
 
