@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace PharmaceuticalBank_Core1.Models.DAL2
+namespace PharmaceuticalBank_Core1.Models.DAL
 {
     public partial class excelpro_pharmabankContext : DbContext
     {
@@ -22,6 +22,7 @@ namespace PharmaceuticalBank_Core1.Models.DAL2
         public virtual DbSet<AspNetUserRoles> AspNetUserRoles { get; set; }
         public virtual DbSet<AspNetUserTokens> AspNetUserTokens { get; set; }
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
+        public virtual DbSet<Phrases> Phrases { get; set; }
         public virtual DbSet<Shipments> Shipments { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -132,6 +133,13 @@ namespace PharmaceuticalBank_Core1.Models.DAL2
                 entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
 
                 entity.Property(e => e.UserName).HasMaxLength(256);
+            });
+
+            modelBuilder.Entity<Phrases>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.Property(e => e.Phrase).IsRequired();
             });
 
             modelBuilder.Entity<Shipments>(entity =>

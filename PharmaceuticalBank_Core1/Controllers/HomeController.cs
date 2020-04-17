@@ -14,8 +14,8 @@ namespace PharmaceuticalBank_Core1.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private pharmabank1Context db = new pharmabank1Context();
-        //private excelpro_pharmabankContext db = new excelpro_pharmabankContext();
+        //private pharmabank1Context db = new pharmabank1Context();
+        private excelpro_pharmabankContext db = new excelpro_pharmabankContext();
 
         public HomeController(ILogger<HomeController> logger)
         {
