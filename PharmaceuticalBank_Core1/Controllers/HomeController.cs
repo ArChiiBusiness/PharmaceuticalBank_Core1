@@ -29,6 +29,11 @@ namespace PharmaceuticalBank_Core1.Controllers
             return View();
         }
 
+        public IActionResult PreSearch(string searchtext = default(string)) {
+            var RecsDAL = db.Phrases.Where(p => p.Phrase.StartsWith(searchtext)).Select(s => s.Phrase).Take(10).ToArray();
+            return Json(RecsDAL);
+        }
+
         public IActionResult Search(string searchtext = default(string), int page = 1, string mode = default(string))
         {
             var pageSize = 10;
@@ -99,7 +104,7 @@ namespace PharmaceuticalBank_Core1.Controllers
 
         }
 
-        public IActionResult LoadShipment(System.Guid id, string mode = default(string))
+        public IActionResult LoadCompany(System.Guid id, string mode = default(string))
         {
             switch (mode)
             {
