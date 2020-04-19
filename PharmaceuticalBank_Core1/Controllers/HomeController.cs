@@ -33,7 +33,7 @@ namespace PharmaceuticalBank_Core1.Controllers
         }
 
         public IActionResult PreSearch(string searchtext = default(string)) {
-            var RecsDAL = db.Phrases.Where(p => p.Phrase.StartsWith(searchtext)).Select(s => s.Phrase).Take(10).ToArray();
+            var RecsDAL = db.Phrases.Where(p => p.Phrase.StartsWith(searchtext)).OrderByDescending(o => o.Popularity).Select(s => s.Phrase).Take(10).ToArray();
             return Json(RecsDAL);
         }
 
