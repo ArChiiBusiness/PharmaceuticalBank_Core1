@@ -5,17 +5,20 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using PharmaceuticalBank_Core1.Models.DAL;
+//using PharmaceuticalBank_Core1.Models.DAL;
+using PharmaceuticalBank_Core1.Models.DAL2;
 using Microsoft.EntityFrameworkCore;
 using PharmaceuticalBank_Core1.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNet.Identity;
 
 namespace PharmaceuticalBank_Core1.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        //private pharmabank1Context db = new pharmabank1Context();
-        private excelpro_pharmabankContext db = new excelpro_pharmabankContext();
+        private pharmabank1Context db = new pharmabank1Context();
+        //private excelpro_pharmabankContext db = new excelpro_pharmabankContext();
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -145,31 +148,9 @@ namespace PharmaceuticalBank_Core1.Controllers
 
         public IActionResult Privacy(string searchtext)
         {
-            //return Json(db.Shipments.AsNoTracking().Where(s => EF.Functions.Like(s.Shipper, "%" + searchtext + "%") || EF.Functions.Like(s.GoodsShipped, "%" + searchtext + "%")).Count());
-            var SearchQuery = db.Shipments.AsNoTracking().Where(s => EF.Functions.Like(s.GoodsShipped, "%" + searchtext + "%"));
-            var ShipmentsDAL = SearchQuery.Skip(0).Take(100).ToList();
-
-            var ShipmentsBOL = ShipmentsDAL.Select(s => new
-            {
-                Company = new
-                {
-                    Name = s.Shipper,
-                    Address = s.ShipperAddress
-                },
-                Shipment = new
-                {
-                    Id = s.Id,
-                    Date = s.Date.HasValue ? s.Date.Value.ToString("MM/dd/yyyy") : null,
-                    Description = s.GoodsShipped
-                }
-            });
-
-            var ResultsObj = new
-            {
-                Count = SearchQuery.Count(),
-                Shipments = ShipmentsBOL
-            };
-            return Json(ResultsObj);
+            var user = User;
+            var test = User.IsInRole("Admin");
+            return Json(new { a = test });
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
