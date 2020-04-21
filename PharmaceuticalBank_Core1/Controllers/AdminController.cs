@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using PharmaceuticalBank_Core1.Models.DAL3;
+using PharmaceuticalBank_Core1.Models.DAL2;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
@@ -15,9 +15,9 @@ namespace PharmaceuticalBank_Core1.Controllers
     public class AdminController : Controller
     {
 
-        //private pharmabank1Context db = new pharmabank1Context();
+        private pharmabank1Context db = new pharmabank1Context();
         //private excelpro_pharmabankContext db = new excelpro_pharmabankContext();
-        private pharmabankContext db = new pharmabankContext();
+        //private pharmabankContext db = new pharmabankContext();
 
 
         public IActionResult Index()
@@ -34,7 +34,7 @@ namespace PharmaceuticalBank_Core1.Controllers
             var CompaniesDAL = db.Companies.AsNoTracking()
                 .Select(c => new 
                 { 
-                    Profile = c.Profile 
+                    Profile = c.Profile
                 }).ToList();
 
             var nCompaniesDAL = new List<Companies>();
@@ -44,7 +44,35 @@ namespace PharmaceuticalBank_Core1.Controllers
                 {
                     Id = Guid.NewGuid(),
                     Name = c.Shipper,
-                    Profile = c.ShipperProfile
+                    Address = c.ShipperAddress,
+                    City = c.ShipperCity,
+                    StateRegion = c.ShipperStateRegion,
+                    PostalCode = c.ShipperPostalCode,
+                    Country = c.ShipperCountry,
+                    FullAddress = c.ShipperFullAddress,
+                    Email1 = c.ShipperEmail1,
+                    Email2 = c.ShipperEmail2,
+                    Email3 = c.ShipperEmail3,
+                    Phone1 = c.ShipperPhone1,
+                    Phone2 = c.ShipperPhone2,
+                    Phone3 = c.ShipperPhone3,
+                    Fax = c.ShipperFax,
+                    Website1 = c.ShipperWebsite1,
+                    Website2 = c.ShipperWebsite2,
+                    Dunsa = c.ShipperDUNSâ,
+                    Industry = c.ShipperIndustry,
+                    Profile = c.ShipperProfile,
+                    Revenue = c.ShipperRevenue,
+                    Employees = c.ShipperEmployees,
+                    //MarketCapitalization = c.ShipperMarketCapitalization,
+                    TradeRoles = c.ShipperTradeRoles,
+                    Siccodes = c.ShipperSicCodes,
+                    StockTickers = c.ShipperStockTickers,
+                    UltimateParent = c.ShipperUltimateParent,
+                    UltimateParentWebsite = c.ShipperUltimateParentWebsite,
+                    UltimateParentHeadquartersAddress = c.ShipperUltimateParentHeadquartersAddress,
+                    UltimateParentProfile = c.ShipperUltimateParentProfile,
+                    UltimateParentStockTickers = c.ShipperUltimateParentStockTickers
                 }).Distinct().ToList();
 
             foreach (var SellerDAL in SellersDAL)
@@ -60,7 +88,35 @@ namespace PharmaceuticalBank_Core1.Controllers
                {
                    Id = Guid.NewGuid(),
                    Name = c.Consignee,
-                   Profile = c.ConsigneeProfile
+                   Address = c.ConsigneeAddress,
+                   City = c.ConsigneeCity,
+                   StateRegion = c.ConsigneeStateRegion,
+                   PostalCode = c.ConsigneePostalCode,
+                   Country = c.ConsigneeCountry,
+                   FullAddress = c.ConsigneeFullAddress,
+                   Email1 = c.ConsigneeEmail1,
+                   Email2 = c.ConsigneeEmail2,
+                   Email3 = c.ConsigneeEmail3,
+                   Phone1 = c.ConsigneePhone1,
+                   Phone2 = c.ConsigneePhone2,
+                   Phone3 = c.ConsigneePhone3,
+                   Fax = c.ConsigneeFax,
+                   Website1 = c.ConsigneeWebsite1,
+                   Website2 = c.ConsigneeWebsite2,
+                   Dunsa = c.ConsigneeDUNSâ,
+                   Industry = c.ConsigneeIndustry,
+                   Profile = c.ConsigneeProfile,
+                   //Revenue = c.ConsigneeRevenue,
+                   Employees = c.ConsigneeEmployees,
+                   //MarketCapitalization = c.ConsigneeMarketCapitalization,
+                   TradeRoles = c.ConsigneeTradeRoles,
+                   Siccodes = c.ConsigneeSicCodes,
+                   StockTickers = c.ConsigneeStockTickers,
+                   UltimateParent = c.ConsigneeUltimateParent,
+                   UltimateParentWebsite = c.ConsigneeUltimateParentWebsite,
+                   UltimateParentHeadquartersAddress = c.ConsigneeUltimateParentHeadquartersAddress,
+                   UltimateParentProfile = c.ConsigneeUltimateParentProfile,
+                   UltimateParentStockTickers = c.ConsigneeUltimateParentStockTickers
                }).Distinct().ToList();
 
             foreach (var BuyerDAL in BuyersDAL)
@@ -80,7 +136,24 @@ namespace PharmaceuticalBank_Core1.Controllers
 
         public IActionResult DeleteCompanies()
         {
-            db.Companies.RemoveRange(db.Companies.ToList());
+            //db.Companies.RemoveRange(db.Companies.ToList());
+            //db.SaveChanges();
+            var rows = db.Database.ExecuteSqlRaw("DELETE FROM Companies");
+
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult AddCompaniesToShipments()
+        {
+            var ShipmentsDAL = db.Shipments.Where(s => (s.ShipperCompanyId == null && s.ShipperProfile != null) || (s.ConsigneeCompanyId == null && s.ConsigneeProfile != null)).ToList();
+            var CompaniesDAL = db.Companies.ToList();
+
+            foreach (var company in CompaniesDAL)
+            {
+                ShipmentsDAL.Where(s => s.ShipperProfile == company.Profile).ToList().ForEach(c => c.ShipperCompanyId = company.Id);
+                ShipmentsDAL.Where(s => s.ConsigneeProfile == company.Profile).ToList().ForEach(c => c.ConsigneeCompanyId = company.Id);
+                db.SaveChanges();
+            }
             db.SaveChanges();
 
             return RedirectToAction("Index");

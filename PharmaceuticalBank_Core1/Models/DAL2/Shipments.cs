@@ -87,5 +87,10 @@ namespace PharmaceuticalBank_Core1.Models.DAL2
         public double? ValueUsd { get; set; }
         public string DataSource { get; set; }
         public string DataSourceTradeDirection { get; set; }
+        public Guid? ShipperCompanyId { get; set; }
+        public Guid? ConsigneeCompanyId { get; set; }
+
+        public virtual Companies ConsigneeCompany { get; set; }
+        public virtual Companies ShipperCompany { get; set; }
     }
 }

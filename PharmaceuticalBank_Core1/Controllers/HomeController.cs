@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using PharmaceuticalBank_Core1.Models.DAL;
+using PharmaceuticalBank_Core1.Models.DAL2;
 //using PharmaceuticalBank_Core1.Models.DAL2;
 using Microsoft.EntityFrameworkCore;
 using PharmaceuticalBank_Core1.Models;
@@ -17,9 +17,9 @@ namespace PharmaceuticalBank_Core1.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        //private pharmabank1Context db = new pharmabank1Context();
+        private pharmabank1Context db = new pharmabank1Context();
         //private excelpro_pharmabankContext db = new excelpro_pharmabankContext();
-        private pharmabankContext db = new pharmabankContext();
+        //private pharmabankContext db = new pharmabankContext();
 
 
         public HomeController(ILogger<HomeController> logger)
@@ -50,6 +50,63 @@ namespace PharmaceuticalBank_Core1.Controllers
         }
 
         public IActionResult Search(string searchtext = default(string), int page = 1, string mode = default(string))
+        {
+            var pageSize = 10;
+            var skip = (page - 1) * pageSize;
+            var ShipmentsBOL = default(IEnumerable<object>);
+            switch (mode)
+            {
+                case "supplier":
+                    {
+                        //var SearchQuery = db.Companies.Include(c => c.ShipmentsShipperCompany).AsNoTracking().Where(s => EF.Functions.Like(s.GoodsShipped, "%" + searchtext + "%") && s.ShipperCompanyId != null);
+
+                        //var CompaniesDAL = SearchQuery.Select(c => c.ShipperCompany).OrderByDescending(s => s.s)
+
+                        var q = db.Shipments.Where(s => EF.Functions.Like(s.GoodsShipped, "%" + searchtext + "%") && s.ShipperCompanyId != null);
+                        var CompaniesDAL = (from c in q.Select(cm => cm.ShipperCompany)
+                                            orderby q.Where(s => s.ShipperCompany == c).Count() descending
+                                            select new { company = c, count = q.Where(s => s.ShipperCompany == c).Count() }).ToList();
+
+                        return Json(CompaniesDAL);
+
+                    }
+                case "buyer":
+                    {
+                        var SearchQuery = db.Shipments.AsNoTracking().Where(s => EF.Functions.Like(s.GoodsShipped, "%" + searchtext + "%") && s.ConsigneeProfile != null);
+                        var ShipmentsDAL = SearchQuery.Skip(skip).Take(pageSize).ToList();
+
+                        ShipmentsBOL = ShipmentsDAL.Select(s => new
+                        {
+                            Company = new
+                            {
+                                Name = s.Consignee,
+                                Address = s.ConsigneeAddress
+                            },
+                            Shipment = new
+                            {
+                                Id = s.Id,
+                                Date = s.Date.HasValue ? s.Date.Value.ToString("MM/dd/yyyy") : null,
+                                Description = s.GoodsShipped
+                            }
+                        });
+
+                        var ResultsObj = new
+                        {
+                            Count = SearchQuery.Count(),
+                            Shipments = ShipmentsBOL
+                        };
+                        return View();
+
+                    }
+                default:
+                    return View();
+            };
+
+
+            return View();
+        }
+
+        public IActionResult SearchOld(string searchtext = default(string), int page = 1, string mode = default(string))
         {
             var pageSize = 10;
             var skip = (page - 1) * pageSize;

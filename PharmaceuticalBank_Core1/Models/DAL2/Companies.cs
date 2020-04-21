@@ -5,6 +5,12 @@ namespace PharmaceuticalBank_Core1.Models.DAL2
 {
     public partial class Companies
     {
+        public Companies()
+        {
+            ShipmentsConsigneeCompany = new HashSet<Shipments>();
+            ShipmentsShipperCompany = new HashSet<Shipments>();
+        }
+
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Address { get; set; }
@@ -25,7 +31,7 @@ namespace PharmaceuticalBank_Core1.Models.DAL2
         public string Profile { get; set; }
         public string Dunsa { get; set; }
         public string Industry { get; set; }
-        public double? Recenue { get; set; }
+        public double? Revenue { get; set; }
         public double? Employees { get; set; }
         public double? MarketCapitalization { get; set; }
         public string TradeRoles { get; set; }
@@ -36,6 +42,8 @@ namespace PharmaceuticalBank_Core1.Models.DAL2
         public string UltimateParentHeadquartersAddress { get; set; }
         public string UltimateParentProfile { get; set; }
         public string UltimateParentStockTickers { get; set; }
-        public string Type { get; set; }
+
+        public virtual ICollection<Shipments> ShipmentsConsigneeCompany { get; set; }
+        public virtual ICollection<Shipments> ShipmentsShipperCompany { get; set; }
     }
 }

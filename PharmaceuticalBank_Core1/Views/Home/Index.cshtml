@@ -14,7 +14,7 @@
 
     <div class="row no-gutters border-0">
         <div class="col">
-            <input v-model="searchText" v-on:input="presearch()" class="form-control" type="search" placeholder="Search...">
+            <input v-model="searchText" v-on:input="presearch()" class="form-control" type="search" placeholder="Search for...">
         </div>
         <div class="col-auto">
             <button v-on:click="search();" class="btn btn-outline-primary rounded-0" type="button">
@@ -33,7 +33,7 @@
         </div>
     </div>
 
-    <div v-if="searchResults.shipments.length > 0 && searchRecommendations.length == 0 && selectedItem == null" class="row mt-5 mb-5">
+    @*<div v-if="searchResults.shipments.length > 0 && searchRecommendations.length == 0 && selectedItem == null" class="row mt-5 mb-5">
         <div class="col-12">
             <div class="table-responsive">
                 <table class="table table-hover">
@@ -59,9 +59,9 @@
             <v-pagination v-model="currentPage" :page-count="totalPages" :classes="bootstrapPaginationClasses"></v-pagination>
 
         </div>
-    </div>
+    </div>*@
 
-    <div v-if="selectedItem !== null && searchRecommendations.length == 0" class="row mt-5 mb-5">
+    @*<div v-if="selectedItem !== null && searchRecommendations.length == 0" class="row mt-5 mb-5">
         <div class="col-12">
 
             <div class="card">
@@ -82,7 +82,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>*@
 
 
 </div>
@@ -98,29 +98,29 @@
             el: '#MainFrame',
             data: {
                 searchText: null,
-                searchResults: { count: 0, shipments: [] },
-                totalPages: 1,
-                pageSize: 10,
-                currentPage: 1,
-                selectedItem: null,
+                //searchResults: { count: 0, shipments: [] },
+                //totalPages: 1,
+                //pageSize: 10,
+                //currentPage: 1,
+                //selectedItem: null,
                 searchMode: 'supplier',
                 searchRecommendations: [],
-                selectedItemDetails: {
-                    company: {
-                        name: null,
-                        address: null,
-                        country:null
-                    }
-                },
-                showModal: false,
+                //selectedItemDetails: {
+                //    company: {
+                //        name: null,
+                //        address: null,
+                //        country:null
+                //    }
+                //},
+                //showModal: false,
                 isAuthenticated: @(User.Identity.IsAuthenticated ? "true" : "false"),
-                bootstrapPaginationClasses: {
-                    ul: 'pagination mt-4 mb-4 justify-content-center',
-                    li: 'page-item',
-                    liActive: 'active',
-                    liDisable: 'disabled',
-                    button: 'page-link'
-                }
+                //bootstrapPaginationClasses: {
+                //    ul: 'pagination mt-4 mb-4 justify-content-center',
+                //    li: 'page-item',
+                //    liActive: 'active',
+                //    liDisable: 'disabled',
+                //    button: 'page-link'
+                //}
             },
             methods: {
                 presearch:function () {
@@ -141,62 +141,65 @@
                     };
                 },
                 search: function () {
-                    let self = this;
-                    self.selectedItem = null;
-                    self.searchRecommendations = [];
-                    if (self.searchText.length == 0) {
-                        self.searchResults = { count: 0, shipments: [] };
-                        self.searchRecommendations = [];
-                    } else {
-                        $.ajax({
-                            method: "get",
-                            url: `home/search`,
-                            data: { searchtext: self.searchText, page: self.currentPage, mode: self.searchMode },
-                            success: function (result) {
-                                self.searchResults = result;
-                                self.totalPages = Math.ceil(result.count / self.pageSize);
-                                if (self.searchText.length == 0) {
-                                    self.searchResults = { count: 0, shipments: [] };
-                                }
-                            }
-                        });
-                    };
+                    window.location.href = 'home/search?searchtext=' + encodeURI(this.searchText) + '&page=1&mode=' + this.searchMode;  
                 },
-                getMarkedHTML: function (text, len) {
-                    if (text == null) { return; }
-                    var reg = new RegExp(this.searchText, 'gi');
-                    if (len == -1) {
-                        return text.replace(reg, function (str) { return '<strong style="color:#4C8BF5;">' + str + '</strong>' });
-                    } else {
-                        return text.substr(0, len).replace(reg, function (str) { return '<strong style="color:#4C8BF5;">' + str + '</strong>' });
-                    }
-                },
-                openResult: function (id) {
-                    let self = this;
-                    self.selectedItemDetails = null;
-                    $.ajax({
-                        method: "get",
-                        url: `home/loadCompany`,
-                        data: { id: id, mode: self.searchMode },
-                        success: function (result) {
-                            self.selectedItemDetails = result;
-                            self.selectedItem = id;
-                            self.showModal = true;
-                        }
-                    });
-                },
+                //search: function () {
+                //    let self = this;
+                //    self.selectedItem = null;
+                //    self.searchRecommendations = [];
+                //    if (self.searchText.length == 0) {
+                //        self.searchResults = { count: 0, shipments: [] };
+                //        self.searchRecommendations = [];
+                //    } else {
+                //        $.ajax({
+                //            method: "get",
+                //            url: `home/search`,
+                //            data: { searchtext: self.searchText, page: self.currentPage, mode: self.searchMode },
+                //            success: function (result) {
+                //                self.searchResults = result;
+                //                self.totalPages = Math.ceil(result.count / self.pageSize);
+                //                if (self.searchText.length == 0) {
+                //                    self.searchResults = { count: 0, shipments: [] };
+                //                }
+                //            }
+                //        });
+                //    };
+                //},
+                //getMarkedHTML: function (text, len) {
+                //    if (text == null) { return; }
+                //    var reg = new RegExp(this.searchText, 'gi');
+                //    if (len == -1) {
+                //        return text.replace(reg, function (str) { return '<strong style="color:#4C8BF5;">' + str + '</strong>' });
+                //    } else {
+                //        return text.substr(0, len).replace(reg, function (str) { return '<strong style="color:#4C8BF5;">' + str + '</strong>' });
+                //    }
+                //},
+                //openResult: function (id) {
+                //    let self = this;
+                //    self.selectedItemDetails = null;
+                //    $.ajax({
+                //        method: "get",
+                //        url: `home/loadCompany`,
+                //        data: { id: id, mode: self.searchMode },
+                //        success: function (result) {
+                //            self.selectedItemDetails = result;
+                //            self.selectedItem = id;
+                //            self.showModal = true;
+                //        }
+                //    });
+                //},
                 sendRequest: function () {
                     alert("Request sent. Thank you!");
                 }
             },
             created: function () {
-                this.searchText = 'pharma';
-                this.search();
+                //this.searchText = 'pharma';
+                //this.search();
             },
             watch: {
-                'currentPage': function () {
-                    this.search();
-                }
+                //'currentPage': function () {
+                //    this.search();
+                //}
             }
         });
     </script>

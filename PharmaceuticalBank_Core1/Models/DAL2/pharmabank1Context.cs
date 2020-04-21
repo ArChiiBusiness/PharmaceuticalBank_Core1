@@ -171,8 +171,6 @@ namespace PharmaceuticalBank_Core1.Models.DAL2
 
                 entity.Property(e => e.Siccodes).HasColumnName("SICCodes");
 
-                entity.Property(e => e.Type).HasMaxLength(20);
-
                 entity.Property(e => e.UltimateParentHeadquartersAddress).HasColumnName("Ultimate ParentHeadquartersAddress");
 
                 entity.Property(e => e.UltimateParentStockTickers).HasColumnName("Ultimate Parent Stock Tickers");
@@ -288,6 +286,8 @@ namespace PharmaceuticalBank_Core1.Models.DAL2
 
                 entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
 
+                entity.Property(e => e.BuyerPopularity).HasDefaultValueSql("((0))");
+
                 entity.Property(e => e.Phrase)
                     .IsRequired()
                     .HasColumnType("nvarchar(max)");
@@ -338,7 +338,8 @@ namespace PharmaceuticalBank_Core1.Models.DAL2
 
             modelBuilder.Entity<Shipments>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.Id)
+                    .IsClustered(false);
 
                 entity.HasIndex(e => e.Date)
                     .HasName("DateSort")
@@ -347,6 +348,8 @@ namespace PharmaceuticalBank_Core1.Models.DAL2
                 entity.HasIndex(e => new { e.GoodsShipped, e.Consignee, e.Shipper, e.Id, e.ConsigneeAddress, e.ConsigneeCountry, e.ShipperAddress, e.ShipperCountry, e.Date })
                     .HasName("MAinIndex2")
                     .HasFilter("([Goods Shipped] IS NOT NULL)");
+
+                entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.Consignee).HasMaxLength(255);
 
@@ -479,8 +482,6 @@ namespace PharmaceuticalBank_Core1.Models.DAL2
                 entity.Property(e => e.HsCode)
                     .HasColumnName("HS Code")
                     .HasMaxLength(255);
-
-                entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.IsContainerized)
                     .HasColumnName("Is Containerized")
@@ -647,6 +648,16 @@ namespace PharmaceuticalBank_Core1.Models.DAL2
                 entity.Property(e => e.VolumeTeu).HasColumnName("Volume (TEU)");
 
                 entity.Property(e => e.WeightKg).HasColumnName("Weight (KG)");
+
+                entity.HasOne(d => d.ConsigneeCompany)
+                    .WithMany(p => p.ShipmentsConsigneeCompany)
+                    .HasForeignKey(d => d.ConsigneeCompanyId)
+                    .HasConstraintName("FK_Shipments_ConsigneeCompanies");
+
+                entity.HasOne(d => d.ShipperCompany)
+                    .WithMany(p => p.ShipmentsShipperCompany)
+                    .HasForeignKey(d => d.ShipperCompanyId)
+                    .HasConstraintName("FK_Shipments_ShipperCompanies");
             });
 
             modelBuilder.Entity<State>(entity =>
