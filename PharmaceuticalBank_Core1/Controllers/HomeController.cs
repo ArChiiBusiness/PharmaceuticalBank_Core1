@@ -5,20 +5,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-//using PharmaceuticalBank_Core1.Models.DAL;
-using PharmaceuticalBank_Core1.Models.DAL2;
+using PharmaceuticalBank_Core1.Models.DAL;
+//using PharmaceuticalBank_Core1.Models.DAL2;
 using Microsoft.EntityFrameworkCore;
 using PharmaceuticalBank_Core1.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNet.Identity;
 
 namespace PharmaceuticalBank_Core1.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private pharmabank1Context db = new pharmabank1Context();
-        //private excelpro_pharmabankContext db = new excelpro_pharmabankContext();
+        //private pharmabank1Context db = new pharmabank1Context();
+        private excelpro_pharmabankContext db = new excelpro_pharmabankContext();
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -32,9 +31,19 @@ namespace PharmaceuticalBank_Core1.Controllers
             return View();
         }
 
-        public IActionResult PreSearch(string searchtext = default(string)) {
-            var RecsDAL = db.Phrases.Where(p => p.Phrase.StartsWith(searchtext)).OrderByDescending(o => o.Popularity).Select(s => s.Phrase).Take(10).ToArray();
-            return Json(RecsDAL);
+        public IActionResult PreSearch(string searchtext = default(string), string mode = default(string))
+        {
+            if (mode == "buyer")
+            {
+                var RecsDAL = db.Phrases.Where(p => p.Phrase.StartsWith(searchtext) && p.BuyerPopularity > 0).OrderByDescending(o => o.BuyerPopularity).Select(s => s.Phrase).Take(10).ToArray();
+                return Json(RecsDAL);
+            };
+            if (mode == "supplier")
+            {
+                var RecsDAL = db.Phrases.Where(p => p.Phrase.StartsWith(searchtext) && p.SellerPopularity > 0).OrderByDescending(o => o.SellerPopularity).Select(s => s.Phrase).Take(10).ToArray();
+                return Json(RecsDAL);
+            };
+            return Json(new { });
         }
 
         public IActionResult Search(string searchtext = default(string), int page = 1, string mode = default(string))

@@ -133,7 +133,7 @@
                         $.ajax({
                             method: "get",
                             url: "home/presearch",
-                            data: { searchtext: self.searchText},
+                            data: { searchtext: self.searchText, mode: self.searchMode},
                             success: function (result) {
                                 self.searchRecommendations = result;
                             }

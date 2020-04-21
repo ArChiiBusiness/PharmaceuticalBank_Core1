@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using PharmaceuticalBank_Core1.Models.DAL2;
-//using PharmaceuticalBank_Core1.Models.DAL;
+//using PharmaceuticalBank_Core1.Models.DAL2;
+using PharmaceuticalBank_Core1.Models.DAL;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
+using Hangfire;
 
 namespace PharmaceuticalBank_Core1.Controllers
 {
@@ -14,8 +16,8 @@ namespace PharmaceuticalBank_Core1.Controllers
     public class AdminController : Controller
     {
 
-        private pharmabank1Context db = new pharmabank1Context();
-        //private excelpro_pharmabankContext db = new excelpro_pharmabankContext();
+        //private pharmabank1Context db = new pharmabank1Context();
+        private excelpro_pharmabankContext db = new excelpro_pharmabankContext();
 
         public IActionResult Index()
         {
@@ -86,18 +88,30 @@ namespace PharmaceuticalBank_Core1.Controllers
 
         public IActionResult IndexPhrases()
         {
-            var time1 = DateTime.Now;
+            BackgroundJob.Enqueue(() => IndexPhrasesBuyers());
+            BackgroundJob.Enqueue(() => IndexPhrasesSellers());
+            return RedirectToAction("Index");
+        }
+
+        public void IndexPhrasesBuyers() {
             var PhrasesDAL = db.Phrases.ToList();
-            var ShipmentsBOL = db.Shipments.Where(s => s.GoodsShipped != null)
+            var ShipmentsBOL = db.Shipments.Where(s => s.GoodsShipped != null && s.Consignee != null && s.ConsigneeProfile != null)
                 .Select(sh => sh.GoodsShipped.ToLower()).ToArray();
 
-            PhrasesDAL.ForEach(p => p.Popularity = ShipmentsBOL.Where(s => s.Contains(p.Phrase.ToLower())).Count());
+            PhrasesDAL.ForEach(p => p.BuyerPopularity = ShipmentsBOL.Where(s => s.Contains(p.Phrase.ToLower())).Count());
+            
+            db.SaveChanges();
+        }
+
+        public void IndexPhrasesSellers()
+        {
+            var PhrasesDAL = db.Phrases.ToList();
+            var ShipmentsBOL = db.Shipments.Where(s => s.GoodsShipped != null && s.Shipper != null && s.ShipperProfile != null)
+                .Select(sh => sh.GoodsShipped.ToLower()).ToArray();
+
+            PhrasesDAL.ForEach(p => p.SellerPopularity = ShipmentsBOL.Where(s => s.Contains(p.Phrase.ToLower())).Count());
 
             db.SaveChanges();
-
-            var time2 = DateTime.Now;
-            return Content(time2.Subtract(time1).TotalMilliseconds.ToString());
-            //return RedirectToAction("Index");
         }
 
     }
