@@ -7,10 +7,13 @@ namespace PharmaceuticalBank_Core1.Models
 {
     public class SearchResultViewModel
     {
-        public Guid CompanyId { get; set; }
-        public string CompanyName { get; set; }
-        public string CompanyAddress { get; set; }
-        public Guid ShipmentId { get; set; }
 
+        public class SearchResultViewModelCompany { 
+            public DAL2.Companies Company { get; set; }
+            public int Count { get; set; }
+        }
+
+        public List<SearchResultViewModelCompany> Companies;
+        public int TotalCount { get; set; }
     }
 }

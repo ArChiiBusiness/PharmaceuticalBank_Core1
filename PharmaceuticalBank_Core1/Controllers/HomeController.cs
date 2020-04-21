@@ -29,8 +29,6 @@ namespace PharmaceuticalBank_Core1.Controllers
 
         public IActionResult Index()
         {
-            ViewData["Buyers"] = db.Shipments.AsNoTracking().Where(s => s.ConsigneeProfile != null).Count();
-            ViewData["Suppliers"] = db.Shipments.AsNoTracking().Where(s => s.ShipperProfile != null).Count();
             return View();
         }
 
@@ -54,47 +52,29 @@ namespace PharmaceuticalBank_Core1.Controllers
             var pageSize = 10;
             var skip = (page - 1) * pageSize;
             var ShipmentsBOL = default(IEnumerable<object>);
+
+            ViewData["mode"] = mode;
+            ViewData["searchtext"] = searchtext;
+
             switch (mode)
             {
                 case "supplier":
                     {
-                        //var SearchQuery = db.Companies.Include(c => c.ShipmentsShipperCompany).AsNoTracking().Where(s => EF.Functions.Like(s.GoodsShipped, "%" + searchtext + "%") && s.ShipperCompanyId != null);
-
-                        //var CompaniesDAL = SearchQuery.Select(c => c.ShipperCompany).OrderByDescending(s => s.s)
-
                         var q = db.Shipments.Where(s => EF.Functions.Like(s.GoodsShipped, "%" + searchtext + "%") && s.ShipperCompanyId != null);
-                        var CompaniesDAL = (from c in q.Select(cm => cm.ShipperCompany)
+                        var CompaniesDAL = (from c in q.Select(cm => cm.ShipperCompany).Distinct()
                                             orderby q.Where(s => s.ShipperCompany == c).Count() descending
-                                            select new { company = c, count = q.Where(s => s.ShipperCompany == c).Count() }).ToList();
+                                            select new SearchResultViewModel.SearchResultViewModelCompany { Company = c, Count = q.Where(s => s.ShipperCompany == c).Count() });
 
-                        return Json(CompaniesDAL);
-
+                        return View(new SearchResultViewModel { Companies = CompaniesDAL.Skip(skip).Take(pageSize).ToList(), TotalCount = CompaniesDAL.Count() });
                     }
                 case "buyer":
                     {
-                        var SearchQuery = db.Shipments.AsNoTracking().Where(s => EF.Functions.Like(s.GoodsShipped, "%" + searchtext + "%") && s.ConsigneeProfile != null);
-                        var ShipmentsDAL = SearchQuery.Skip(skip).Take(pageSize).ToList();
+                        var q = db.Shipments.Where(s => EF.Functions.Like(s.GoodsShipped, "%" + searchtext + "%") && s.ConsigneeCompanyId != null);
+                        var CompaniesDAL = (from c in q.Select(cm => cm.ConsigneeCompany).Distinct()
+                                            orderby q.Where(s => s.ConsigneeCompany == c).Count() descending
+                                            select new SearchResultViewModel.SearchResultViewModelCompany { Company = c, Count = q.Where(s => s.ConsigneeCompany == c).Count() });
 
-                        ShipmentsBOL = ShipmentsDAL.Select(s => new
-                        {
-                            Company = new
-                            {
-                                Name = s.Consignee,
-                                Address = s.ConsigneeAddress
-                            },
-                            Shipment = new
-                            {
-                                Id = s.Id,
-                                Date = s.Date.HasValue ? s.Date.Value.ToString("MM/dd/yyyy") : null,
-                                Description = s.GoodsShipped
-                            }
-                        });
-
-                        var ResultsObj = new
-                        {
-                            Count = SearchQuery.Count(),
-                            Shipments = ShipmentsBOL
-                        };
+                        return View(new SearchResultViewModel { Companies = CompaniesDAL.Skip(skip).Take(pageSize).ToList(), TotalCount = CompaniesDAL.Count() });
                         return View();
 
                     }

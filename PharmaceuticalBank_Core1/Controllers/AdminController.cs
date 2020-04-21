@@ -32,8 +32,8 @@ namespace PharmaceuticalBank_Core1.Controllers
         {
 
             var CompaniesDAL = db.Companies.AsNoTracking()
-                .Select(c => new 
-                { 
+                .Select(c => new
+                {
                     Profile = c.Profile
                 }).ToList();
 
@@ -136,25 +136,22 @@ namespace PharmaceuticalBank_Core1.Controllers
 
         public IActionResult DeleteCompanies()
         {
-            //db.Companies.RemoveRange(db.Companies.ToList());
-            //db.SaveChanges();
             var rows = db.Database.ExecuteSqlRaw("DELETE FROM Companies");
-
             return RedirectToAction("Index");
         }
 
         public IActionResult AddCompaniesToShipments()
         {
-            var ShipmentsDAL = db.Shipments.Where(s => (s.ShipperCompanyId == null && s.ShipperProfile != null) || (s.ConsigneeCompanyId == null && s.ConsigneeProfile != null)).ToList();
-            var CompaniesDAL = db.Companies.ToList();
-
-            foreach (var company in CompaniesDAL)
-            {
-                ShipmentsDAL.Where(s => s.ShipperProfile == company.Profile).ToList().ForEach(c => c.ShipperCompanyId = company.Id);
-                ShipmentsDAL.Where(s => s.ConsigneeProfile == company.Profile).ToList().ForEach(c => c.ConsigneeCompanyId = company.Id);
-                db.SaveChanges();
-            }
-            db.SaveChanges();
+            db.Database.ExecuteSqlRaw("UPDATE Shipments SET ShipperCompanyId = NULL");
+            db.Database.ExecuteSqlRaw("UPDATE Shipments SET ConsigneeCompanyId = NULL");
+            db.Database.ExecuteSqlRaw("UPDATE[Shipments] SET " +
+                    "[Shipments].[ShipperCompanyId] = [Companies].[Id] " +
+                    "FROM [Shipments], [Companies] WHERE " +
+                    "[Shipments].[Shipper Profile] = [Companies].[Profile]");
+            db.Database.ExecuteSqlRaw("UPDATE[Shipments] SET " +
+                    "[Shipments].[ConsigneeCompanyId] = [Companies].[Id] " +
+                    "FROM [Shipments], [Companies] WHERE " +
+                    "[Shipments].[Consignee Profile] = [Companies].[Profile]");
 
             return RedirectToAction("Index");
         }
@@ -166,13 +163,14 @@ namespace PharmaceuticalBank_Core1.Controllers
             return RedirectToAction("Index");
         }
 
-        public void IndexPhrasesBuyers() {
+        public void IndexPhrasesBuyers()
+        {
             var PhrasesDAL = db.Phrases.ToList();
             var ShipmentsBOL = db.Shipments.Where(s => s.GoodsShipped != null && s.Consignee != null && s.ConsigneeProfile != null)
                 .Select(sh => sh.GoodsShipped.ToLower()).ToArray();
 
             PhrasesDAL.ForEach(p => p.BuyerPopularity = ShipmentsBOL.Where(s => s.Contains(p.Phrase.ToLower())).Count());
-            
+
             db.SaveChanges();
         }
 

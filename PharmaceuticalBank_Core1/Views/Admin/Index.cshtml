@@ -2,51 +2,54 @@
 @{
     ViewData["Title"] = "Index";
 }
+<div class="container">
 
-<h3>Admin panel</h3>
+    <h3>Admin panel</h3>
 
-<hr />
+    <hr />
 
-<h4>Companies</h4>
+    <h4>Companies</h4>
 
-<div class="row">
-    <div class="col-12">
-        <ul>
-            <li>Total companies: @ViewData["TotalCompanies"]</li>
-        </ul>
+    <div class="row">
+        <div class="col-12">
+            <ul>
+                <li>Total companies: @ViewData["TotalCompanies"]</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <label>Generate companies</label>
+            @Html.ActionLink("Generate companies", "GenerateCompanies", "Admin")
+        </div>
+        <div class="col-12">
+            <label>Delete all companies</label>
+            @Html.ActionLink("Delete companies", "DeleteCompanies", "Admin")
+        </div>
+        <div class="col-12">
+            <label>Delete all companies</label>
+            @Html.ActionLink("Add Companies To Shipments", "AddCompaniesToShipments", "Admin")
+        </div>
+    </div>
+
+    <hr />
+
+    <h4>Search phrases</h4>
+
+    <div class="row">
+        <div class="col-12">
+            <ul>
+                <li>Count: @ViewData["SearchPhrases"]</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <label>Index Phrases</label>
+            @Html.ActionLink("Index phrases", "IndexPhrases", "Admin")
+        </div>
     </div>
 </div>
 
-<div class="row">
-    <div class="col-12">
-        <label>Generate companies</label>
-        @Html.ActionLink("Generate companies", "GenerateCompanies", "Admin")
-    </div>
-    <div class="col-12">
-        <label>Delete all companies</label>
-        @Html.ActionLink("Delete companies", "DeleteCompanies", "Admin")
-    </div>
-    <div class="col-12">
-        <label>Delete all companies</label>
-        @Html.ActionLink("Add Companies To Shipments", "AddCompaniesToShipments", "Admin")
-    </div>
-</div>
-
-<hr />
-
-<h4>Search phrases</h4>
-
-<div class="row">
-    <div class="col-12">
-        <ul>
-            <li>Count: @ViewData["SearchPhrases"]</li>
-        </ul>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-12">
-        <label>Index Phrases</label>
-        @Html.ActionLink("Index phrases", "IndexPhrases", "Admin")
-    </div>
-</div>
