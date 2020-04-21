@@ -10,6 +10,7 @@ using PharmaceuticalBank_Core1.Models.DAL;
 using Microsoft.EntityFrameworkCore;
 using PharmaceuticalBank_Core1.Models;
 using Microsoft.AspNetCore.Identity;
+using PharmaceuticalBank_Core1.Models.DAL3;
 
 namespace PharmaceuticalBank_Core1.Controllers
 {
@@ -17,7 +18,9 @@ namespace PharmaceuticalBank_Core1.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         //private pharmabank1Context db = new pharmabank1Context();
-        private excelpro_pharmabankContext db = new excelpro_pharmabankContext();
+        //private excelpro_pharmabankContext db = new excelpro_pharmabankContext();
+        private pharmabankContext db = new pharmabankContext();
+
 
         public HomeController(ILogger<HomeController> logger)
         {

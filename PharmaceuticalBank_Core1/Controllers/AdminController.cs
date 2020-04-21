@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-//using PharmaceuticalBank_Core1.Models.DAL2;
-using PharmaceuticalBank_Core1.Models.DAL;
+using PharmaceuticalBank_Core1.Models.DAL3;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
@@ -17,13 +16,13 @@ namespace PharmaceuticalBank_Core1.Controllers
     {
 
         //private pharmabank1Context db = new pharmabank1Context();
-        private excelpro_pharmabankContext db = new excelpro_pharmabankContext();
+        //private excelpro_pharmabankContext db = new excelpro_pharmabankContext();
+        private pharmabankContext db = new pharmabankContext();
+
 
         public IActionResult Index()
         {
             ViewData["TotalCompanies"] = db.Companies.Count();
-            ViewData["Buyers"] = db.Companies.Where(c => c.Type == "Buyer").Count();
-            ViewData["Sellers"] = db.Companies.Where(c => c.Type == "Seller").Count();
             ViewData["SearchPhrases"] = db.Phrases.Count();
 
             return View();
@@ -32,46 +31,47 @@ namespace PharmaceuticalBank_Core1.Controllers
         public IActionResult GenerateCompanies()
         {
 
+            var CompaniesDAL = db.Companies.AsNoTracking()
+                .Select(c => new 
+                { 
+                    Profile = c.Profile 
+                }).ToList();
+
+            var nCompaniesDAL = new List<Companies>();
+
             var SellersDAL = db.Shipments.Where(s => s.Shipper != null && s.ShipperProfile != null)
                 .Select(c => new Companies()
                 {
+                    Id = Guid.NewGuid(),
                     Name = c.Shipper,
-                    Type = "Seller",
                     Profile = c.ShipperProfile
                 }).Distinct().ToList();
 
-            var SellerCompaniesDAL = new List<Companies>();
-
             foreach (var SellerDAL in SellersDAL)
             {
-                if (!db.Companies.Where(c => c.Profile == SellerDAL.Profile).Any())
+                if (!CompaniesDAL.Where(c => c.Profile == SellerDAL.Profile).Any() && !nCompaniesDAL.Where(c => c.Profile == SellerDAL.Profile).Any())
                 {
-                    SellerCompaniesDAL.Add(SellerDAL);
+                    nCompaniesDAL.Add(SellerDAL);
                 }
             }
-
-            db.Companies.AddRange(SellerCompaniesDAL);
 
             var BuyersDAL = db.Shipments.Where(s => s.Consignee != null && s.ConsigneeProfile != null)
                .Select(c => new Companies()
                {
+                   Id = Guid.NewGuid(),
                    Name = c.Consignee,
-                   Type = "Buyer",
                    Profile = c.ConsigneeProfile
                }).Distinct().ToList();
 
-            var BuyerCompaniesDAL = new List<Companies>();
-
             foreach (var BuyerDAL in BuyersDAL)
             {
-                if (!db.Companies.Where(c => c.Profile == BuyerDAL.Profile).Any())
+                if (!CompaniesDAL.Where(c => c.Profile == BuyerDAL.Profile).Any() && !nCompaniesDAL.Where(c => c.Profile == BuyerDAL.Profile).Any())
                 {
-                    BuyerCompaniesDAL.Add(BuyerDAL);
+                    nCompaniesDAL.Add(BuyerDAL);
                 }
             }
 
-            db.Companies.AddRange(BuyerCompaniesDAL);
-
+            db.Companies.AddRange(nCompaniesDAL);
             db.SaveChanges();
 
             return RedirectToAction("Index");

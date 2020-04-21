@@ -132,7 +132,7 @@
                     } else {
                         $.ajax({
                             method: "get",
-                            url: "home/presearch",
+                            url: `home/presearch`,
                             data: { searchtext: self.searchText, mode: self.searchMode},
                             success: function (result) {
                                 self.searchRecommendations = result;
@@ -150,7 +150,7 @@
                     } else {
                         $.ajax({
                             method: "get",
-                            url: "home/search",
+                            url: `home/search`,
                             data: { searchtext: self.searchText, page: self.currentPage, mode: self.searchMode },
                             success: function (result) {
                                 self.searchResults = result;
@@ -176,7 +176,7 @@
                     self.selectedItemDetails = null;
                     $.ajax({
                         method: "get",
-                        url: "home/loadCompany",
+                        url: `home/loadCompany`,
                         data: { id: id, mode: self.searchMode },
                         success: function (result) {
                             self.selectedItemDetails = result;
