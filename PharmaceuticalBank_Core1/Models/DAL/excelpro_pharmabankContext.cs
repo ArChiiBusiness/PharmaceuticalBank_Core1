@@ -15,6 +15,7 @@ namespace PharmaceuticalBank_Core1.Models.DAL
         {
         }
 
+        public virtual DbSet<AggregatedCounter> AggregatedCounter { get; set; }
         public virtual DbSet<AspNetRoleClaims> AspNetRoleClaims { get; set; }
         public virtual DbSet<AspNetRoles> AspNetRoles { get; set; }
         public virtual DbSet<AspNetUserClaims> AspNetUserClaims { get; set; }
@@ -22,8 +23,19 @@ namespace PharmaceuticalBank_Core1.Models.DAL
         public virtual DbSet<AspNetUserRoles> AspNetUserRoles { get; set; }
         public virtual DbSet<AspNetUserTokens> AspNetUserTokens { get; set; }
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
+        public virtual DbSet<Companies> Companies { get; set; }
+        public virtual DbSet<Counter> Counter { get; set; }
+        public virtual DbSet<Hash> Hash { get; set; }
+        public virtual DbSet<Job> Job { get; set; }
+        public virtual DbSet<JobParameter> JobParameter { get; set; }
+        public virtual DbSet<JobQueue> JobQueue { get; set; }
+        public virtual DbSet<List> List { get; set; }
         public virtual DbSet<Phrases> Phrases { get; set; }
+        public virtual DbSet<Schema> Schema { get; set; }
+        public virtual DbSet<Server> Server { get; set; }
+        public virtual DbSet<Set> Set { get; set; }
         public virtual DbSet<Shipments> Shipments { get; set; }
+        public virtual DbSet<State> State { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -38,9 +50,24 @@ namespace PharmaceuticalBank_Core1.Models.DAL
         {
             modelBuilder.HasAnnotation("Relational:DefaultSchema", "pharmaly_admin");
 
+            modelBuilder.Entity<AggregatedCounter>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("AggregatedCounter", "HangFire");
+
+                entity.Property(e => e.ExpireAt).HasColumnType("datetime");
+
+                entity.Property(e => e.Key)
+                    .IsRequired()
+                    .HasMaxLength(100);
+            });
+
             modelBuilder.Entity<AspNetRoleClaims>(entity =>
             {
                 entity.HasNoKey();
+
+                entity.ToTable("AspNetRoleClaims", "dbo");
 
                 entity.Property(e => e.RoleId)
                     .IsRequired()
@@ -50,6 +77,8 @@ namespace PharmaceuticalBank_Core1.Models.DAL
             modelBuilder.Entity<AspNetRoles>(entity =>
             {
                 entity.HasNoKey();
+
+                entity.ToTable("AspNetRoles", "dbo");
 
                 entity.Property(e => e.Id)
                     .IsRequired()
@@ -64,6 +93,8 @@ namespace PharmaceuticalBank_Core1.Models.DAL
             {
                 entity.HasNoKey();
 
+                entity.ToTable("AspNetUserClaims", "dbo");
+
                 entity.Property(e => e.UserId)
                     .IsRequired()
                     .HasMaxLength(450);
@@ -72,6 +103,8 @@ namespace PharmaceuticalBank_Core1.Models.DAL
             modelBuilder.Entity<AspNetUserLogins>(entity =>
             {
                 entity.HasNoKey();
+
+                entity.ToTable("AspNetUserLogins", "dbo");
 
                 entity.Property(e => e.LoginProvider)
                     .IsRequired()
@@ -90,6 +123,8 @@ namespace PharmaceuticalBank_Core1.Models.DAL
             {
                 entity.HasNoKey();
 
+                entity.ToTable("AspNetUserRoles", "dbo");
+
                 entity.Property(e => e.RoleId)
                     .IsRequired()
                     .HasMaxLength(450);
@@ -102,6 +137,8 @@ namespace PharmaceuticalBank_Core1.Models.DAL
             modelBuilder.Entity<AspNetUserTokens>(entity =>
             {
                 entity.HasNoKey();
+
+                entity.ToTable("AspNetUserTokens", "dbo");
 
                 entity.Property(e => e.LoginProvider)
                     .IsRequired()
@@ -120,13 +157,13 @@ namespace PharmaceuticalBank_Core1.Models.DAL
             {
                 entity.HasNoKey();
 
+                entity.ToTable("AspNetUsers", "dbo");
+
                 entity.Property(e => e.Email).HasMaxLength(256);
 
                 entity.Property(e => e.Id)
                     .IsRequired()
                     .HasMaxLength(450);
-
-                entity.Property(e => e.LockoutEnd).HasColumnType("sql_variant");
 
                 entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
 
@@ -135,16 +172,156 @@ namespace PharmaceuticalBank_Core1.Models.DAL
                 entity.Property(e => e.UserName).HasMaxLength(256);
             });
 
+            modelBuilder.Entity<Companies>(entity =>
+            {
+                entity.ToTable("Companies", "dbo");
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.Dunsa).HasColumnName("DUNSA");
+
+                entity.Property(e => e.Siccodes).HasColumnName("SICCodes");
+
+                entity.Property(e => e.Type).HasMaxLength(20);
+
+                entity.Property(e => e.UltimateParentHeadquartersAddress).HasColumnName("Ultimate ParentHeadquartersAddress");
+
+                entity.Property(e => e.UltimateParentStockTickers).HasColumnName("Ultimate Parent Stock Tickers");
+            });
+
+            modelBuilder.Entity<Counter>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("Counter", "HangFire");
+
+                entity.Property(e => e.ExpireAt).HasColumnType("datetime");
+
+                entity.Property(e => e.Key)
+                    .IsRequired()
+                    .HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<Hash>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("Hash", "HangFire");
+
+                entity.Property(e => e.Field)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.Key)
+                    .IsRequired()
+                    .HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<Job>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("Job", "HangFire");
+
+                entity.Property(e => e.Arguments).IsRequired();
+
+                entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+
+                entity.Property(e => e.ExpireAt).HasColumnType("datetime");
+
+                entity.Property(e => e.InvocationData).IsRequired();
+
+                entity.Property(e => e.StateName).HasMaxLength(20);
+            });
+
+            modelBuilder.Entity<JobParameter>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("JobParameter", "HangFire");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(40);
+            });
+
+            modelBuilder.Entity<JobQueue>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("JobQueue", "HangFire");
+
+                entity.Property(e => e.FetchedAt).HasColumnType("datetime");
+
+                entity.Property(e => e.Queue)
+                    .IsRequired()
+                    .HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<List>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("List", "HangFire");
+
+                entity.Property(e => e.ExpireAt).HasColumnType("datetime");
+
+                entity.Property(e => e.Key)
+                    .IsRequired()
+                    .HasMaxLength(100);
+            });
+
             modelBuilder.Entity<Phrases>(entity =>
             {
                 entity.HasNoKey();
 
+                entity.ToTable("Phrases", "dbo");
+
                 entity.Property(e => e.Phrase).IsRequired();
+            });
+
+            modelBuilder.Entity<Schema>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("Schema", "HangFire");
+            });
+
+            modelBuilder.Entity<Server>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("Server", "HangFire");
+
+                entity.Property(e => e.Id)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.LastHeartbeat).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<Set>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("Set", "HangFire");
+
+                entity.Property(e => e.ExpireAt).HasColumnType("datetime");
+
+                entity.Property(e => e.Key)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.Value)
+                    .IsRequired()
+                    .HasMaxLength(256);
             });
 
             modelBuilder.Entity<Shipments>(entity =>
             {
                 entity.HasNoKey();
+
+                entity.ToTable("Shipments", "dbo");
 
                 entity.Property(e => e.Consignee).HasMaxLength(255);
 
@@ -441,6 +618,21 @@ namespace PharmaceuticalBank_Core1.Models.DAL
                 entity.Property(e => e.VolumeTeu).HasColumnName("Volume (TEU)");
 
                 entity.Property(e => e.WeightKg).HasColumnName("Weight (KG)");
+            });
+
+            modelBuilder.Entity<State>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("State", "HangFire");
+
+                entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(20);
+
+                entity.Property(e => e.Reason).HasMaxLength(100);
             });
 
             OnModelCreatingPartial(modelBuilder);

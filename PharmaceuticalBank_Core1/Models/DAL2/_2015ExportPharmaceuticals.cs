@@ -27,7 +27,7 @@ namespace PharmaceuticalBank_Core1.Models.DAL2
         public string ConsigneeProfile { get; set; }
         public string ConsigneeDUNSâ { get; set; }
         public string ConsigneeIndustry { get; set; }
-        public string ConsigneeRevenue { get; set; }
+        public double? ConsigneeRevenue { get; set; }
         public double? ConsigneeEmployees { get; set; }
         public string ConsigneeMarketCapitalization { get; set; }
         public string ConsigneeTradeRoles { get; set; }
