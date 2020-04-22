@@ -13,6 +13,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Hangfire;
+using Hangfire.Dashboard;
+using PharmaceuticalBank_Core1.Filters;
 
 namespace PharmaceuticalBank_Core1
 {
@@ -62,7 +64,10 @@ namespace PharmaceuticalBank_Core1
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseHangfireDashboard();
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            {
+                Authorization = new[] { new MyAuthorizationFilter() }
+            });
 
             app.UseEndpoints(endpoints =>
             {

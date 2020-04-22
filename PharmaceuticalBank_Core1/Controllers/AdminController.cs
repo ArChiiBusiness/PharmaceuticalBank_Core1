@@ -136,6 +136,8 @@ namespace PharmaceuticalBank_Core1.Controllers
 
         public IActionResult DeleteCompanies()
         {
+            db.Database.ExecuteSqlRaw("UPDATE Shipments SET ShipperCompanyId = NULL");
+            db.Database.ExecuteSqlRaw("UPDATE Shipments SET ConsigneeCompanyId = NULL");
             var rows = db.Database.ExecuteSqlRaw("DELETE FROM Companies");
             return RedirectToAction("Index");
         }
