@@ -8,8 +8,15 @@ namespace PharmaceuticalBank_Core1.Models
     public class SearchResultViewModel
     {
 
+        public class CompanyViewModel { 
+            public System.Guid Id { get; set; }
+            public String Name { get; set; }
+            public String Address { get; set; }
+
+        }
+
         public class SearchResultViewModelCompany { 
-            public DAL2.Companies Company { get; set; }
+            public CompanyViewModel Company { get; set; }
             public int Count { get; set; }
         }
 

@@ -11,6 +11,9 @@ using Microsoft.EntityFrameworkCore;
 using PharmaceuticalBank_Core1.Models;
 using Microsoft.AspNetCore.Identity;
 using PharmaceuticalBank_Core1.Models.DAL3;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore.Query.Internal;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace PharmaceuticalBank_Core1.Controllers
 {
@@ -29,7 +32,7 @@ namespace PharmaceuticalBank_Core1.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("Shipments","Search",new { q = "pharma" });
         }
 
         public IActionResult PreSearch(string searchtext = default(string), string mode = default(string))
@@ -61,21 +64,20 @@ namespace PharmaceuticalBank_Core1.Controllers
                 case "supplier":
                     {
                         var q = db.Shipments.Where(s => EF.Functions.Like(s.GoodsShipped, "%" + searchtext + "%") && s.ShipperCompanyId != null);
-                        var CompaniesDAL = (from c in q.Select(cm => cm.ShipperCompany).Distinct()
-                                            orderby q.Where(s => s.ShipperCompany == c).Count() descending
-                                            select new SearchResultViewModel.SearchResultViewModelCompany { Company = c, Count = q.Where(s => s.ShipperCompany == c).Count() });
+                        var CompaniesDAL = (from c in q.Select(cm => new SearchResultViewModel.CompanyViewModel { Id = cm.ShipperCompany.Id, Name = cm.ShipperCompany.Name, Address = cm.ShipperCompany.Address }).Distinct()
+                                            orderby q.Where(s => s.ShipperCompany.Id == c.Id).Count() descending
+                                            select new SearchResultViewModel.SearchResultViewModelCompany { Company = c, Count = q.Where(s => s.ShipperCompanyId == c.Id).Count() });
 
                         return View(new SearchResultViewModel { Companies = CompaniesDAL.Skip(skip).Take(pageSize).ToList(), TotalCount = CompaniesDAL.Count() });
                     }
                 case "buyer":
                     {
                         var q = db.Shipments.Where(s => EF.Functions.Like(s.GoodsShipped, "%" + searchtext + "%") && s.ConsigneeCompanyId != null);
-                        var CompaniesDAL = (from c in q.Select(cm => cm.ConsigneeCompany).Distinct()
-                                            orderby q.Where(s => s.ConsigneeCompany == c).Count() descending
-                                            select new SearchResultViewModel.SearchResultViewModelCompany { Company = c, Count = q.Where(s => s.ConsigneeCompany == c).Count() });
+                        var CompaniesDAL = (from c in q.Select(cm => new SearchResultViewModel.CompanyViewModel { Id = cm.ConsigneeCompany.Id, Name = cm.ConsigneeCompany.Name, Address = cm.ConsigneeCompany.Address }).Distinct()
+                                            orderby q.Where(s => s.ConsigneeCompany.Id == c.Id).Count() descending
+                                            select new SearchResultViewModel.SearchResultViewModelCompany { Company = c, Count = q.Where(s => s.ConsigneeCompanyId == c.Id).Count() });
 
                         return View(new SearchResultViewModel { Companies = CompaniesDAL.Skip(skip).Take(pageSize).ToList(), TotalCount = CompaniesDAL.Count() });
-                        return View();
 
                     }
                 default:

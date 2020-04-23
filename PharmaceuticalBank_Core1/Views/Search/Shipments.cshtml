@@ -1,18 +1,18 @@
 ﻿@{
-    ViewData["Title"] = "Search";
+    ViewData["Title"] = "Search shipments";
 }
 
-@model SearchResultViewModel;
+@model List<ShipmentViewModel>;
 
 <div id="MainFrame" class="pb-5">
     <div class="jumbotron jumbotron-fluid m-0 pl-0 pr-0 py-3">
         <div class="container">
             <div class="row mt-3 mb-2 p-3">
                 <div class="col-6 p-1">
-                    <button type="button" v-on:click="searchMode = 'supplier'" v-bind:class="{'active': searchMode == 'supplier'}" class="btn btn-outline-primary btn-block">Looking for Suppliers</button>
+                    @Html.ActionLink("Looking for shipments", "Shipments", "Search", null, new { @class = "btn btn-outline-primary btn-block active" })
                 </div>
                 <div class="col-6 p-1">
-                    <button type="button" v-on:click="searchMode = 'buyer'" v-bind:class="{'active': searchMode == 'buyer'}" class="btn btn-outline-primary btn-block">Looking for Buyers</button>
+                    @Html.ActionLink("Looking for buyers","Buyers","Search", null, new {@class = "btn btn-outline-primary btn-block" })
                 </div>
             </div>
 
@@ -42,36 +42,60 @@
     <div class="container">
         <div class="row mb-3">
             <div class="col-12 mt-4">
-                <h4>Found @Model.TotalCount companies</h4>
+                <h4>Found @ViewData["TotalShipments"] shipments</h4>
             </div>
         </div>
 
         <div class="row">
             <div class="col-12 mt-4">
-                <ul class="list-unstyled">
-                    @foreach (var c in Model.Companies)
+
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">Date</th>
+                                <th scope="col">Buyer</th>
+                                <th scope="col">Seller</th>
+                                <th scope="col">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var shipment in Model)
+                            {
+                            <tr>
+                                <td scope="col">
+                                    <span>@shipment.Date.ToShortDateString()</span>
+                                </td>
+                                <td scope="col">@shipment.Buyer.Name</td>
+                                <td scope="col">@shipment.Seller.Name</td>
+                                <td scope="col">@shipment.Description</td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                @*<ul class="list-unstyled">
+                    @foreach (var shipment in Model)
                     {
                         <div class="card">
                             <div class="card-body">
                                 <div class="card-title">
-                                    @c.Company.Name 
+                                    @shipment.Description
                                 </div>
                                 <div class="card-title">
-                                    Shipments: @c.Count
-                                    <button class="btn btn-primary float-right ml-2">Contact now</button>
-                                    <button class="btn btn-warning float-right">See profile</button>
-
+                                    Buyer: @shipment.Buyer.Name
+                                    Seller: @shipment.Seller.Name
                                 </div>
                             </div>
                         </div>
                     }
-                </ul>
+                </ul>*@
             </div>
         </div>
     </div>
 
 </div>
-
 
 @section scripts {
     <script src="//unpkg.com/vue-plain-pagination@0.2.1"></script>
@@ -82,8 +106,7 @@
         var App = new Vue({
             el: '#MainFrame',
             data: {
-                searchText: '@(ViewData["searchtext"])',
-                searchMode: '@(ViewData["mode"])',
+                searchText: '@Context.Request.Query["q"]',
                 searchRecommendations: [],
                 isAuthenticated: @(User.Identity.IsAuthenticated ? "true" : "false"),
             },
@@ -97,8 +120,8 @@
                     } else {
                         $.ajax({
                             method: "get",
-                            url: `presearch`,
-                            data: { searchtext: self.searchText, mode: self.searchMode},
+                            url: `presearchshipments`,
+                            data: { q: self.searchText},
                             success: function (result) {
                                 self.searchRecommendations = result;
                             }
@@ -106,7 +129,7 @@
                     };
                 },
                 search: function () {
-                    window.location.href = 'search?searchtext=' + encodeURI(this.searchText) + '&page=1&mode=' + this.searchMode;
+                    window.location.href = '?q=' + encodeURI(this.searchText) + '&page=1';
                 },
                 sendRequest: function () {
                     alert("Request sent. Thank you!");

@@ -1,0 +1,121 @@
+﻿@{
+    ViewData["Title"] = "Search Buyers";
+}
+
+@model SearchResultViewModel;
+
+<div id="MainFrame" class="pb-5">
+    <div class="jumbotron jumbotron-fluid m-0 pl-0 pr-0 py-3">
+        <div class="container">
+            <div class="row mt-3 mb-2 p-3">
+                <div class="col-6 p-1">
+                    @Html.ActionLink("Looking for shipments", "Shipments", "Search", null, new { @class = "btn btn-outline-primary btn-block" })
+                </div>
+                <div class="col-6 p-1">
+                    @Html.ActionLink("Looking for buyers", "Buyers", "Search", null, new { @class = "btn btn-outline-primary btn-block active" })
+                </div>
+            </div>
+
+            <div class="row no-gutters border-0">
+                <div class="col">
+                    <input v-model="searchText" v-on:input="presearch()" class="form-control" type="search" placeholder="Search for...">
+                </div>
+                <div class="col-auto">
+                    <button v-on:click="search();" class="btn btn-outline-primary rounded-0" type="button">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+                <div v-if="searchRecommendations.length > 0" class="col-12 m-0 p-0 bg-white border">
+                    <ul class="list-unstyled">
+                        <li v-for="recommendation in searchRecommendations">
+                            <div v-on:click="searchText = recommendation; search();" class="p-1 search-result-item">
+                                <i class="fas fa-search text-secondary ml-2 mr-2"></i>
+                                {{recommendation}}
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row mb-3">
+            <div class="col-12 mt-4">
+                <h4>Found @Model.TotalCount companies</h4>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 mt-4">
+                <ul class="list-unstyled">
+                    @foreach (var c in Model.Companies)
+                    {
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title">
+                                    @c.Company.Name
+                                </div>
+                                <div class="card-title">
+                                    Shipments: @c.Count
+                                    <button class="btn btn-primary float-right ml-2">Contact now</button>
+                                    <button class="btn btn-warning float-right">See profile</button>
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+@section scripts {
+    <script src="//unpkg.com/vue-plain-pagination@0.2.1"></script>
+
+    <script type="text/javascript">
+        Vue.component('v-pagination', window['vue-plain-pagination']);
+
+        var App = new Vue({
+            el: '#MainFrame',
+            data: {
+                searchText: '@Context.Request.Query["q"]',
+                searchRecommendations: [],
+                isAuthenticated: @(User.Identity.IsAuthenticated ? "true" : "false"),
+            },
+            methods: {
+                presearch:function () {
+                    let self = this;
+                    self.selectedItem = null;
+                    if (self.searchText.length == 0) {
+                        self.searchResults = { count: 0, shipments: [] };
+                        self.searchRecommendations = [];
+                    } else {
+                        $.ajax({
+                            method: "get",
+                            url: `presearch`,
+                            data: { searchtext: self.searchText},
+                            success: function (result) {
+                                self.searchRecommendations = result;
+                            }
+                        });
+                    };
+                },
+                search: function () {
+                    window.location.href = '?q=' + encodeURI(this.searchText) + '&page=1';
+                },
+                sendRequest: function () {
+                    alert("Request sent. Thank you!");
+                }
+            },
+            created: function () {
+            },
+            watch: {
+            }
+        });
+    </script>
+
+}
