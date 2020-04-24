@@ -38,7 +38,7 @@ namespace PharmaceuticalBank_Core1
             services.AddControllersWithViews();
             services.AddRazorPages();
 
-            services.AddHangfire(x => x.UseSqlServerStorage("Data Source=(LocalDb)\\MSSQLLocalDB;Initial Catalog=pharmabank1;Integrated Security=True"));
+            services.AddHangfire(x => x.UseSqlServerStorage("Data Source=EC2AMAZ-HUKJBO0;Initial Catalog=pharmabank1;Integrated Security=True"));
             services.AddHangfireServer();
         }
 

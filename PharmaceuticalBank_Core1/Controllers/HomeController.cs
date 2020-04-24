@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using PharmaceuticalBank_Core1.Models.DAL2;
+using PharmaceuticalBank_Core1.Models.DAL4;
 //using PharmaceuticalBank_Core1.Models.DAL2;
 using Microsoft.EntityFrameworkCore;
 using PharmaceuticalBank_Core1.Models;

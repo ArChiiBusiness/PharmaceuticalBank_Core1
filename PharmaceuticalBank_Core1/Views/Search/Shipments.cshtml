@@ -45,7 +45,7 @@
     <div class="container">
         <div class="row mb-3">
             <div class="col-12 mt-4">
-                <h4>Found @ViewData["TotalShipments"] shipments</h4>
+                <h4>Found @String.Format("{0:n0}", ViewData["TotalShipments"]) shipments</h4>
             </div>
         </div>
 
@@ -64,7 +64,7 @@
                         </thead>
                         <tbody>
                             @foreach (var shipment in Model)
-                            {
+                {
                             <tr>
                                 <td scope="col">
                                     <span>@shipment.Date.ToShortDateString()</span>

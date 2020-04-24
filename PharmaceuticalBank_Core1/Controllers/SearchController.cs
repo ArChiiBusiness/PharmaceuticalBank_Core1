@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PharmaceuticalBank_Core1.Models;
-using PharmaceuticalBank_Core1.Models.DAL2;
+using PharmaceuticalBank_Core1.Models.DAL4;
 
 namespace PharmaceuticalBank_Core1.Controllers
 {
@@ -45,7 +45,7 @@ namespace PharmaceuticalBank_Core1.Controllers
                     Address = s.ShipperCompany.Address,
                     Name = s.ShipperCompany.Name
                 },
-                Description = s.GoodsShipped.Substring(1, 150),
+                Description = s.GoodsShipped.Substring(0, 150),
                 Date = s.Date ?? DateTime.Now.AddYears(-3)
             }).Skip(skip).Take(pageSize).ToList();
 
