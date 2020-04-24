@@ -27,7 +27,7 @@ namespace PharmaceuticalBank_Core1.Controllers
             var skip = (page - 1) * pageSize;
             var Shipments = db.Shipments.Where(
                 s => EF.Functions.Like(s.GoodsShipped, "%" + q + "%") && s.GoodsShipped != null
-                && (s.ConsigneeCompanyId != null || s.ShipperCompanyId != null));
+                && (s.ConsigneeCompanyId != null || s.ShipperCompanyId != null)).OrderByDescending(d => d.Date);
             ViewData["TotalShipments"] = Shipments.Count();
             var ShipmentsBOL = Shipments.Select(s => new Models.ShipmentViewModel
             {
@@ -61,6 +61,19 @@ namespace PharmaceuticalBank_Core1.Controllers
             var CompaniesDAL = (from c in query.Select(cm => new SearchResultViewModel.CompanyViewModel { Id = cm.ConsigneeCompany.Id, Name = cm.ConsigneeCompany.Name, Address = cm.ConsigneeCompany.Address }).Distinct()
                                 orderby query.Where(s => s.ConsigneeCompany.Id == c.Id).Count() descending
                                 select new SearchResultViewModel.SearchResultViewModelCompany { Company = c, Count = query.Where(s => s.ConsigneeCompanyId == c.Id).Count() });
+
+            return View(new SearchResultViewModel { Companies = CompaniesDAL.Skip(skip).Take(pageSize).ToList(), TotalCount = CompaniesDAL.Count() });
+        }
+
+        public IActionResult Suppliers(string q = default(string), int page = 1)
+        {
+            var pageSize = 10;
+            var skip = (page - 1) * pageSize;
+
+            var query = db.Shipments.Where(s => EF.Functions.Like(s.GoodsShipped, "%" + q + "%") && s.ShipperCompanyId != null);
+            var CompaniesDAL = (from c in query.Select(cm => new SearchResultViewModel.CompanyViewModel { Id = cm.ShipperCompany.Id, Name = cm.ShipperCompany.Name, Address = cm.ShipperCompany.Address }).Distinct()
+                                orderby query.Where(s => s.ShipperCompany.Id == c.Id).Count() descending
+                                select new SearchResultViewModel.SearchResultViewModelCompany { Company = c, Count = query.Where(s => s.ShipperCompanyId == c.Id).Count() });
 
             return View(new SearchResultViewModel { Companies = CompaniesDAL.Skip(skip).Take(pageSize).ToList(), TotalCount = CompaniesDAL.Count() });
         }

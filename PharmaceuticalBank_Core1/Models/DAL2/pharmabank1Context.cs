@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using PharmaceuticalBank_Core1.Models;
 
 namespace PharmaceuticalBank_Core1.Models.DAL2
 {
@@ -994,5 +995,7 @@ namespace PharmaceuticalBank_Core1.Models.DAL2
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+        public DbSet<PharmaceuticalBank_Core1.Models.ShipmentViewModel> ShipmentViewModel { get; set; }
     }
 }

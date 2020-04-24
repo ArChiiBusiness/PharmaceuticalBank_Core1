@@ -1,21 +1,21 @@
 ﻿@{
-    ViewData["Title"] = "Search shipments";
+    ViewData["Title"] = "Search Suppliers";
 }
 
-@model List<ShipmentViewModel>;
+@model SearchResultViewModel;
 
 <div id="MainFrame" class="pb-5">
     <div class="jumbotron jumbotron-fluid m-0 pl-0 pr-0 py-3">
         <div class="container">
             <div class="row mt-3 mb-2 p-3">
                 <div class="col-4 p-1">
-                    @Html.ActionLink("Looking for shipments", "Shipments", "Search", null, new { @class = "btn btn-outline-primary btn-block active" })
+                    @Html.ActionLink("Looking for shipments", "Shipments", "Search", null, new { @class = "btn btn-outline-primary btn-block" })
                 </div>
                 <div class="col-4 p-1">
                     @Html.ActionLink("Looking for buyers", "Buyers", "Search", null, new { @class = "btn btn-outline-primary btn-block" })
                 </div>
                 <div class="col-4 p-1">
-                    @Html.ActionLink("Looking for suppliers", "Suppliers", "Search", null, new { @class = "btn btn-outline-primary btn-block" })
+                    @Html.ActionLink("Looking for suppliers", "Suppliers", "Search", null, new { @class = "btn btn-outline-primary btn-block active" })
                 </div>
             </div>
 
@@ -45,60 +45,36 @@
     <div class="container">
         <div class="row mb-3">
             <div class="col-12 mt-4">
-                <h4>Found @ViewData["TotalShipments"] shipments</h4>
+                <h4>Found @Model.TotalCount companies</h4>
             </div>
         </div>
 
         <div class="row">
             <div class="col-12 mt-4">
-
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th scope="col">Date</th>
-                                <th scope="col">Buyer</th>
-                                <th scope="col">Seller</th>
-                                <th scope="col">Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var shipment in Model)
-                            {
-                            <tr>
-                                <td scope="col">
-                                    <span>@shipment.Date.ToShortDateString()</span>
-                                </td>
-                                <td scope="col">@shipment.Buyer.Name</td>
-                                <td scope="col">@shipment.Seller.Name</td>
-                                <td scope="col">@Html.ActionLink(shipment.Description,"Details","Shipments",new {Id = shipment.Id })</td>
-                            </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-
-                @*<ul class="list-unstyled">
-                    @foreach (var shipment in Model)
+                <ul class="list-unstyled">
+                    @foreach (var c in Model.Companies)
                     {
                         <div class="card">
                             <div class="card-body">
                                 <div class="card-title">
-                                    @shipment.Description
+                                    @c.Company.Name
                                 </div>
                                 <div class="card-title">
-                                    Buyer: @shipment.Buyer.Name
-                                    Seller: @shipment.Seller.Name
+                                    Shipments: @c.Count
+                                    <button class="btn btn-primary float-right ml-2">Contact now</button>
+                                    @*<button class="btn btn-warning float-right">See profile</button>*@
+
                                 </div>
                             </div>
                         </div>
                     }
-                </ul>*@
+                </ul>
             </div>
         </div>
     </div>
 
 </div>
+
 
 @section scripts {
     <script src="//unpkg.com/vue-plain-pagination@0.2.1"></script>
