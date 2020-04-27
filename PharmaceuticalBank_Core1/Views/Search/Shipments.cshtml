@@ -9,19 +9,19 @@
         <div class="container">
             <div class="row mt-3 mb-2 p-3">
                 <div class="col-4 p-1">
-                    @Html.ActionLink("Looking for shipments", "Shipments", "Search", null, new { @class = "btn btn-outline-primary btn-block active" })
+                    @Html.ActionLink("Looking for shipments (" + String.Format("{0:n0}", ViewData["TotalShipments"]) + ")", "Shipments", "Search", null, new { @class = "btn btn-outline-primary btn-block active" })
                 </div>
                 <div class="col-4 p-1">
-                    @Html.ActionLink("Looking for buyers", "Buyers", "Search", null, new { @class = "btn btn-outline-primary btn-block" })
+                    @Html.ActionLink("Looking for buyers (" + String.Format("{0:n0}", ViewData["TotalBuyers"]) + ")", "Buyers", "Search", null, new { @class = "btn btn-outline-primary btn-block" })
                 </div>
                 <div class="col-4 p-1">
-                    @Html.ActionLink("Looking for suppliers", "Suppliers", "Search", null, new { @class = "btn btn-outline-primary btn-block" })
+                    @Html.ActionLink("Looking for suppliers (" + String.Format("{0:n0}", ViewData["TotalSuppliers"]) + ")", "Suppliers", "Search", null, new { @class = "btn btn-outline-primary btn-block" })
                 </div>
             </div>
 
             <div class="row no-gutters border-0">
                 <div class="col">
-                    <input v-model="searchText" v-on:input="presearch()" class="form-control" type="search" placeholder="Search for...">
+                    <input v-model="searchText" v-on:input="presearch()" class="form-control" type="search" placeholder="Enter a product, product type">
                 </div>
                 <div class="col-auto">
                     <button v-on:click="search();" class="btn btn-outline-primary rounded-0" type="button">
@@ -59,41 +59,25 @@
                                 <th scope="col">Date</th>
                                 <th scope="col">Buyer</th>
                                 <th scope="col">Seller</th>
-                                <th scope="col">Description</th>
+                                <th scope="col">Shipment description</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var shipment in Model)
-                {
-                            <tr>
-                                <td scope="col">
-                                    <span>@shipment.Date.ToShortDateString()</span>
-                                </td>
-                                <td scope="col">@shipment.Buyer.Name</td>
-                                <td scope="col">@shipment.Seller.Name</td>
-                                <td scope="col">@Html.ActionLink(shipment.Description,"Details","Shipments",new {Id = shipment.Id })</td>
-                            </tr>
+                            {
+                                <tr>
+                                    <td scope="col">
+                                        <span>@shipment.Date.ToShortDateString()</span>
+                                    </td>
+                                    <td scope="col">@shipment.Buyer.Name</td>
+                                    <td scope="col">@shipment.Seller.Name</td>
+                                    <td scope="col">@Html.ActionLink(shipment.Description, "Details", "Shipments", new { Id = shipment.Id })</td>
+                                </tr>
                             }
                         </tbody>
                     </table>
                 </div>
 
-                @*<ul class="list-unstyled">
-                    @foreach (var shipment in Model)
-                    {
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="card-title">
-                                    @shipment.Description
-                                </div>
-                                <div class="card-title">
-                                    Buyer: @shipment.Buyer.Name
-                                    Seller: @shipment.Seller.Name
-                                </div>
-                            </div>
-                        </div>
-                    }
-                </ul>*@
             </div>
         </div>
     </div>

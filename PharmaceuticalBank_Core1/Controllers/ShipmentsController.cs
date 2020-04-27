@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using PharmaceuticalBank_Core1.Models;
 using PharmaceuticalBank_Core1.Models.DAL4;
 
@@ -24,7 +25,6 @@ namespace PharmaceuticalBank_Core1.Controllers
                 .Select(s => new Models.ShipmentViewModel
                 {
                     Id = s.Id,
-                    GoodsShipped = s.GoodsShipped,
                     Buyer = new Models.CompanyViewModel
                     {
                         Id = s.ConsigneeCompany.Id,
@@ -37,7 +37,7 @@ namespace PharmaceuticalBank_Core1.Controllers
                         Address = s.ShipperCompany.Address,
                         Name = s.ShipperCompany.Name
                     },
-                    Description = s.GoodsShipped.Substring(0, 150),
+                    Description = Strings.StrConv(s.GoodsShipped.Substring(0, 150),VbStrConv.ProperCase,0),
                     Date = s.Date ?? DateTime.Now.AddYears(-3)
                 }).Take(100).ToListAsync();
 
@@ -56,7 +56,6 @@ namespace PharmaceuticalBank_Core1.Controllers
                 .Select(s => new Models.ShipmentViewModel
                 {
                     Id = s.Id,
-                    GoodsShipped = s.GoodsShipped,
                     Buyer = new Models.CompanyViewModel
                     {
                         Id = s.ConsigneeCompany.Id,
@@ -69,7 +68,7 @@ namespace PharmaceuticalBank_Core1.Controllers
                         Address = s.ShipperCompany.Address,
                         Name = s.ShipperCompany.Name
                     },
-                    Description = s.GoodsShipped.Substring(1, 150),
+                    Description = Strings.StrConv(s.GoodsShipped.Substring(0, 150), VbStrConv.ProperCase, 0),
                     Date = s.Date ?? DateTime.Now.AddYears(-3)
                 }).FirstOrDefaultAsync();
             if (shipmentViewModel == null)

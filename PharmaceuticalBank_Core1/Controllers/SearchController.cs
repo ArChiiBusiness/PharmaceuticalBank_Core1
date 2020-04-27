@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualBasic;
 using PharmaceuticalBank_Core1.Models;
 using PharmaceuticalBank_Core1.Models.DAL4;
 
@@ -23,6 +24,10 @@ namespace PharmaceuticalBank_Core1.Controllers
 
         public IActionResult Shipments(string q = default(string), int page = 1)
         {
+            ViewData["TotalShipments"] = 20381; // db.Shipments.Where(s => s.GoodsShipped != null).Count();
+            ViewData["TotalBuyers"] = 2818; // db.Shipments.Where(s => s.GoodsShipped != null).Select(b => b.ConsigneeCompanyId).Distinct().Count();
+            ViewData["TotalSuppliers"] = 3246; // db.Shipments.Where(s => s.GoodsShipped != null).Select(b => b.ShipperCompanyId).Distinct().Count();
+
             var pageSize = 10;
             var skip = (page - 1) * pageSize;
             var Shipments = db.Shipments.Where(
@@ -32,7 +37,6 @@ namespace PharmaceuticalBank_Core1.Controllers
             var ShipmentsBOL = Shipments.Select(s => new Models.ShipmentViewModel
             {
                 Id = s.Id,
-                GoodsShipped = s.GoodsShipped,
                 Buyer = new Models.CompanyViewModel
                 {
                     Id = s.ConsigneeCompany.Id,
@@ -45,7 +49,7 @@ namespace PharmaceuticalBank_Core1.Controllers
                     Address = s.ShipperCompany.Address,
                     Name = s.ShipperCompany.Name
                 },
-                Description = s.GoodsShipped.Substring(0, 150),
+                Description = Strings.StrConv(s.GoodsShipped.Substring(0, 150), VbStrConv.ProperCase, 0),
                 Date = s.Date ?? DateTime.Now.AddYears(-3)
             }).Skip(skip).Take(pageSize).ToList();
 
@@ -54,11 +58,21 @@ namespace PharmaceuticalBank_Core1.Controllers
 
         public IActionResult Buyers(string q = default(string), int page = 1)
         {
-            var pageSize = 10;
+            ViewData["TotalShipments"] = 20381; // db.Shipments.Where(s => s.GoodsShipped != null).Count();
+            ViewData["TotalBuyers"] = 2818; // db.Shipments.Where(s => s.GoodsShipped != null).Select(b => b.ConsigneeCompanyId).Distinct().Count();
+            ViewData["TotalSuppliers"] = 3246; // db.Shipments.Where(s => s.GoodsShipped != null).Select(b => b.ShipperCompanyId).Distinct().Count();
+
+            var pageSize = 50;
             var skip = (page - 1) * pageSize;
 
             var query = db.Shipments.Where(s => EF.Functions.Like(s.GoodsShipped, "%" + q + "%") && s.ConsigneeCompanyId != null);
-            var CompaniesDAL = (from c in query.Select(cm => new SearchResultViewModel.CompanyViewModel { Id = cm.ConsigneeCompany.Id, Name = cm.ConsigneeCompany.Name, Address = cm.ConsigneeCompany.Address }).Distinct()
+            var CompaniesDAL = (from c in query.Select(cm => new SearchResultViewModel.CompanyViewModel
+            {
+                Id = cm.ConsigneeCompany.Id,
+                Name = cm.ConsigneeCompany.Name,
+                Address = cm.ConsigneeCompany.Address,
+                Country = cm.ConsigneeCompany.Country
+            }).Distinct()
                                 orderby query.Where(s => s.ConsigneeCompany.Id == c.Id).Count() descending
                                 select new SearchResultViewModel.SearchResultViewModelCompany { Company = c, Count = query.Where(s => s.ConsigneeCompanyId == c.Id).Count() });
 
@@ -67,11 +81,20 @@ namespace PharmaceuticalBank_Core1.Controllers
 
         public IActionResult Suppliers(string q = default(string), int page = 1)
         {
-            var pageSize = 10;
+            ViewData["TotalShipments"] = 20381; // db.Shipments.Where(s => s.GoodsShipped != null).Count();
+            ViewData["TotalBuyers"] = 2818; // db.Shipments.Where(s => s.GoodsShipped != null).Select(b => b.ConsigneeCompanyId).Distinct().Count();
+            ViewData["TotalSuppliers"] = 3246; // db.Shipments.Where(s => s.GoodsShipped != null).Select(b => b.ShipperCompanyId).Distinct().Count();
+
+            var pageSize = 50;
             var skip = (page - 1) * pageSize;
 
             var query = db.Shipments.Where(s => EF.Functions.Like(s.GoodsShipped, "%" + q + "%") && s.ShipperCompanyId != null);
-            var CompaniesDAL = (from c in query.Select(cm => new SearchResultViewModel.CompanyViewModel { Id = cm.ShipperCompany.Id, Name = cm.ShipperCompany.Name, Address = cm.ShipperCompany.Address }).Distinct()
+            var CompaniesDAL = (from c in query.Select(cm => new SearchResultViewModel.CompanyViewModel { 
+                Id = cm.ShipperCompany.Id, 
+                Name = cm.ShipperCompany.Name,
+                Address = cm.ShipperCompany.Address,
+                Country = cm.ShipperCompany.Country
+            }).Distinct()
                                 orderby query.Where(s => s.ShipperCompany.Id == c.Id).Count() descending
                                 select new SearchResultViewModel.SearchResultViewModelCompany { Company = c, Count = query.Where(s => s.ShipperCompanyId == c.Id).Count() });
 

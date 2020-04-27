@@ -9,19 +9,19 @@
         <div class="container">
             <div class="row mt-3 mb-2 p-3">
                 <div class="col-4 p-1">
-                    @Html.ActionLink("Looking for shipments", "Shipments", "Search", null, new { @class = "btn btn-outline-primary btn-block" })
+                    @Html.ActionLink("Looking for shipments (" + String.Format("{0:n0}", ViewData["TotalShipments"]) + ")", "Shipments", "Search", null, new { @class = "btn btn-outline-primary btn-block" })
                 </div>
                 <div class="col-4 p-1">
-                    @Html.ActionLink("Looking for buyers", "Buyers", "Search", null, new { @class = "btn btn-outline-primary btn-block" })
+                    @Html.ActionLink("Looking for buyers (" + String.Format("{0:n0}", ViewData["TotalBuyers"]) + ")", "Buyers", "Search", null, new { @class = "btn btn-outline-primary btn-block" })
                 </div>
                 <div class="col-4 p-1">
-                    @Html.ActionLink("Looking for suppliers", "Suppliers", "Search", null, new { @class = "btn btn-outline-primary btn-block active" })
+                    @Html.ActionLink("Looking for suppliers (" + String.Format("{0:n0}", ViewData["TotalSuppliers"]) + ")", "Suppliers", "Search", null, new { @class = "btn btn-outline-primary btn-block active" })
                 </div>
             </div>
 
             <div class="row no-gutters border-0">
                 <div class="col">
-                    <input v-model="searchText" v-on:input="presearch()" class="form-control" type="search" placeholder="Search for...">
+                    <input v-model="searchText" v-on:input="presearch()" class="form-control" type="search" placeholder="Enter a product, product type">
                 </div>
                 <div class="col-auto">
                     <button v-on:click="search();" class="btn btn-outline-primary rounded-0" type="button">
@@ -51,24 +51,32 @@
 
         <div class="row">
             <div class="col-12 mt-4">
-                <ul class="list-unstyled">
-                    @foreach (var c in Model.Companies)
-                    {
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="card-title">
-                                    @c.Company.Name
-                                </div>
-                                <div class="card-title">
-                                    Shipments: @c.Count
-                                    <button class="btn btn-primary float-right ml-2">Contact now</button>
-                                    @*<button class="btn btn-warning float-right">See profile</button>*@
 
-                                </div>
-                            </div>
-                        </div>
-                    }
-                </ul>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Country</th>
+                                <th scope="col">Shipment count</th>
+                                <th scope="col">Address</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var c in Model.Companies)
+                            {
+                                <tr>
+                                    <td scope="col">@Html.ActionLink(c.Company.Name, "Details", "Companies", new { Id = c.Company.Id })</td>
+                                    <td scope="col">@c.Company.Country</td>
+                                    <td scope="col">@c.Count</td>
+                                    <td scope="col">@c.Company.Address</td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
