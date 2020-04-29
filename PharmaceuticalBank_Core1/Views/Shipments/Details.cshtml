@@ -4,7 +4,7 @@
     ViewData["Title"] = "Details";
 }
 
-<div class="container pt-4">
+<div class="container pt-4" id="DetailsFrame">
     <div class="row">
         <div class="col-12">
             <h1>Details</h1>
@@ -16,7 +16,7 @@
                         @Html.DisplayNameFor(model => model.Description)
                     </dt>
                     <dd class="col-sm-10">
-                        @Html.DisplayFor(model => model.Description)
+                        <span v-html='getMarkedHTML("@Model.Description.Replace("\n","")",-1)'></span>
                     </dd>
                     <dt class="col-sm-2">
                         @Html.DisplayNameFor(model => model.Date)
@@ -34,3 +34,29 @@
         </div>
     </div>
 </div>
+
+@section scripts {
+    <script src="//unpkg.com/vue-plain-pagination@0.2.1"></script>
+
+    <script type="text/javascript">
+        Vue.component('v-pagination', window['vue-plain-pagination']);
+
+        var App = new Vue({
+            el: '#DetailsFrame',
+            data: {
+                searchText: '@Context.Request.Query["q"]',
+            },
+            methods: {
+                getMarkedHTML: function (text, len) {
+                    if (text == null) { return; }
+                    var reg = new RegExp(this.searchText, 'gi');
+                    if (len == -1) {
+                        return text.replace(reg, function (str) { return '<strong style="color:#4C8BF5;">' + str + '</strong>' });
+                    } else {
+                        return text.substr(0, text.length).replace(reg, function (str) { return '<strong style="color:#4C8BF5;">' + str + '</strong>' });
+                    }
+                }
+            }
+        });
+    </script>
+}

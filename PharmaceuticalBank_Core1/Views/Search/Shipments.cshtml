@@ -3,6 +3,7 @@
 }
 
 @model List<ShipmentViewModel>;
+@using Microsoft.VisualBasic;
 
 <div id="MainFrame" class="pb-5">
     <div class="jumbotron jumbotron-fluid m-0 pl-0 pr-0 py-3">
@@ -69,14 +70,47 @@
                                     <td scope="col">
                                         <span>@shipment.Date.ToShortDateString()</span>
                                     </td>
-                                    <td scope="col">@shipment.Buyer.Name</td>
-                                    <td scope="col">@shipment.Seller.Name</td>
-                                    <td scope="col">@Html.ActionLink(shipment.Description, "Details", "Shipments", new { Id = shipment.Id })</td>
+                                    @if (shipment.Buyer.Name == null)
+                                    {
+                                        <td scope="col">-</td>
+                                    }
+                                    else
+                                    {
+                                        <td scope="col">@Html.ActionLink(shipment.Buyer.Name, "Details", "Companies", new { Id = shipment.Buyer.Id })</td>
+                                    }
+                                    @if (shipment.Seller.Name == null)
+                                    {
+                                        <td scope="col">-</td>
+                                    }
+                                    else
+                                    {
+                                        <td scope="col">@Html.ActionLink(shipment.Seller.Name, "Details", "Companies", new { Id = shipment.Seller.Id })</td>
+                                    }
+                                    <td scope="col">
+                                        <a class="text-dark" href="@Url.Action("Details","Shipments", new { id = shipment.Id, q = Context.Request.Query["q"]})">
+                                            <span v-html='getMarkedHTML("@shipment.Description.Replace("\n","")",150)'></span>
+                                        </a>
+                                        @*@Html.ActionLink(shipment.Description.Replace("Pharma","<b>Pharma</b>"), "Details", "Shipments", new { Id = shipment.Id })*@
+                                    </td>
                                 </tr>
                             }
                         </tbody>
                     </table>
                 </div>
+
+                <paginate :page-count="@ViewData["TotalPages"]"
+                          :page-range="5"
+                          :margin-pages="2"
+                          :page-link-class="'page-link'"
+                          :prev-link-class="'page-link'"
+                          :next-link-class="'page-link'"
+                          :click-handler="clickCallback"
+                          :prev-text="'Prev'"
+                          :initial-page="@(int.Parse(Context.Request.Query["page"])-1)"
+                          :next-text="'Next'"
+                          :container-class="'pagination justify-content-center'"
+                          :page-class="'page-item'">
+                </paginate>
 
             </div>
         </div>
@@ -85,19 +119,27 @@
 </div>
 
 @section scripts {
-    <script src="//unpkg.com/vue-plain-pagination@0.2.1"></script>
+    <!-- use the latest release -->
+    <script src="https://unpkg.com/vuejs-paginate@latest"></script>
+    <!-- or use the specify version -->
+    <script src="https://unpkg.com/vuejs-paginate@0.9.0"></script>
 
     <script type="text/javascript">
-        Vue.component('v-pagination', window['vue-plain-pagination']);
+        Vue.component('paginate', VuejsPaginate);
 
         var App = new Vue({
             el: '#MainFrame',
             data: {
                 searchText: '@Context.Request.Query["q"]',
                 searchRecommendations: [],
-                isAuthenticated: @(User.Identity.IsAuthenticated ? "true" : "false"),
+                isAuthenticated: @(User.Identity.IsAuthenticated ? "true" : "false")
             },
             methods: {
+                clickCallback: function (pageNum) {
+                    var href = new URL(window.location.href);
+                    href.searchParams.set('page', pageNum);
+                    window.location.href = href;
+                },
                 presearch:function () {
                     let self = this;
                     self.selectedItem = null;
@@ -120,6 +162,20 @@
                 },
                 sendRequest: function () {
                     alert("Request sent. Thank you!");
+                },
+                getMarkedHTML: function (text, len) {
+                    if (text == null) { return; }
+                    var reg = new RegExp(this.searchText, 'gi');
+                    if (len == -1) {
+                        return text.replace(reg, function (str) { return '<strong style="color:#4C8BF5;">' + str + '</strong>' });
+                    } else {
+                        var startPos = text.toLowerCase().indexOf(this.searchText.toLowerCase()) - 75;
+                        if (startPos < 0) {
+                            startPos = 0;
+                        };
+                        console.log(startPos);
+                        return text.replace(reg, function (str) { return '<strong style="color:#4C8BF5;">' + str + '</strong>' }).substr(startPos, len);
+                    }
                 }
             },
             created: function () {
@@ -128,5 +184,4 @@
             }
         });
     </script>
-
 }

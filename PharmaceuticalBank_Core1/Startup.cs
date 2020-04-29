@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using Hangfire;
 using Hangfire.Dashboard;
 using PharmaceuticalBank_Core1.Filters;
+using ReflectionIT.Mvc.Paging;
 
 namespace PharmaceuticalBank_Core1
 {
@@ -37,7 +38,7 @@ namespace PharmaceuticalBank_Core1
                 .AddRoles<IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
-
+            services.AddMvc();
             services.AddHangfire(x => x.UseSqlServerStorage("Data Source=EC2AMAZ-HUKJBO0;Initial Catalog=pharmabank1;Integrated Security=True"));
             services.AddHangfireServer();
         }

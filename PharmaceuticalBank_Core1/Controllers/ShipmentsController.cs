@@ -37,7 +37,7 @@ namespace PharmaceuticalBank_Core1.Controllers
                         Address = s.ShipperCompany.Address,
                         Name = s.ShipperCompany.Name
                     },
-                    Description = Strings.StrConv(s.GoodsShipped.Substring(0, 150),VbStrConv.ProperCase,0),
+                    Description = Strings.StrConv(s.GoodsShipped.Replace("\"", "'"), VbStrConv.ProperCase,0),
                     Date = s.Date ?? DateTime.Now.AddYears(-3)
                 }).Take(100).ToListAsync();
 
@@ -68,7 +68,7 @@ namespace PharmaceuticalBank_Core1.Controllers
                         Address = s.ShipperCompany.Address,
                         Name = s.ShipperCompany.Name
                     },
-                    Description = Strings.StrConv(s.GoodsShipped.Substring(0, 150), VbStrConv.ProperCase, 0),
+                    Description = Strings.StrConv(s.GoodsShipped.Replace("\"", "'"), VbStrConv.ProperCase, 0),
                     Date = s.Date ?? DateTime.Now.AddYears(-3)
                 }).FirstOrDefaultAsync();
             if (shipmentViewModel == null)

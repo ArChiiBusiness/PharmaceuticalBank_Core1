@@ -32,7 +32,7 @@ namespace PharmaceuticalBank_Core1.Controllers
 
         public IActionResult Index()
         {
-            return RedirectToAction("Shipments","Search",new { q = "pharma" });
+            return RedirectToAction("Shipments","Search",new { q = "pharma", page=1});
         }
 
         public IActionResult PreSearch(string searchtext = default(string), string mode = default(string))

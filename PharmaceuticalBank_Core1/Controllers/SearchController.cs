@@ -19,21 +19,28 @@ namespace PharmaceuticalBank_Core1.Controllers
 
         public IActionResult Index()
         {
-            return RedirectToAction("Shipments");
+            return RedirectToAction("Shipments", "Search", new { q = "pharma", page = 1 });
         }
 
-        public IActionResult Shipments(string q = default(string), int page = 1)
+        public IActionResult Shipments(string q, int page)
         {
+            if (q == null || page < 1)
+            {
+                return RedirectToAction("Shipments", "Search", new { q = "pharma", page = 1 });
+            }
+
             ViewData["TotalShipments"] = 20381; // db.Shipments.Where(s => s.GoodsShipped != null).Count();
             ViewData["TotalBuyers"] = 2818; // db.Shipments.Where(s => s.GoodsShipped != null).Select(b => b.ConsigneeCompanyId).Distinct().Count();
             ViewData["TotalSuppliers"] = 3246; // db.Shipments.Where(s => s.GoodsShipped != null).Select(b => b.ShipperCompanyId).Distinct().Count();
 
             var pageSize = 10;
             var skip = (page - 1) * pageSize;
-            var Shipments = db.Shipments.Where(
+            var Shipments = db.Shipments.AsNoTracking().Where(
                 s => EF.Functions.Like(s.GoodsShipped, "%" + q + "%") && s.GoodsShipped != null
                 && (s.ConsigneeCompanyId != null || s.ShipperCompanyId != null)).OrderByDescending(d => d.Date);
-            ViewData["TotalShipments"] = Shipments.Count();
+            var sCount = Shipments.Count();
+            ViewData["TotalShipments"] = sCount;
+            ViewData["TotalPages"] = Math.Ceiling(double.Parse(sCount.ToString()) / 10);
             var ShipmentsBOL = Shipments.Select(s => new Models.ShipmentViewModel
             {
                 Id = s.Id,
@@ -49,7 +56,7 @@ namespace PharmaceuticalBank_Core1.Controllers
                     Address = s.ShipperCompany.Address,
                     Name = s.ShipperCompany.Name
                 },
-                Description = Strings.StrConv(s.GoodsShipped.Substring(0, 150), VbStrConv.ProperCase, 0),
+                Description = Strings.StrConv(s.GoodsShipped.Replace("\"", "'"), VbStrConv.ProperCase, 0),
                 Date = s.Date ?? DateTime.Now.AddYears(-3)
             }).Skip(skip).Take(pageSize).ToList();
 
@@ -89,8 +96,9 @@ namespace PharmaceuticalBank_Core1.Controllers
             var skip = (page - 1) * pageSize;
 
             var query = db.Shipments.Where(s => EF.Functions.Like(s.GoodsShipped, "%" + q + "%") && s.ShipperCompanyId != null);
-            var CompaniesDAL = (from c in query.Select(cm => new SearchResultViewModel.CompanyViewModel { 
-                Id = cm.ShipperCompany.Id, 
+            var CompaniesDAL = (from c in query.Select(cm => new SearchResultViewModel.CompanyViewModel
+            {
+                Id = cm.ShipperCompany.Id,
                 Name = cm.ShipperCompany.Name,
                 Address = cm.ShipperCompany.Address,
                 Country = cm.ShipperCompany.Country
@@ -103,7 +111,8 @@ namespace PharmaceuticalBank_Core1.Controllers
 
         public IActionResult PreSearchShipments(string q = default(string))
         {
-            var RecsDAL = db.Phrases.Where(p => p.Phrase.StartsWith(q) && (p.BuyerPopularity + p.SellerPopularity) > 0).OrderByDescending(o => (o.BuyerPopularity + o.SellerPopularity)).Select(s => s.Phrase).Take(10).ToArray();
+            var RecsDAL = db.Phrases.Where(p => p.Phrase.StartsWith(q) && (p.BuyerPopularity + p.SellerPopularity) > 0).OrderByDescending(o => (o.BuyerPopularity + o.SellerPopularity)).Select(s => s.Phrase.ToLower()).Take(10).ToArray();
+
             return Json(RecsDAL);
         }
 
