@@ -4,37 +4,48 @@
 
 @model List<ShipmentViewModel>;
 @using Microsoft.VisualBasic;
+@{ var db = new PharmaceuticalBank_Core1.Models.DAL.excelpro_pharmabankContext(); }
 
-<div id="MainFrame" class="pb-5">
+<div id="MainFrame" class="pb-5" v-on:click="recOpened = false">
     <div class="jumbotron jumbotron-fluid m-0 pl-0 pr-0 py-3">
         <div class="container">
             <div class="row mt-3 mb-2 p-3">
                 <div class="col-4 p-1">
-                    @Html.ActionLink("Looking for shipments (" + String.Format("{0:n0}", ViewData["TotalShipments"]) + ")", "Shipments", "Search", null, new { @class = "btn btn-outline-primary btn-block active" })
+                    @Html.ActionLink("Looking for shipments (" + String.Format("{0:n0}", ViewData["TotalShipments"]) + ")", "Shipments", "Search", new { q = Context.Request.Query["q"], page = 1 }, new { @class = "btn btn-outline-primary btn-block active rounded-0", @style="border-radius:0.25em !important;" })
                 </div>
                 <div class="col-4 p-1">
-                    @Html.ActionLink("Looking for buyers (" + String.Format("{0:n0}", ViewData["TotalBuyers"]) + ")", "Buyers", "Search", null, new { @class = "btn btn-outline-primary btn-block" })
+                    @Html.ActionLink("Looking for suppliers (" + String.Format("{0:n0}", ViewData["TotalSuppliers"]) + ")", "Suppliers", "Search", new { q = Context.Request.Query["q"], page = 1 }, new { @class = "btn btn-outline-primary btn-block", @style = "border-radius:0.25em !important;" })
                 </div>
                 <div class="col-4 p-1">
-                    @Html.ActionLink("Looking for suppliers (" + String.Format("{0:n0}", ViewData["TotalSuppliers"]) + ")", "Suppliers", "Search", null, new { @class = "btn btn-outline-primary btn-block" })
+                    @Html.ActionLink("Looking for buyers (" + String.Format("{0:n0}", ViewData["TotalBuyers"]) + ")", "Buyers", "Search", new { q = Context.Request.Query["q"], page = 1 }, new { @class = "btn btn-outline-primary btn-block", @style = "border-radius:0.25em !important;" })
                 </div>
             </div>
 
             <div class="row no-gutters border-0">
                 <div class="col">
-                    <input v-model="searchText" v-on:input="presearch()" class="form-control" type="search" placeholder="Enter a product, product type">
+                    <input v-on:click.stop="recOpened = true" v-model="searchText" v-on:input="presearch(); recOpened = true" class="form-control" type="search" placeholder="Enter a product, product type">
                 </div>
                 <div class="col-auto">
-                    <button v-on:click="search();" class="btn btn-outline-primary rounded-0" type="button">
+                    <button v-on:click="search();" class="btn btn-outline-primary rounded-0 ml-2" type="button">
                         <i class="fa fa-search"></i>
                     </button>
                 </div>
-                <div v-if="searchRecommendations.length > 0" class="col-12 m-0 p-0 bg-white border">
+                <div class="col-12 text-center pt-1">
+                    <span>
+                        Trending searches:
+                        <u>@Html.ActionLink("gabapentin", "Shipments", "Search", new { q = "gabapentin", page = 1 }, new { @class = "text-dark" })</u>,
+                        <u>@Html.ActionLink("amlodipine", "Shipments", "Search", new { q = "amlodipine", page = 1 }, new { @class = "text-dark" })</u>,
+                        <u>@Html.ActionLink("lisinopril", "Shipments", "Search", new { q = "lisinopril", page = 1 }, new { @class = "text-dark" })</u>,
+                        <u>@Html.ActionLink("prednisone", "Shipments", "Search", new { q = "prednisone", page = 1 }, new { @class = "text-dark" })</u>,
+                        <u>@Html.ActionLink("tramadol", "Shipments", "Search", new { q = "tramadol", page = 1 }, new { @class = "text-dark" })</u>
+                    </span>
+                </div>
+                <div v-if="recOpened" class="col-12 m-0 p-0 bg-white border">
                     <ul class="list-unstyled">
                         <li v-for="recommendation in searchRecommendations">
-                            <div v-on:click="searchText = recommendation; search();" class="p-1 search-result-item">
+                            <div v-on:click="searchText = recommendation.phrase; search();" class="p-1 search-result-item">
                                 <i class="fas fa-search text-secondary ml-2 mr-2"></i>
-                                {{recommendation}}
+                                {{recommendation.phrase}}  <span class="float-right mr-3">{{recommendation.count}} shipments found</span>
                             </div>
                         </li>
                     </ul>
@@ -48,51 +59,102 @@
             <div class="col-12 mt-4">
                 <h4>Found @String.Format("{0:n0}", ViewData["TotalShipments"]) shipments</h4>
             </div>
+            @*<div class="col-12">
+                <span>Our last Shipment is on  @ViewData["LastShipmentData"] and we add 'New" badge for all shipments from last 30 days</span>
+            </div>*@
+        </div>
+
+        <div class="row">
+            <form class="w-100" method="post" asp-controller="Search" asp-action="Filter">
+                <input type="hidden" name="page" value="@Context.Request.Query["page"].ToString()" />
+                <input type="hidden" name="q" value="@Context.Request.Query["q"].ToString()" />
+                <div class="form-row">
+                    <div class="col">
+                        Year:
+                        @Html.DropDownList("Year", new List<SelectListItem>
+                            {
+                               new SelectListItem{ Text="All", Value = ""},
+                               new SelectListItem{ Text="2020", Value = "2020", Selected = Context.Request.Query["Year"] == "2020" },
+                               new SelectListItem{ Text="2019", Value = "2019", Selected = Context.Request.Query["Year"] == "2019"},
+                               new SelectListItem{ Text="2018", Value = "2018", Selected = Context.Request.Query["Year"] == "2018"},
+                               new SelectListItem{ Text="2017", Value = "2017", Selected = Context.Request.Query["Year"] == "2017"},
+                               new SelectListItem{ Text="2016", Value = "2016", Selected = Context.Request.Query["Year"] == "2016"},
+                               new SelectListItem{ Text="2015", Value = "2015", Selected = Context.Request.Query["Year"] == "2015"},
+
+                            }, null, new { @class = "form-control" })
+                    </div>
+                    <div class="col">
+                        From country:
+                        <select name="FromCountry" class="form-control">
+                            <option value="">All</option>
+                            <option value="United Stated">United Stated</option>
+                            <option value="Canada">Canada</option>
+                            <option value="China">China</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        To country:
+                        <select name="ToCountry" class="form-control">
+                            <option value="">All</option>
+                            <option value="United Stated">United Stated</option>
+                            <option value="Canada">Canada</option>
+                            <option value="China">China</option>
+                        </select>
+                    </div>
+                    <div class="d-flex align-self-end">
+                        <input type="submit" class="btn btn-primary" value="Filter" />
+                    </div>
+                </div>
+            </form>
         </div>
 
         <div class="row">
             <div class="col-12 mt-4">
-
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead>
                             <tr>
                                 <th scope="col">Date</th>
-                                <th scope="col">Buyer</th>
                                 <th scope="col">Seller</th>
+                                <th scope="col">Buyer</th>
                                 <th scope="col">Shipment description</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var shipment in Model)
                             {
-                                <tr>
-                                    <td scope="col">
-                                        <span>@shipment.Date.ToShortDateString()</span>
-                                    </td>
-                                    @if (shipment.Buyer.Name == null)
-                                    {
-                                        <td scope="col">-</td>
+                            <tr>
+                                <td scope="col">
+                                    <span>
+                                        @shipment.Date.ToShortDateString()
+                                        @if (shipment.Date > DateTime.Now.AddDays(-30))
+                                        {@Html.Raw("<span class='badge badge-primary'>New</span>");
                                     }
-                                    else
-                                    {
-                                        <td scope="col">@Html.ActionLink(shipment.Buyer.Name, "Details", "Companies", new { Id = shipment.Buyer.Id })</td>
-                                    }
-                                    @if (shipment.Seller.Name == null)
-                                    {
-                                        <td scope="col">-</td>
-                                    }
-                                    else
-                                    {
-                                        <td scope="col">@Html.ActionLink(shipment.Seller.Name, "Details", "Companies", new { Id = shipment.Seller.Id })</td>
-                                    }
-                                    <td scope="col">
-                                        <a class="text-dark" href="@Url.Action("Details","Shipments", new { id = shipment.Id, q = Context.Request.Query["q"]})">
-                                            <span v-html='getMarkedHTML("@shipment.Description.Replace("\n","")",150)'></span>
-                                        </a>
-                                        @*@Html.ActionLink(shipment.Description.Replace("Pharma","<b>Pharma</b>"), "Details", "Shipments", new { Id = shipment.Id })*@
-                                    </td>
-                                </tr>
+                                    </span>
+                                </td>
+                                @if (shipment.Seller.Name == null)
+                                {
+                                    <td scope="col">-</td>
+                                }
+                                else
+                                {
+                                    <td scope="col">@Html.ActionLink(shipment.Seller.Name, "Details", "Companies", new { Id = shipment.Seller.Id }) <br />@shipment.Seller.Country </td>
+                                }
+                                @if (shipment.Buyer.Name == null)
+                                {
+                                    <td scope="col">-</td>
+                                }
+                                else
+                                {
+                                    <td scope="col">@Html.ActionLink(shipment.Buyer.Name, "Details", "Companies", new { Id = shipment.Buyer.Id }) <br />@shipment.Buyer.Country</td>
+                                }
+                                <td scope="col">
+                                    <a class="text-dark" href="@Url.Action("Details","Shipments", new { id = shipment.Id, q = Context.Request.Query["q"]})">
+                                        <span v-html='getMarkedHTML("@shipment.Description.Replace("\n","")",150)'></span>
+                                    </a>
+                                    @*@Html.ActionLink(shipment.Description.Replace("Pharma","<b>Pharma</b>"), "Details", "Shipments", new { Id = shipment.Id })*@
+                                </td>
+                            </tr>
                             }
                         </tbody>
                     </table>
@@ -119,8 +181,7 @@
 </div>
 
 @section scripts {
-    <!-- use the latest release -->
-    <script src="https://unpkg.com/vuejs-paginate@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.25.3/moment.min.js" integrity="sha256-C66CaAImteEKZPYvgng9j10J/45e9sAuZyfPYCwp4gE=" crossorigin="anonymous"></script>
     <!-- or use the specify version -->
     <script src="https://unpkg.com/vuejs-paginate@0.9.0"></script>
 
@@ -132,7 +193,8 @@
             data: {
                 searchText: '@Context.Request.Query["q"]',
                 searchRecommendations: [],
-                isAuthenticated: @(User.Identity.IsAuthenticated ? "true" : "false")
+                isAuthenticated: @(User.Identity.IsAuthenticated ? "true" : "false"),
+                recOpened: true
             },
             methods: {
                 clickCallback: function (pageNum) {
@@ -179,6 +241,8 @@
                 }
             },
             created: function () {
+                this.presearch();
+                this.recOpened = false;
             },
             watch: {
             }

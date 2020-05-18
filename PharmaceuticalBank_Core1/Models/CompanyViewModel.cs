@@ -12,6 +12,5 @@ namespace PharmaceuticalBank_Core1.Models
         public String Address { get; set; }
         public String Email { get; set; }
         public String Country { get; set; }
-
     }
 }

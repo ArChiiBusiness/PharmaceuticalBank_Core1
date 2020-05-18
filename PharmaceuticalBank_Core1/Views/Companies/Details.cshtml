@@ -2,53 +2,135 @@
 
 @{
     ViewData["Title"] = "Details";
+    var db = new PharmaceuticalBank_Core1.Models.DAL4.pharmabank1Context();
 }
 
 <div class="container">
+    <div class="row">
+        <div class="col-6">
+            <h1>Details</h1>
+            <div>
+                <h4>Company</h4>
+                <hr />
+                <dl class="row">
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Name)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.Name)
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Address)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.Address)
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Country)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.Country)
+                    </dd>
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Email)
+                    </dt>
+                    <dd class="col-sm-8 text-primary">
+                        @Html.DisplayFor(model => model.Email)
+                    </dd>
+                    <dt class="col-sm-4">
+                        Last shipment
+                    </dt>
+                    <dd class="col-sm-8">
+                        @{ var lShipDate = db.Shipments.Where(s => s.Date.HasValue).Where(s => s.ShipperCompanyId == Model.Id || s.ConsigneeCompanyId == Model.Id)
+                             .OrderByDescending(d => d.Date).Select(d => d.Date).First();
+                            @String.Format("{0:MM/dd/yyyy}", lShipDate)
+                        }
+                    </dd>
+                </dl>
+            </div>
+            @{
+                var ShipmentsQuery = db.Shipments.Where(s => s.ShipperCompanyId == Model.Id || s.ConsigneeCompanyId == Model.Id);
+            }
+            <h5>Total shipments: @ShipmentsQuery.Count()</h5>
+            <ul class="list-unstyled">
+                <li>2020: @ShipmentsQuery.Where(s => s.Date.Value.Year == 2020).Count()</li>
+                <li>2019: @ShipmentsQuery.Where(s => s.Date.Value.Year == 2019).Count()</li>
+                <li>2018: @ShipmentsQuery.Where(s => s.Date.Value.Year == 2018).Count()</li>
+                <li>2017: @ShipmentsQuery.Where(s => s.Date.Value.Year == 2017).Count()</li>
+                <li>2016: @ShipmentsQuery.Where(s => s.Date.Value.Year == 2016).Count()</li>
+                <li>2015: @ShipmentsQuery.Where(s => s.Date.Value.Year == 2015).Count()</li>
+            </ul>
+            <div>
+                <input type="button" class="btn btn-outline-success contactBtn" value="Connect with company" />
+                <input type="button" onclick="history.go(-1)" class="btn btn-outline-primary" value="Back" />
+            </div>
 
-    <h1>Details</h1>
-
-    <div>
-        <h4>Company</h4>
-        <hr />
-        <dl class="row">
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Name)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Name)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Address)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Address)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Email)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Email)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Country)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Country)
-            </dd>
-        </dl>
-    </div>
-    <div>
-        <input type="button" class="btn btn-outline-success contactBtn" value="Contact" />
-        <input type="button" onclick="history.go(-1)" class="btn btn-outline-primary" value="Back" />
+        </div>
+        <div class="col-6">
+            @{
+                var PartnerListBuyers = ShipmentsQuery.Where(s => s.ShipperCompanyId == Model.Id && s.ConsigneeCompany.Name.Length > 0)
+                    .Select(p => p.ConsigneeCompany.Name).Distinct()
+                    .Select(p => new
+                    {
+                        Partner = db.Companies.Where(c => c.Name == p).First(),
+                        PartnerId = db.Companies.Where(c => c.Name == p).Select(c => c.Id).First(),
+                        Count = ShipmentsQuery.Where(s => s.ConsigneeCompany.Name == p).Count()
+                    }).OrderByDescending(o => o.Count).Take(10).ToList();
+                var PartnerListSellers = ShipmentsQuery.Where(s => s.ConsigneeCompanyId == Model.Id && s.ShipperCompany.Name.Length > 0)
+                    .Select(p => p.ShipperCompany.Name).Distinct()
+                    .Select(p => new
+                    {
+                        Partner = db.Companies.Where(c => c.Name == p).First(),
+                        PartnerId = db.Companies.Where(c => c.Name == p).Select(c => c.Id).First(),
+                        Count = ShipmentsQuery.Where(s => s.ShipperCompany.Name == p).Count()
+                    }).OrderByDescending(o => o.Count).Take(10).ToList();
+            }
+            <h1>Partners</h1>
+            <div>
+                <h4>Company partner list</h4>
+                <hr />
+                @{ if (PartnerListBuyers.Count > 0)
+                    { <h5>Sold To (Top 10 by shipment count):</h5>} }
+                <dl class="row mt-4">
+                    @foreach (var partner in PartnerListBuyers)
+                    {
+                    <dt class="col-sm-8">
+                        @Html.ActionLink(partner.Partner.Name, "Details", "Companies", new { Id = partner.PartnerId }) @partner.Partner.Country
+                    </dt>
+                        <dd class="col-sm-4">
+                            @partner.Count shipments
+                        </dd>
+                    }
+                </dl>
+                <hr />
+                @{ if (PartnerListSellers.Count > 0)
+                    { <h5>Bought From (Top 10 by shipment count):</h5>} }
+                <dl class="row mt-4">
+                    @foreach (var partner in PartnerListSellers)
+                    {
+                        <dt class="col-sm-8">
+                            @Html.ActionLink(partner.Partner.Name, "Details", "Companies", new { Id = partner.PartnerId }) @partner.Partner.Country
+                        </dt>
+                        <dd class="col-sm-4">
+                            @partner.Count shipments
+                        </dd>
+                    }
+                </dl>
+            </div>
+        </div>
     </div>
 </div>
 
 @section scripts {
     <script type="text/javascript">
         $(document).ready(function () {
+            var loggedIn = '@Context.User.Identity.IsAuthenticated';
             $(".contactBtn").click(function () {
-                $(".contactBtn").val("Request sent!");
+                if (loggedIn == 'True') {
+                    $(".contactBtn").val("Request sent!");
+                } else {
+                    $(".contactBtn").val("Login to send request!");
+                }
             });
         });
     </script>

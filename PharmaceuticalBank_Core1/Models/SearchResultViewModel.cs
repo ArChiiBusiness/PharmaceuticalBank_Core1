@@ -13,7 +13,7 @@ namespace PharmaceuticalBank_Core1.Models
             public String Name { get; set; }
             public String Address { get; set; }
             public String Country { get; set; }
-
+            public String Phone { get; set; }
 
         }
 

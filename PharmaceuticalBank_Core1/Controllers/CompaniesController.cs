@@ -41,12 +41,17 @@ namespace PharmaceuticalBank_Core1.Controllers
                 .Select(c => new CompanyViewModel
                 {
                     Id = c.Id,
-                    Address = c.Address,
+                    Address = c.Address + ", " + c.City + ", " + c.StateRegion,
                     Email = c.Email1,
                     Name = c.Name,
                     Country = c.Country
                 }
                 ).FirstOrDefaultAsync();
+
+            if (CompanyBOL.Email == null)
+            {
+                CompanyBOL.Email = "Not disclosed";
+            }
 
             if (CompanyBOL == null)
             {

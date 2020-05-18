@@ -60,13 +60,15 @@ namespace PharmaceuticalBank_Core1.Controllers
                     {
                         Id = s.ConsigneeCompany.Id,
                         Address = s.ConsigneeCompany.Address,
-                        Name = s.ConsigneeCompany.Name
+                        Name = s.ConsigneeCompany.Name,
+                        Country = s.ConsigneeCompany.Country
                     },
                     Seller = new Models.CompanyViewModel
                     {
                         Id = s.ShipperCompany.Id,
                         Address = s.ShipperCompany.Address,
-                        Name = s.ShipperCompany.Name
+                        Name = s.ShipperCompany.Name,
+                        Country = s.ShipperCompany.Country
                     },
                     Description = Strings.StrConv(s.GoodsShipped.Replace("\"", "'"), VbStrConv.ProperCase, 0),
                     Date = s.Date ?? DateTime.Now.AddYears(-3)
