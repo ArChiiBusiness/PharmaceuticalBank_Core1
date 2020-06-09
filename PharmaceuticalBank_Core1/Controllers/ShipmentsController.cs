@@ -37,8 +37,8 @@ namespace PharmaceuticalBank_Core1.Controllers
                         Address = s.ShipperCompany.Address,
                         Name = s.ShipperCompany.Name
                     },
-                    Description = Strings.StrConv(s.GoodsShipped.Replace("\"", "'"), VbStrConv.ProperCase,0),
-                    Date = s.Date ?? DateTime.Now.AddYears(-3)
+                    Description = Strings.StrConv(s.GoodsShipped.Replace("\"", "'"), VbStrConv.ProperCase, 0),
+                    Date =  s.Date
                 }).Take(100).ToListAsync();
 
             return View(ShipmentsBOL);
@@ -59,20 +59,37 @@ namespace PharmaceuticalBank_Core1.Controllers
                     Buyer = new Models.CompanyViewModel
                     {
                         Id = s.ConsigneeCompany.Id,
-                        Address = s.ConsigneeCompany.Address,
-                        Name = s.ConsigneeCompany.Name,
-                        Country = s.ConsigneeCompany.Country
+                        Address = "",
+                        Name = "",
+                        Country = ""
                     },
                     Seller = new Models.CompanyViewModel
                     {
                         Id = s.ShipperCompany.Id,
-                        Address = s.ShipperCompany.Address,
-                        Name = s.ShipperCompany.Name,
-                        Country = s.ShipperCompany.Country
+                        Address = "",
+                        Name = "",
+                        Country = ""
                     },
                     Description = Strings.StrConv(s.GoodsShipped.Replace("\"", "'"), VbStrConv.ProperCase, 0),
-                    Date = s.Date ?? DateTime.Now.AddYears(-3)
+                    Date = s.Date
                 }).FirstOrDefaultAsync();
+
+            if (shipmentViewModel.Buyer.Id != default(Guid))
+            {
+                var buyer = db.Companies.Where(c => c.Id == shipmentViewModel.Buyer.Id).FirstOrDefault();
+                shipmentViewModel.Buyer.Address = buyer.Address;
+                shipmentViewModel.Buyer.Name = buyer.Name;
+                shipmentViewModel.Buyer.Country = buyer.Country;
+            }
+
+            if (shipmentViewModel.Seller.Id != default(Guid))
+            {
+                var seller = db.Companies.Where(c => c.Id == shipmentViewModel.Seller.Id).FirstOrDefault();
+                shipmentViewModel.Seller.Address = seller.Address;
+                shipmentViewModel.Seller.Name = seller.Name;
+                shipmentViewModel.Seller.Country = seller.Country;
+            }
+
             if (shipmentViewModel == null)
             {
                 return NotFound();

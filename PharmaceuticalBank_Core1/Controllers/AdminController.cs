@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
 using Hangfire;
+using Microsoft.AspNetCore.Identity.UI.V3.Pages.Internal.Account;
+using Microsoft.AspNetCore.StaticFiles.Infrastructure;
 
 namespace PharmaceuticalBank_Core1.Controllers
 {
@@ -28,114 +30,104 @@ namespace PharmaceuticalBank_Core1.Controllers
             return View();
         }
 
+
+        public void GenerateCompaniesFun()
+        {
+            db.Database.SetCommandTimeout(0);
+
+            var CompaniesDAL = db.Companies.Where(c => c.Name == null)
+                .ToList();
+
+            //var nCompaniesDAL = new List<Companies>();
+
+            foreach (var c in CompaniesDAL)
+            {
+                var ship = db.Shipments.Where(s => s.ConsigneeProfile == c.Profile).FirstOrDefault();
+                var ship2 = db.Shipments.Where(s => s.ShipperProfile == c.Profile).FirstOrDefault();
+                if (ship != null)
+                {
+                    c.Name = ship.Consignee;
+                    c.Address = ship.ConsigneeAddress;
+                    c.City = ship.ConsigneeCity;
+                    c.StateRegion = ship.ConsigneeStateRegion;
+                    c.PostalCode = ship.ConsigneePostalCode;
+                    c.Country = ship.ConsigneeCountry;
+                    c.FullAddress = ship.ConsigneeFullAddress;
+                    c.Email1 = ship.ConsigneeEmail1;
+                    c.Email2 = ship.ConsigneeEmail2;
+                    c.Email3 = ship.ConsigneeEmail3;
+                    c.Phone1 = ship.ConsigneePhone1;
+                    c.Phone2 = ship.ConsigneePhone2;
+                    c.Phone3 = ship.ConsigneePhone3;
+                    c.Fax = ship.ConsigneeFax;
+                    c.Website1 = ship.ConsigneeWebsite1;
+                    c.Website2 = ship.ConsigneeWebsite2;
+                    c.Dunsa = ship.ConsigneeDUNSâ;
+                    c.Industry = ship.ConsigneeIndustry;
+                    c.Profile = ship.ConsigneeProfile;
+                    c.Revenue = ship.ConsigneeRevenue;
+                    c.Employees = ship.ConsigneeEmployees;
+                    c.MarketCapitalization = ship.ConsigneeMarketCapitalization;
+                    c.TradeRoles = ship.ConsigneeTradeRoles;
+                    c.Siccodes = ship.ConsigneeSicCodes;
+                    c.StockTickers = ship.ConsigneeStockTickers;
+                    c.UltimateParent = ship.ConsigneeUltimateParent;
+                    c.UltimateParentWebsite = ship.ConsigneeUltimateParentWebsite;
+                    c.UltimateParentHeadquartersAddress = ship.ConsigneeUltimateParentHeadquartersAddress;
+                    c.UltimateParentProfile = ship.ConsigneeUltimateParentProfile;
+                    c.UltimateParentStockTickers = ship.ConsigneeUltimateParentStockTickers;
+                    db.SaveChanges();
+                }
+
+                if (ship2 != null)
+                {
+                    c.Name = ship2.Shipper;
+                    c.Address = ship2.ShipperAddress;
+                    c.City = ship2.ShipperCity;
+                    c.StateRegion = ship2.ShipperStateRegion;
+                    c.PostalCode = ship2.ShipperPostalCode;
+                    c.Country = ship2.ShipperCountry;
+                    c.FullAddress = ship2.ShipperFullAddress;
+                    c.Email1 = ship2.ShipperEmail1;
+                    c.Email2 = ship2.ShipperEmail2;
+                    c.Email3 = ship2.ShipperEmail3;
+                    c.Phone1 = ship2.ShipperPhone1;
+                    c.Phone2 = ship2.ShipperPhone2;
+                    c.Phone3 = ship2.ShipperPhone3;
+                    c.Fax = ship2.ShipperFax;
+                    c.Website1 = ship2.ShipperWebsite1;
+                    c.Website2 = ship2.ShipperWebsite2;
+                    c.Dunsa = ship2.ShipperDUNSâ;
+                    c.Industry = ship2.ShipperIndustry;
+                    c.Profile = ship2.ShipperProfile;
+                    c.Revenue = ship2.ShipperRevenue;
+                    c.Employees = ship2.ShipperEmployees;
+                    c.MarketCapitalization = ship2.ShipperMarketCapitalization;
+                    c.TradeRoles = ship2.ShipperTradeRoles;
+                    c.Siccodes = ship2.ShipperSicCodes;
+                    c.StockTickers = ship2.ShipperStockTickers;
+                    c.UltimateParent = ship2.ShipperUltimateParent;
+                    c.UltimateParentWebsite = ship2.ShipperUltimateParentWebsite;
+                    c.UltimateParentHeadquartersAddress = ship2.ShipperUltimateParentHeadquartersAddress;
+                    c.UltimateParentProfile = ship2.ShipperUltimateParentProfile;
+                    c.UltimateParentStockTickers = ship2.ShipperUltimateParentStockTickers;
+                    db.SaveChanges();
+                }
+
+            }
+
+            return;
+        }
+
         public IActionResult GenerateCompanies()
         {
-
-            var CompaniesDAL = db.Companies.AsNoTracking()
-                .Select(c => new
-                {
-                    Profile = c.Profile
-                }).ToList();
-
-            var nCompaniesDAL = new List<Companies>();
-
-            var SellersDAL = db.Shipments.Where(s => s.Shipper != null && s.ShipperProfile != null)
-                .Select(c => new Companies()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = c.Shipper,
-                    Address = c.ShipperAddress,
-                    City = c.ShipperCity,
-                    StateRegion = c.ShipperStateRegion,
-                    PostalCode = c.ShipperPostalCode,
-                    Country = c.ShipperCountry,
-                    FullAddress = c.ShipperFullAddress,
-                    Email1 = c.ShipperEmail1,
-                    Email2 = c.ShipperEmail2,
-                    Email3 = c.ShipperEmail3,
-                    Phone1 = c.ShipperPhone1,
-                    Phone2 = c.ShipperPhone2,
-                    Phone3 = c.ShipperPhone3,
-                    Fax = c.ShipperFax,
-                    Website1 = c.ShipperWebsite1,
-                    Website2 = c.ShipperWebsite2,
-                    Dunsa = c.ShipperDUNSâ,
-                    Industry = c.ShipperIndustry,
-                    Profile = c.ShipperProfile,
-                    Revenue = c.ShipperRevenue,
-                    Employees = c.ShipperEmployees,
-                    //MarketCapitalization = c.ShipperMarketCapitalization,
-                    TradeRoles = c.ShipperTradeRoles,
-                    Siccodes = c.ShipperSicCodes,
-                    StockTickers = c.ShipperStockTickers,
-                    UltimateParent = c.ShipperUltimateParent,
-                    UltimateParentWebsite = c.ShipperUltimateParentWebsite,
-                    UltimateParentHeadquartersAddress = c.ShipperUltimateParentHeadquartersAddress,
-                    UltimateParentProfile = c.ShipperUltimateParentProfile,
-                    UltimateParentStockTickers = c.ShipperUltimateParentStockTickers
-                }).Distinct().ToList();
-
-            foreach (var SellerDAL in SellersDAL)
-            {
-                if (!CompaniesDAL.Where(c => c.Profile == SellerDAL.Profile).Any() && !nCompaniesDAL.Where(c => c.Profile == SellerDAL.Profile).Any())
-                {
-                    nCompaniesDAL.Add(SellerDAL);
-                }
-            }
-
-            var BuyersDAL = db.Shipments.Where(s => s.Consignee != null && s.ConsigneeProfile != null)
-               .Select(c => new Companies()
-               {
-                   Id = Guid.NewGuid(),
-                   Name = c.Consignee,
-                   Address = c.ConsigneeAddress,
-                   City = c.ConsigneeCity,
-                   StateRegion = c.ConsigneeStateRegion,
-                   PostalCode = c.ConsigneePostalCode,
-                   Country = c.ConsigneeCountry,
-                   FullAddress = c.ConsigneeFullAddress,
-                   Email1 = c.ConsigneeEmail1,
-                   Email2 = c.ConsigneeEmail2,
-                   Email3 = c.ConsigneeEmail3,
-                   Phone1 = c.ConsigneePhone1,
-                   Phone2 = c.ConsigneePhone2,
-                   Phone3 = c.ConsigneePhone3,
-                   Fax = c.ConsigneeFax,
-                   Website1 = c.ConsigneeWebsite1,
-                   Website2 = c.ConsigneeWebsite2,
-                   Dunsa = c.ConsigneeDUNSâ,
-                   Industry = c.ConsigneeIndustry,
-                   Profile = c.ConsigneeProfile,
-                   //Revenue = c.ConsigneeRevenue,
-                   Employees = c.ConsigneeEmployees,
-                   //MarketCapitalization = c.ConsigneeMarketCapitalization,
-                   TradeRoles = c.ConsigneeTradeRoles,
-                   Siccodes = c.ConsigneeSicCodes,
-                   StockTickers = c.ConsigneeStockTickers,
-                   UltimateParent = c.ConsigneeUltimateParent,
-                   UltimateParentWebsite = c.ConsigneeUltimateParentWebsite,
-                   UltimateParentHeadquartersAddress = c.ConsigneeUltimateParentHeadquartersAddress,
-                   UltimateParentProfile = c.ConsigneeUltimateParentProfile,
-                   UltimateParentStockTickers = c.ConsigneeUltimateParentStockTickers
-               }).Distinct().ToList();
-
-            foreach (var BuyerDAL in BuyersDAL)
-            {
-                if (!CompaniesDAL.Where(c => c.Profile == BuyerDAL.Profile).Any() && !nCompaniesDAL.Where(c => c.Profile == BuyerDAL.Profile).Any())
-                {
-                    nCompaniesDAL.Add(BuyerDAL);
-                }
-            }
-
-            db.Companies.AddRange(nCompaniesDAL);
-            db.SaveChanges();
-
+            BackgroundJob.Enqueue(() => GenerateCompaniesFun());
             return RedirectToAction("Index");
-
         }
 
         public IActionResult DeleteCompanies()
         {
+            db.Database.SetCommandTimeout(5000);
             db.Database.ExecuteSqlRaw("UPDATE Shipments SET ShipperCompanyId = NULL");
             db.Database.ExecuteSqlRaw("UPDATE Shipments SET ConsigneeCompanyId = NULL");
             var rows = db.Database.ExecuteSqlRaw("DELETE FROM Companies");

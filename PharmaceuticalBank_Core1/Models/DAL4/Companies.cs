@@ -31,9 +31,9 @@ namespace PharmaceuticalBank_Core1.Models.DAL4
         public string Profile { get; set; }
         public string Dunsa { get; set; }
         public string Industry { get; set; }
-        public double? Revenue { get; set; }
-        public double? Employees { get; set; }
-        public double? MarketCapitalization { get; set; }
+        public string Revenue { get; set; }
+        public string Employees { get; set; }
+        public string MarketCapitalization { get; set; }
         public string TradeRoles { get; set; }
         public string Siccodes { get; set; }
         public string StockTickers { get; set; }

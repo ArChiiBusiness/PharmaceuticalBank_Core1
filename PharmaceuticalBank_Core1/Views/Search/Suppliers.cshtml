@@ -72,7 +72,11 @@
                                 <td scope="col">@c.Count</td>
                                 <td scope="col">@c.Company.Country</td>
                                 <td scope="col">@c.Company.Address</td>
-                                <td scope="col">@c.Company.Phone</td>
+                                @{
+                                    decimal d;
+                                    decimal.TryParse(c.Company.Phone, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d);
+                                }
+                                <td scope="col">@d</td>
                             </tr>
                             }
 

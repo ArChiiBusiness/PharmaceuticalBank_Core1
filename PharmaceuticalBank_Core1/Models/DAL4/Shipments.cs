@@ -5,9 +5,8 @@ namespace PharmaceuticalBank_Core1.Models.DAL4
 {
     public partial class Shipments
     {
-        public Guid Id { get; set; }
         public string Type { get; set; }
-        public DateTime? Date { get; set; }
+        public DateTime Date { get; set; }
         public string MatchingFields { get; set; }
         public string Consignee { get; set; }
         public string ConsigneeAddress { get; set; }
@@ -28,9 +27,9 @@ namespace PharmaceuticalBank_Core1.Models.DAL4
         public string ConsigneeProfile { get; set; }
         public string ConsigneeDUNSâ { get; set; }
         public string ConsigneeIndustry { get; set; }
-        public double? ConsigneeRevenue { get; set; }
-        public double? ConsigneeEmployees { get; set; }
-        public double? ConsigneeMarketCapitalization { get; set; }
+        public string ConsigneeRevenue { get; set; }
+        public string ConsigneeEmployees { get; set; }
+        public string ConsigneeMarketCapitalization { get; set; }
         public string ConsigneeTradeRoles { get; set; }
         public string ConsigneeSicCodes { get; set; }
         public string ConsigneeStockTickers { get; set; }
@@ -58,8 +57,8 @@ namespace PharmaceuticalBank_Core1.Models.DAL4
         public string ShipperProfile { get; set; }
         public string ShipperDUNSâ { get; set; }
         public string ShipperIndustry { get; set; }
-        public double? ShipperRevenue { get; set; }
-        public double? ShipperEmployees { get; set; }
+        public string ShipperRevenue { get; set; }
+        public string ShipperEmployees { get; set; }
         public string ShipperMarketCapitalization { get; set; }
         public string ShipperTradeRoles { get; set; }
         public string ShipperSicCodes { get; set; }
@@ -82,13 +81,14 @@ namespace PharmaceuticalBank_Core1.Models.DAL4
         public string HsCode { get; set; }
         public string GoodsShipped { get; set; }
         public string IsContainerized { get; set; }
-        public double? VolumeTeu { get; set; }
-        public double? WeightKg { get; set; }
-        public double? ValueUsd { get; set; }
+        public string VolumeTeu { get; set; }
+        public string WeightKg { get; set; }
+        public string ValueUsd { get; set; }
         public string DataSource { get; set; }
         public string DataSourceTradeDirection { get; set; }
-        public Guid? ShipperCompanyId { get; set; }
+        public Guid Id { get; set; }
         public Guid? ConsigneeCompanyId { get; set; }
+        public Guid? ShipperCompanyId { get; set; }
 
         public virtual Companies ConsigneeCompany { get; set; }
         public virtual Companies ShipperCompany { get; set; }

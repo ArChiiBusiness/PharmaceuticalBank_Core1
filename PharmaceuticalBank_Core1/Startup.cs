@@ -39,7 +39,7 @@ namespace PharmaceuticalBank_Core1
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddMvc();
-            services.AddHangfire(x => x.UseSqlServerStorage("Data Source=EC2AMAZ-HUKJBO0;Initial Catalog=pharmabank1;Integrated Security=True"));
+            services.AddHangfire(x => x.UseSqlServerStorage("Data Source=pharmabank.czzyzybsig59.us-east-1.rds.amazonaws.com;Initial Catalog=pb2;User ID=admin;Password=pharma111"));
             services.AddHangfireServer();
         }
 

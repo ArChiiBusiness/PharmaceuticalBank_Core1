@@ -11,7 +11,7 @@
         <div class="container">
             <div class="row mt-3 mb-2 p-3">
                 <div class="col-4 p-1">
-                    @Html.ActionLink("Looking for shipments (" + String.Format("{0:n0}", ViewData["TotalShipments"]) + ")", "Shipments", "Search", new { q = Context.Request.Query["q"], page = 1 }, new { @class = "btn btn-outline-primary btn-block active rounded-0", @style="border-radius:0.25em !important;" })
+                    @Html.ActionLink("Looking for shipments (" + String.Format("{0:n0}", ViewData["TotalShipments"]) + ")", "Shipments", "Search", new { q = Context.Request.Query["q"], page = 1 }, new { @class = "btn btn-outline-primary btn-block active rounded-0", @style = "border-radius:0.25em !important;" })
                 </div>
                 <div class="col-4 p-1">
                     @Html.ActionLink("Looking for suppliers (" + String.Format("{0:n0}", ViewData["TotalSuppliers"]) + ")", "Suppliers", "Search", new { q = Context.Request.Query["q"], page = 1 }, new { @class = "btn btn-outline-primary btn-block", @style = "border-radius:0.25em !important;" })
@@ -60,8 +60,8 @@
                 <h4>Found @String.Format("{0:n0}", ViewData["TotalShipments"]) shipments</h4>
             </div>
             @*<div class="col-12">
-                <span>Our last Shipment is on  @ViewData["LastShipmentData"] and we add 'New" badge for all shipments from last 30 days</span>
-            </div>*@
+                    <span>Our last Shipment is on  @ViewData["LastShipmentData"] and we add 'New" badge for all shipments from last 30 days</span>
+                </div>*@
         </div>
 
         <div class="row">
@@ -85,21 +85,249 @@
                     </div>
                     <div class="col">
                         From country:
-                        <select name="FromCountry" class="form-control">
-                            <option value="">All</option>
-                            <option value="United Stated">United Stated</option>
-                            <option value="Canada">Canada</option>
-                            <option value="China">China</option>
-                        </select>
+                        @Html.DropDownList("FromCountry", new List<SelectListItem>
+                            {
+                               new SelectListItem{ Text="All", Value = ""},
+                               new SelectListItem{ Text="American Samoa", Value = "American Samoa", Selected = Context.Request.Query["FromCountry"] == "American%20Samoa" },
+                            new SelectListItem{ Text="Anguilla", Value = "Anguilla", Selected = Context.Request.Query["FromCountry"] == "Anguilla" },
+                            new SelectListItem{ Text="Argentina", Value = "Argentina", Selected = Context.Request.Query["FromCountry"] == "Argentina" },
+                            new SelectListItem{ Text="Aruba", Value = "Aruba", Selected = Context.Request.Query["FromCountry"] == "Aruba" },
+                            new SelectListItem{ Text="Australia", Value = "Australia", Selected = Context.Request.Query["FromCountry"] == "Australia" },
+                            new SelectListItem{ Text="Austria", Value = "Austria", Selected = Context.Request.Query["FromCountry"] == "Austria" },
+                            new SelectListItem{ Text="Bahamas", Value = "Bahamas", Selected = Context.Request.Query["FromCountry"] == "Bahamas" },
+                            new SelectListItem{ Text="Bangladesh", Value = "Bangladesh", Selected = Context.Request.Query["FromCountry"] == "Bangladesh" },
+                            new SelectListItem{ Text="Barbados", Value = "Barbados", Selected = Context.Request.Query["FromCountry"] == "Barbados" },
+                            new SelectListItem{ Text="Belgium", Value = "Belgium", Selected = Context.Request.Query["FromCountry"] == "Belgium" },
+                            new SelectListItem{ Text="Belize", Value = "Belize", Selected = Context.Request.Query["FromCountry"] == "Belize" },
+                            new SelectListItem{ Text="Bermuda", Value = "Bermuda", Selected = Context.Request.Query["FromCountry"] == "Bermuda" },
+                            new SelectListItem{ Text="Bolivia", Value = "Bolivia", Selected = Context.Request.Query["FromCountry"] == "Bolivia" },
+                            new SelectListItem{ Text="Brazil", Value = "Brazil", Selected = Context.Request.Query["FromCountry"] == "Brazil" },
+                            new SelectListItem{ Text="Cambodia", Value = "Cambodia", Selected = Context.Request.Query["FromCountry"] == "Cambodia" },
+                            new SelectListItem{ Text="Canada", Value = "Canada", Selected = Context.Request.Query["FromCountry"] == "Canada" },
+                            new SelectListItem{ Text="Cayman Islands", Value = "Cayman Islands", Selected = Context.Request.Query["FromCountry"] == "Cayman%20Islands" },
+                            new SelectListItem{ Text="Chile", Value = "Chile", Selected = Context.Request.Query["FromCountry"] == "Chile" },
+                            new SelectListItem{ Text="China", Value = "China", Selected = Context.Request.Query["FromCountry"] == "China" },
+                            new SelectListItem{ Text="Colombia", Value = "Colombia", Selected = Context.Request.Query["FromCountry"] == "Colombia" },
+                            new SelectListItem{ Text="Comoros", Value = "Comoros", Selected = Context.Request.Query["FromCountry"] == "Comoros" },
+                            new SelectListItem{ Text="Costa Rica", Value = "Costa Rica", Selected = Context.Request.Query["FromCountry"] == "Costa%20Rica" },
+                            new SelectListItem{ Text="Croatia", Value = "Croatia", Selected = Context.Request.Query["FromCountry"] == "Croatia" },
+                            new SelectListItem{ Text="Cyprus", Value = "Cyprus", Selected = Context.Request.Query["FromCountry"] == "Cyprus" },
+                            new SelectListItem{ Text="Czech Republic", Value = "Czech Republic", Selected = Context.Request.Query["FromCountry"] == "Czech%20Republic" },
+                            new SelectListItem{ Text="Denmark", Value = "Denmark", Selected = Context.Request.Query["FromCountry"] == "Denmark" },
+                            new SelectListItem{ Text="Dominica", Value = "Dominica", Selected = Context.Request.Query["FromCountry"] == "Dominica" },
+                            new SelectListItem{ Text="Dominican Republic", Value = "Dominican Republic", Selected = Context.Request.Query["FromCountry"] == "Dominican%20Republic" },
+                            new SelectListItem{ Text="Ecuador", Value = "Ecuador", Selected = Context.Request.Query["FromCountry"] == "Ecuador" },
+                            new SelectListItem{ Text="Egypt", Value = "Egypt", Selected = Context.Request.Query["FromCountry"] == "Egypt" },
+                            new SelectListItem{ Text="El Salvador", Value = "El Salvador", Selected = Context.Request.Query["FromCountry"] == "El%20Salvador" },
+                            new SelectListItem{ Text="Estonia", Value = "Estonia", Selected = Context.Request.Query["FromCountry"] == "Estonia" },
+                            new SelectListItem{ Text="Ethiopia", Value = "Ethiopia", Selected = Context.Request.Query["FromCountry"] == "Ethiopia" },
+                            new SelectListItem{ Text="Finland", Value = "Finland", Selected = Context.Request.Query["FromCountry"] == "Finland" },
+                            new SelectListItem{ Text="France", Value = "France", Selected = Context.Request.Query["FromCountry"] == "France" },
+                            new SelectListItem{ Text="French Polynesia", Value = "French Polynesia", Selected = Context.Request.Query["FromCountry"] == "French%20Polynesia" },
+                            new SelectListItem{ Text="Georgia", Value = "Georgia", Selected = Context.Request.Query["FromCountry"] == "Georgia" },
+                            new SelectListItem{ Text="Germany", Value = "Germany", Selected = Context.Request.Query["FromCountry"] == "Germany" },
+                            new SelectListItem{ Text="Ghana", Value = "Ghana", Selected = Context.Request.Query["FromCountry"] == "Ghana" },
+                            new SelectListItem{ Text="Grenada", Value = "Grenada", Selected = Context.Request.Query["FromCountry"] == "Grenada" },
+                            new SelectListItem{ Text="Guam", Value = "Guam", Selected = Context.Request.Query["FromCountry"] == "Guam" },
+                            new SelectListItem{ Text="Guatemala", Value = "Guatemala", Selected = Context.Request.Query["FromCountry"] == "Guatemala" },
+                            new SelectListItem{ Text="Guyana", Value = "Guyana", Selected = Context.Request.Query["FromCountry"] == "Guyana" },
+                            new SelectListItem{ Text="Haiti", Value = "Haiti", Selected = Context.Request.Query["FromCountry"] == "Haiti" },
+                            new SelectListItem{ Text="Honduras", Value = "Honduras", Selected = Context.Request.Query["FromCountry"] == "Honduras" },
+                            new SelectListItem{ Text="Hong Kong", Value = "Hong Kong", Selected = Context.Request.Query["FromCountry"] == "Hong%20Kong" },
+                            new SelectListItem{ Text="Hungary", Value = "Hungary", Selected = Context.Request.Query["FromCountry"] == "Hungary" },
+                            new SelectListItem{ Text="Iceland", Value = "Iceland", Selected = Context.Request.Query["FromCountry"] == "Iceland" },
+                            new SelectListItem{ Text="India", Value = "India", Selected = Context.Request.Query["FromCountry"] == "India" },
+                            new SelectListItem{ Text="Indonesia", Value = "Indonesia", Selected = Context.Request.Query["FromCountry"] == "Indonesia" },
+                            new SelectListItem{ Text="Iran", Value = "Iran", Selected = Context.Request.Query["FromCountry"] == "Iran" },
+                            new SelectListItem{ Text="Iraq", Value = "Iraq", Selected = Context.Request.Query["FromCountry"] == "Iraq" },
+                            new SelectListItem{ Text="Ireland", Value = "Ireland", Selected = Context.Request.Query["FromCountry"] == "Ireland" },
+                            new SelectListItem{ Text="Israel", Value = "Israel", Selected = Context.Request.Query["FromCountry"] == "Israel" },
+                            new SelectListItem{ Text="Italy", Value = "Italy", Selected = Context.Request.Query["FromCountry"] == "Italy" },
+                            new SelectListItem{ Text="Jamaica", Value = "Jamaica", Selected = Context.Request.Query["FromCountry"] == "Jamaica" },
+                            new SelectListItem{ Text="Japan", Value = "Japan", Selected = Context.Request.Query["FromCountry"] == "Japan" },
+                            new SelectListItem{ Text="Jersey", Value = "Jersey", Selected = Context.Request.Query["FromCountry"] == "Jersey" },
+                            new SelectListItem{ Text="Kuwait", Value = "Kuwait", Selected = Context.Request.Query["FromCountry"] == "Kuwait" },
+                            new SelectListItem{ Text="Latvia", Value = "Latvia", Selected = Context.Request.Query["FromCountry"] == "Latvia" },
+                            new SelectListItem{ Text="Lebanon", Value = "Lebanon", Selected = Context.Request.Query["FromCountry"] == "Lebanon" },
+                            new SelectListItem{ Text="Libya", Value = "Libya", Selected = Context.Request.Query["FromCountry"] == "Libya" },
+                            new SelectListItem{ Text="Lithuania", Value = "Lithuania", Selected = Context.Request.Query["FromCountry"] == "Lithuania" },
+                            new SelectListItem{ Text="Luxembourg", Value = "Luxembourg", Selected = Context.Request.Query["FromCountry"] == "Luxembourg" },
+                            new SelectListItem{ Text="Macau", Value = "Macau", Selected = Context.Request.Query["FromCountry"] == "Macau" },
+                            new SelectListItem{ Text="Madagascar", Value = "Madagascar", Selected = Context.Request.Query["FromCountry"] == "Madagascar" },
+                            new SelectListItem{ Text="Malaysia", Value = "Malaysia", Selected = Context.Request.Query["FromCountry"] == "Malaysia" },
+                            new SelectListItem{ Text="Malta", Value = "Malta", Selected = Context.Request.Query["FromCountry"] == "Malta" },
+                            new SelectListItem{ Text="Mauritius", Value = "Mauritius", Selected = Context.Request.Query["FromCountry"] == "Mauritius" },
+                            new SelectListItem{ Text="Mexico", Value = "Mexico", Selected = Context.Request.Query["FromCountry"] == "Mexico" },
+                            new SelectListItem{ Text="Monaco", Value = "Monaco", Selected = Context.Request.Query["FromCountry"] == "Monaco" },
+                            new SelectListItem{ Text="Netherlands", Value = "Netherlands", Selected = Context.Request.Query["FromCountry"] == "Netherlands" },
+                            new SelectListItem{ Text="New Caledonia", Value = "New Caledonia", Selected = Context.Request.Query["FromCountry"] == "New%20Caledonia" },
+                            new SelectListItem{ Text="New Zealand", Value = "New Zealand", Selected = Context.Request.Query["FromCountry"] == "New%20Zealand" },
+                            new SelectListItem{ Text="Nicaragua", Value = "Nicaragua", Selected = Context.Request.Query["FromCountry"] == "Nicaragua" },
+                            new SelectListItem{ Text="Nigeria", Value = "Nigeria", Selected = Context.Request.Query["FromCountry"] == "Nigeria" },
+                            new SelectListItem{ Text="Norway", Value = "Norway", Selected = Context.Request.Query["FromCountry"] == "Norway" },
+                            new SelectListItem{ Text="NULL", Value = "NULL", Selected = Context.Request.Query["FromCountry"] == "NULL" },
+                            new SelectListItem{ Text="Pakistan", Value = "Pakistan", Selected = Context.Request.Query["FromCountry"] == "Pakistan" },
+                            new SelectListItem{ Text="Palestine", Value = "Palestine", Selected = Context.Request.Query["FromCountry"] == "Palestine" },
+                            new SelectListItem{ Text="Panama", Value = "Panama", Selected = Context.Request.Query["FromCountry"] == "Panama" },
+                            new SelectListItem{ Text="Paraguay", Value = "Paraguay", Selected = Context.Request.Query["FromCountry"] == "Paraguay" },
+                            new SelectListItem{ Text="Peru", Value = "Peru", Selected = Context.Request.Query["FromCountry"] == "Peru" },
+                            new SelectListItem{ Text="Philippines", Value = "Philippines", Selected = Context.Request.Query["FromCountry"] == "Philippines" },
+                            new SelectListItem{ Text="Poland", Value = "Poland", Selected = Context.Request.Query["FromCountry"] == "Poland" },
+                            new SelectListItem{ Text="Portugal", Value = "Portugal", Selected = Context.Request.Query["FromCountry"] == "Portugal" },
+                            new SelectListItem{ Text="Puerto Rico", Value = "Puerto Rico", Selected = Context.Request.Query["FromCountry"] == "Puerto%20Rico" },
+                            new SelectListItem{ Text="Russia", Value = "Russia", Selected = Context.Request.Query["FromCountry"] == "Russia" },
+                            new SelectListItem{ Text="Saint Kitts and Nevis", Value = "Saint Kitts and Nevis", Selected = Context.Request.Query["FromCountry"] == "Saint%20Kitts%20and%20Nevis" },
+                            new SelectListItem{ Text="Saint Martin", Value = "Saint Martin", Selected = Context.Request.Query["FromCountry"] == "Saint%20Martin" },
+                            new SelectListItem{ Text="Saint Vincent and the Grenadines", Value = "Saint Vincent and the Grenadines", Selected = Context.Request.Query["FromCountry"] == "Saint%20Vincent%20and%20the%20Grenadines" },
+                            new SelectListItem{ Text="Saudi Arabia", Value = "Saudi Arabia", Selected = Context.Request.Query["FromCountry"] == "Saudi%20Arabia" },
+                            new SelectListItem{ Text="Serbia", Value = "Serbia", Selected = Context.Request.Query["FromCountry"] == "Serbia" },
+                            new SelectListItem{ Text="Sierra Leone", Value = "Sierra Leone", Selected = Context.Request.Query["FromCountry"] == "Sierra%20Leone" },
+                            new SelectListItem{ Text="Singapore", Value = "Singapore", Selected = Context.Request.Query["FromCountry"] == "Singapore" },
+                            new SelectListItem{ Text="Slovakia", Value = "Slovakia", Selected = Context.Request.Query["FromCountry"] == "Slovakia" },
+                            new SelectListItem{ Text="Slovenia", Value = "Slovenia", Selected = Context.Request.Query["FromCountry"] == "Slovenia" },
+                            new SelectListItem{ Text="South Africa", Value = "South Africa", Selected = Context.Request.Query["FromCountry"] == "South%20Africa" },
+                            new SelectListItem{ Text="South Korea", Value = "South Korea", Selected = Context.Request.Query["FromCountry"] == "South%20Korea" },
+                            new SelectListItem{ Text="Spain", Value = "Spain", Selected = Context.Request.Query["FromCountry"] == "Spain" },
+                            new SelectListItem{ Text="Sri Lanka", Value = "Sri Lanka", Selected = Context.Request.Query["FromCountry"] == "Sri%20Lanka" },
+                            new SelectListItem{ Text="Sweden", Value = "Sweden", Selected = Context.Request.Query["FromCountry"] == "Sweden" },
+                            new SelectListItem{ Text="Switzerland", Value = "Switzerland", Selected = Context.Request.Query["FromCountry"] == "Switzerland" },
+                            new SelectListItem{ Text="Taiwan", Value = "Taiwan", Selected = Context.Request.Query["FromCountry"] == "Taiwan" },
+                            new SelectListItem{ Text="Thailand", Value = "Thailand", Selected = Context.Request.Query["FromCountry"] == "Thailand" },
+                            new SelectListItem{ Text="Trinidad and Tobago", Value = "Trinidad and Tobago", Selected = Context.Request.Query["FromCountry"] == "Trinidad%20and%20Tobago" },
+                            new SelectListItem{ Text="Turkey", Value = "Turkey", Selected = Context.Request.Query["FromCountry"] == "Turkey" },
+                            new SelectListItem{ Text="Ukraine", Value = "Ukraine", Selected = Context.Request.Query["FromCountry"] == "Ukraine" },
+                            new SelectListItem{ Text="United Arab Emirates", Value = "United Arab Emirates", Selected = Context.Request.Query["FromCountry"] == "United%20Arab%20Emirates" },
+                            new SelectListItem{ Text="United Kingdom", Value = "United Kingdom", Selected = Context.Request.Query["FromCountry"] == "United%20Kingdom" },
+                            new SelectListItem{ Text="United States", Value = "United States", Selected = Context.Request.Query["FromCountry"] == "United%20States" },
+                            new SelectListItem{ Text="Uruguay", Value = "Uruguay", Selected = Context.Request.Query["FromCountry"] == "Uruguay" },
+                            new SelectListItem{ Text="Venezuela", Value = "Venezuela", Selected = Context.Request.Query["FromCountry"] == "Venezuela" },
+                            new SelectListItem{ Text="Vietnam", Value = "Vietnam", Selected = Context.Request.Query["FromCountry"] == "Vietnam" },
+                            new SelectListItem{ Text="Zimbabwe", Value = "Zimbabwe", Selected = Context.Request.Query["FromCountry"] == "Zimbabwe" }
+
+                            }, null, new { @class = "form-control" })
                     </div>
                     <div class="col">
                         To country:
-                        <select name="ToCountry" class="form-control">
-                            <option value="">All</option>
-                            <option value="United Stated">United Stated</option>
-                            <option value="Canada">Canada</option>
-                            <option value="China">China</option>
-                        </select>
+                        @Html.DropDownList("ToCountry", new List<SelectListItem>
+                            {
+                               new SelectListItem{ Text="All", Value = ""},
+                               new SelectListItem{ Text="American Samoa", Value = "American Samoa", Selected = Context.Request.Query["ToCountry"] == "American%20Samoa" },
+                            new SelectListItem{ Text="Anguilla", Value = "Anguilla", Selected = Context.Request.Query["ToCountry"] == "Anguilla" },
+                            new SelectListItem{ Text="Argentina", Value = "Argentina", Selected = Context.Request.Query["ToCountry"] == "Argentina" },
+                            new SelectListItem{ Text="Aruba", Value = "Aruba", Selected = Context.Request.Query["ToCountry"] == "Aruba" },
+                            new SelectListItem{ Text="Australia", Value = "Australia", Selected = Context.Request.Query["ToCountry"] == "Australia" },
+                            new SelectListItem{ Text="Austria", Value = "Austria", Selected = Context.Request.Query["ToCountry"] == "Austria" },
+                            new SelectListItem{ Text="Bahamas", Value = "Bahamas", Selected = Context.Request.Query["ToCountry"] == "Bahamas" },
+                            new SelectListItem{ Text="Bangladesh", Value = "Bangladesh", Selected = Context.Request.Query["ToCountry"] == "Bangladesh" },
+                            new SelectListItem{ Text="Barbados", Value = "Barbados", Selected = Context.Request.Query["ToCountry"] == "Barbados" },
+                            new SelectListItem{ Text="Belgium", Value = "Belgium", Selected = Context.Request.Query["ToCountry"] == "Belgium" },
+                            new SelectListItem{ Text="Belize", Value = "Belize", Selected = Context.Request.Query["ToCountry"] == "Belize" },
+                            new SelectListItem{ Text="Bermuda", Value = "Bermuda", Selected = Context.Request.Query["ToCountry"] == "Bermuda" },
+                            new SelectListItem{ Text="Bolivia", Value = "Bolivia", Selected = Context.Request.Query["ToCountry"] == "Bolivia" },
+                            new SelectListItem{ Text="Brazil", Value = "Brazil", Selected = Context.Request.Query["ToCountry"] == "Brazil" },
+                            new SelectListItem{ Text="Cambodia", Value = "Cambodia", Selected = Context.Request.Query["ToCountry"] == "Cambodia" },
+                            new SelectListItem{ Text="Canada", Value = "Canada", Selected = Context.Request.Query["ToCountry"] == "Canada" },
+                            new SelectListItem{ Text="Cayman Islands", Value = "Cayman Islands", Selected = Context.Request.Query["ToCountry"] == "Cayman%20Islands" },
+                            new SelectListItem{ Text="Chile", Value = "Chile", Selected = Context.Request.Query["ToCountry"] == "Chile" },
+                            new SelectListItem{ Text="China", Value = "China", Selected = Context.Request.Query["ToCountry"] == "China" },
+                            new SelectListItem{ Text="Colombia", Value = "Colombia", Selected = Context.Request.Query["ToCountry"] == "Colombia" },
+                            new SelectListItem{ Text="Comoros", Value = "Comoros", Selected = Context.Request.Query["ToCountry"] == "Comoros" },
+                            new SelectListItem{ Text="Costa Rica", Value = "Costa Rica", Selected = Context.Request.Query["ToCountry"] == "Costa%20Rica" },
+                            new SelectListItem{ Text="Croatia", Value = "Croatia", Selected = Context.Request.Query["ToCountry"] == "Croatia" },
+                            new SelectListItem{ Text="Cyprus", Value = "Cyprus", Selected = Context.Request.Query["ToCountry"] == "Cyprus" },
+                            new SelectListItem{ Text="Czech Republic", Value = "Czech Republic", Selected = Context.Request.Query["ToCountry"] == "Czech%20Republic" },
+                            new SelectListItem{ Text="Denmark", Value = "Denmark", Selected = Context.Request.Query["ToCountry"] == "Denmark" },
+                            new SelectListItem{ Text="Dominica", Value = "Dominica", Selected = Context.Request.Query["ToCountry"] == "Dominica" },
+                            new SelectListItem{ Text="Dominican Republic", Value = "Dominican Republic", Selected = Context.Request.Query["ToCountry"] == "Dominican%20Republic" },
+                            new SelectListItem{ Text="Ecuador", Value = "Ecuador", Selected = Context.Request.Query["ToCountry"] == "Ecuador" },
+                            new SelectListItem{ Text="Egypt", Value = "Egypt", Selected = Context.Request.Query["ToCountry"] == "Egypt" },
+                            new SelectListItem{ Text="El Salvador", Value = "El Salvador", Selected = Context.Request.Query["ToCountry"] == "El%20Salvador" },
+                            new SelectListItem{ Text="Estonia", Value = "Estonia", Selected = Context.Request.Query["ToCountry"] == "Estonia" },
+                            new SelectListItem{ Text="Ethiopia", Value = "Ethiopia", Selected = Context.Request.Query["ToCountry"] == "Ethiopia" },
+                            new SelectListItem{ Text="Finland", Value = "Finland", Selected = Context.Request.Query["ToCountry"] == "Finland" },
+                            new SelectListItem{ Text="France", Value = "France", Selected = Context.Request.Query["ToCountry"] == "France" },
+                            new SelectListItem{ Text="French Polynesia", Value = "French Polynesia", Selected = Context.Request.Query["ToCountry"] == "French%20Polynesia" },
+                            new SelectListItem{ Text="Georgia", Value = "Georgia", Selected = Context.Request.Query["ToCountry"] == "Georgia" },
+                            new SelectListItem{ Text="Germany", Value = "Germany", Selected = Context.Request.Query["ToCountry"] == "Germany" },
+                            new SelectListItem{ Text="Ghana", Value = "Ghana", Selected = Context.Request.Query["ToCountry"] == "Ghana" },
+                            new SelectListItem{ Text="Grenada", Value = "Grenada", Selected = Context.Request.Query["ToCountry"] == "Grenada" },
+                            new SelectListItem{ Text="Guam", Value = "Guam", Selected = Context.Request.Query["ToCountry"] == "Guam" },
+                            new SelectListItem{ Text="Guatemala", Value = "Guatemala", Selected = Context.Request.Query["ToCountry"] == "Guatemala" },
+                            new SelectListItem{ Text="Guyana", Value = "Guyana", Selected = Context.Request.Query["ToCountry"] == "Guyana" },
+                            new SelectListItem{ Text="Haiti", Value = "Haiti", Selected = Context.Request.Query["ToCountry"] == "Haiti" },
+                            new SelectListItem{ Text="Honduras", Value = "Honduras", Selected = Context.Request.Query["ToCountry"] == "Honduras" },
+                            new SelectListItem{ Text="Hong Kong", Value = "Hong Kong", Selected = Context.Request.Query["ToCountry"] == "Hong%20Kong" },
+                            new SelectListItem{ Text="Hungary", Value = "Hungary", Selected = Context.Request.Query["ToCountry"] == "Hungary" },
+                            new SelectListItem{ Text="Iceland", Value = "Iceland", Selected = Context.Request.Query["ToCountry"] == "Iceland" },
+                            new SelectListItem{ Text="India", Value = "India", Selected = Context.Request.Query["ToCountry"] == "India" },
+                            new SelectListItem{ Text="Indonesia", Value = "Indonesia", Selected = Context.Request.Query["ToCountry"] == "Indonesia" },
+                            new SelectListItem{ Text="Iran", Value = "Iran", Selected = Context.Request.Query["ToCountry"] == "Iran" },
+                            new SelectListItem{ Text="Iraq", Value = "Iraq", Selected = Context.Request.Query["ToCountry"] == "Iraq" },
+                            new SelectListItem{ Text="Ireland", Value = "Ireland", Selected = Context.Request.Query["ToCountry"] == "Ireland" },
+                            new SelectListItem{ Text="Israel", Value = "Israel", Selected = Context.Request.Query["ToCountry"] == "Israel" },
+                            new SelectListItem{ Text="Italy", Value = "Italy", Selected = Context.Request.Query["ToCountry"] == "Italy" },
+                            new SelectListItem{ Text="Jamaica", Value = "Jamaica", Selected = Context.Request.Query["ToCountry"] == "Jamaica" },
+                            new SelectListItem{ Text="Japan", Value = "Japan", Selected = Context.Request.Query["ToCountry"] == "Japan" },
+                            new SelectListItem{ Text="Jersey", Value = "Jersey", Selected = Context.Request.Query["ToCountry"] == "Jersey" },
+                            new SelectListItem{ Text="Kuwait", Value = "Kuwait", Selected = Context.Request.Query["ToCountry"] == "Kuwait" },
+                            new SelectListItem{ Text="Latvia", Value = "Latvia", Selected = Context.Request.Query["ToCountry"] == "Latvia" },
+                            new SelectListItem{ Text="Lebanon", Value = "Lebanon", Selected = Context.Request.Query["ToCountry"] == "Lebanon" },
+                            new SelectListItem{ Text="Libya", Value = "Libya", Selected = Context.Request.Query["ToCountry"] == "Libya" },
+                            new SelectListItem{ Text="Lithuania", Value = "Lithuania", Selected = Context.Request.Query["ToCountry"] == "Lithuania" },
+                            new SelectListItem{ Text="Luxembourg", Value = "Luxembourg", Selected = Context.Request.Query["ToCountry"] == "Luxembourg" },
+                            new SelectListItem{ Text="Macau", Value = "Macau", Selected = Context.Request.Query["ToCountry"] == "Macau" },
+                            new SelectListItem{ Text="Madagascar", Value = "Madagascar", Selected = Context.Request.Query["ToCountry"] == "Madagascar" },
+                            new SelectListItem{ Text="Malaysia", Value = "Malaysia", Selected = Context.Request.Query["ToCountry"] == "Malaysia" },
+                            new SelectListItem{ Text="Malta", Value = "Malta", Selected = Context.Request.Query["ToCountry"] == "Malta" },
+                            new SelectListItem{ Text="Mauritius", Value = "Mauritius", Selected = Context.Request.Query["ToCountry"] == "Mauritius" },
+                            new SelectListItem{ Text="Mexico", Value = "Mexico", Selected = Context.Request.Query["ToCountry"] == "Mexico" },
+                            new SelectListItem{ Text="Monaco", Value = "Monaco", Selected = Context.Request.Query["ToCountry"] == "Monaco" },
+                            new SelectListItem{ Text="Netherlands", Value = "Netherlands", Selected = Context.Request.Query["ToCountry"] == "Netherlands" },
+                            new SelectListItem{ Text="New Caledonia", Value = "New Caledonia", Selected = Context.Request.Query["ToCountry"] == "New%20Caledonia" },
+                            new SelectListItem{ Text="New Zealand", Value = "New Zealand", Selected = Context.Request.Query["ToCountry"] == "New%20Zealand" },
+                            new SelectListItem{ Text="Nicaragua", Value = "Nicaragua", Selected = Context.Request.Query["ToCountry"] == "Nicaragua" },
+                            new SelectListItem{ Text="Nigeria", Value = "Nigeria", Selected = Context.Request.Query["ToCountry"] == "Nigeria" },
+                            new SelectListItem{ Text="Norway", Value = "Norway", Selected = Context.Request.Query["ToCountry"] == "Norway" },
+                            new SelectListItem{ Text="NULL", Value = "NULL", Selected = Context.Request.Query["ToCountry"] == "NULL" },
+                            new SelectListItem{ Text="Pakistan", Value = "Pakistan", Selected = Context.Request.Query["ToCountry"] == "Pakistan" },
+                            new SelectListItem{ Text="Palestine", Value = "Palestine", Selected = Context.Request.Query["ToCountry"] == "Palestine" },
+                            new SelectListItem{ Text="Panama", Value = "Panama", Selected = Context.Request.Query["ToCountry"] == "Panama" },
+                            new SelectListItem{ Text="Paraguay", Value = "Paraguay", Selected = Context.Request.Query["ToCountry"] == "Paraguay" },
+                            new SelectListItem{ Text="Peru", Value = "Peru", Selected = Context.Request.Query["ToCountry"] == "Peru" },
+                            new SelectListItem{ Text="Philippines", Value = "Philippines", Selected = Context.Request.Query["ToCountry"] == "Philippines" },
+                            new SelectListItem{ Text="Poland", Value = "Poland", Selected = Context.Request.Query["ToCountry"] == "Poland" },
+                            new SelectListItem{ Text="Portugal", Value = "Portugal", Selected = Context.Request.Query["ToCountry"] == "Portugal" },
+                            new SelectListItem{ Text="Puerto Rico", Value = "Puerto Rico", Selected = Context.Request.Query["ToCountry"] == "Puerto%20Rico" },
+                            new SelectListItem{ Text="Russia", Value = "Russia", Selected = Context.Request.Query["ToCountry"] == "Russia" },
+                            new SelectListItem{ Text="Saint Kitts and Nevis", Value = "Saint Kitts and Nevis", Selected = Context.Request.Query["ToCountry"] == "Saint%20Kitts%20and%20Nevis" },
+                            new SelectListItem{ Text="Saint Martin", Value = "Saint Martin", Selected = Context.Request.Query["ToCountry"] == "Saint%20Martin" },
+                            new SelectListItem{ Text="Saint Vincent and the Grenadines", Value = "Saint Vincent and the Grenadines", Selected = Context.Request.Query["ToCountry"] == "Saint%20Vincent%20and%20the%20Grenadines" },
+                            new SelectListItem{ Text="Saudi Arabia", Value = "Saudi Arabia", Selected = Context.Request.Query["ToCountry"] == "Saudi%20Arabia" },
+                            new SelectListItem{ Text="Serbia", Value = "Serbia", Selected = Context.Request.Query["ToCountry"] == "Serbia" },
+                            new SelectListItem{ Text="Sierra Leone", Value = "Sierra Leone", Selected = Context.Request.Query["ToCountry"] == "Sierra%20Leone" },
+                            new SelectListItem{ Text="Singapore", Value = "Singapore", Selected = Context.Request.Query["ToCountry"] == "Singapore" },
+                            new SelectListItem{ Text="Slovakia", Value = "Slovakia", Selected = Context.Request.Query["ToCountry"] == "Slovakia" },
+                            new SelectListItem{ Text="Slovenia", Value = "Slovenia", Selected = Context.Request.Query["ToCountry"] == "Slovenia" },
+                            new SelectListItem{ Text="South Africa", Value = "South Africa", Selected = Context.Request.Query["ToCountry"] == "South%20Africa" },
+                            new SelectListItem{ Text="South Korea", Value = "South Korea", Selected = Context.Request.Query["ToCountry"] == "South%20Korea" },
+                            new SelectListItem{ Text="Spain", Value = "Spain", Selected = Context.Request.Query["ToCountry"] == "Spain" },
+                            new SelectListItem{ Text="Sri Lanka", Value = "Sri Lanka", Selected = Context.Request.Query["ToCountry"] == "Sri%20Lanka" },
+                            new SelectListItem{ Text="Sweden", Value = "Sweden", Selected = Context.Request.Query["ToCountry"] == "Sweden" },
+                            new SelectListItem{ Text="Switzerland", Value = "Switzerland", Selected = Context.Request.Query["ToCountry"] == "Switzerland" },
+                            new SelectListItem{ Text="Taiwan", Value = "Taiwan", Selected = Context.Request.Query["ToCountry"] == "Taiwan" },
+                            new SelectListItem{ Text="Thailand", Value = "Thailand", Selected = Context.Request.Query["ToCountry"] == "Thailand" },
+                            new SelectListItem{ Text="Trinidad and Tobago", Value = "Trinidad and Tobago", Selected = Context.Request.Query["ToCountry"] == "Trinidad%20and%20Tobago" },
+                            new SelectListItem{ Text="Turkey", Value = "Turkey", Selected = Context.Request.Query["ToCountry"] == "Turkey" },
+                            new SelectListItem{ Text="Ukraine", Value = "Ukraine", Selected = Context.Request.Query["ToCountry"] == "Ukraine" },
+                            new SelectListItem{ Text="United Arab Emirates", Value = "United Arab Emirates", Selected = Context.Request.Query["ToCountry"] == "United%20Arab%20Emirates" },
+                            new SelectListItem{ Text="United Kingdom", Value = "United Kingdom", Selected = Context.Request.Query["ToCountry"] == "United%20Kingdom" },
+                            new SelectListItem{ Text="United States", Value = "United States", Selected = Context.Request.Query["ToCountry"] == "United%20States" },
+                            new SelectListItem{ Text="Uruguay", Value = "Uruguay", Selected = Context.Request.Query["ToCountry"] == "Uruguay" },
+                            new SelectListItem{ Text="Venezuela", Value = "Venezuela", Selected = Context.Request.Query["ToCountry"] == "Venezuela" },
+                            new SelectListItem{ Text="Vietnam", Value = "Vietnam", Selected = Context.Request.Query["ToCountry"] == "Vietnam" },
+                            new SelectListItem{ Text="Zimbabwe", Value = "Zimbabwe", Selected = Context.Request.Query["ToCountry"] == "Zimbabwe" }
+
+                            }, null, new { @class = "form-control" })
                     </div>
                     <div class="d-flex align-self-end">
                         <input type="submit" class="btn btn-primary" value="Filter" />
@@ -123,38 +351,38 @@
                         <tbody>
                             @foreach (var shipment in Model)
                             {
-                            <tr>
-                                <td scope="col">
-                                    <span>
-                                        @shipment.Date.ToShortDateString()
-                                        @if (shipment.Date > DateTime.Now.AddDays(-30))
-                                        {@Html.Raw("<span class='badge badge-primary'>New</span>");
+                                <tr>
+                                    <td scope="col">
+                                        <span>
+                                            @shipment.Date.ToShortDateString()
+                                            @if (shipment.Date > DateTime.Now.AddDays(-30))
+                                            {@Html.Raw("<span class='badge badge-primary'>New</span>");
+                                        }
+                                        </span>
+                                    </td>
+                                    @if (shipment.Seller.Name == null)
+                                    {
+                                        <td scope="col">-</td>
                                     }
-                                    </span>
-                                </td>
-                                @if (shipment.Seller.Name == null)
-                                {
-                                    <td scope="col">-</td>
-                                }
-                                else
-                                {
-                                    <td scope="col">@Html.ActionLink(shipment.Seller.Name, "Details", "Companies", new { Id = shipment.Seller.Id }) <br />@shipment.Seller.Country </td>
-                                }
-                                @if (shipment.Buyer.Name == null)
-                                {
-                                    <td scope="col">-</td>
-                                }
-                                else
-                                {
-                                    <td scope="col">@Html.ActionLink(shipment.Buyer.Name, "Details", "Companies", new { Id = shipment.Buyer.Id }) <br />@shipment.Buyer.Country</td>
-                                }
-                                <td scope="col">
-                                    <a class="text-dark" href="@Url.Action("Details","Shipments", new { id = shipment.Id, q = Context.Request.Query["q"]})">
-                                        <span v-html='getMarkedHTML("@shipment.Description.Replace("\n","")",150)'></span>
-                                    </a>
-                                    @*@Html.ActionLink(shipment.Description.Replace("Pharma","<b>Pharma</b>"), "Details", "Shipments", new { Id = shipment.Id })*@
-                                </td>
-                            </tr>
+                                    else
+                                    {
+                                        <td scope="col">@Html.ActionLink(shipment.Seller.Name, "Details", "Companies", new { Id = shipment.Seller.Id }) <br />@shipment.Seller.Country </td>
+                                    }
+                                    @if (shipment.Buyer.Name == null)
+                                    {
+                                        <td scope="col">-</td>
+                                    }
+                                    else
+                                    {
+                                        <td scope="col">@Html.ActionLink(shipment.Buyer.Name, "Details", "Companies", new { Id = shipment.Buyer.Id }) <br />@shipment.Buyer.Country</td>
+                                    }
+                                    <td scope="col">
+                                        <a class="text-dark" href="@Url.Action("Details","Shipments", new { id = shipment.Id, q = Context.Request.Query["q"]})">
+                                            <span v-html='getMarkedHTML("@System.Text.RegularExpressions.Regex.Replace(shipment.Description, "[^a-zA-Z0-9 -]", " ")",150)'></span>
+                                        </a>
+                                        @*@Html.ActionLink(shipment.Description.Replace("Pharma","<b>Pharma</b>"), "Details", "Shipments", new { Id = shipment.Id })*@
+                                    </td>
+                                </tr>
                             }
                         </tbody>
                     </table>
@@ -227,6 +455,7 @@
                 },
                 getMarkedHTML: function (text, len) {
                     if (text == null) { return; }
+                    if (this.searchText.length == 0) { return text.substr(0,len);}
                     var reg = new RegExp(this.searchText, 'gi');
                     if (len == -1) {
                         return text.replace(reg, function (str) { return '<strong style="color:#4C8BF5;">' + str + '</strong>' });

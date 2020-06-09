@@ -41,8 +41,8 @@
                         Last shipment
                     </dt>
                     <dd class="col-sm-8">
-                        @{ var lShipDate = db.Shipments.Where(s => s.Date.HasValue).Where(s => s.ShipperCompanyId == Model.Id || s.ConsigneeCompanyId == Model.Id)
-                             .OrderByDescending(d => d.Date).Select(d => d.Date).First();
+                        @{ var lShipDate = db.Shipments.Where(s => s.ShipperCompanyId == Model.Id || s.ConsigneeCompanyId == Model.Id)
+                             .OrderByDescending(d => d.Date).Select(d => d.Date).FirstOrDefault();
                             @String.Format("{0:MM/dd/yyyy}", lShipDate)
                         }
                     </dd>
@@ -53,12 +53,12 @@
             }
             <h5>Total shipments: @ShipmentsQuery.Count()</h5>
             <ul class="list-unstyled">
-                <li>2020: @ShipmentsQuery.Where(s => s.Date.Value.Year == 2020).Count()</li>
-                <li>2019: @ShipmentsQuery.Where(s => s.Date.Value.Year == 2019).Count()</li>
-                <li>2018: @ShipmentsQuery.Where(s => s.Date.Value.Year == 2018).Count()</li>
-                <li>2017: @ShipmentsQuery.Where(s => s.Date.Value.Year == 2017).Count()</li>
-                <li>2016: @ShipmentsQuery.Where(s => s.Date.Value.Year == 2016).Count()</li>
-                <li>2015: @ShipmentsQuery.Where(s => s.Date.Value.Year == 2015).Count()</li>
+                <li>2020: @ShipmentsQuery.Where(s => s.Date.Year == 2020).Count()</li>
+                <li>2019: @ShipmentsQuery.Where(s => s.Date.Year == 2019).Count()</li>
+                <li>2018: @ShipmentsQuery.Where(s => s.Date.Year == 2018).Count()</li>
+                <li>2017: @ShipmentsQuery.Where(s => s.Date.Year == 2017).Count()</li>
+                <li>2016: @ShipmentsQuery.Where(s => s.Date.Year == 2016).Count()</li>
+                <li>2015: @ShipmentsQuery.Where(s => s.Date.Year == 2015).Count()</li>
             </ul>
             <div>
                 <input type="button" class="btn btn-outline-success contactBtn" value="Connect with company" />

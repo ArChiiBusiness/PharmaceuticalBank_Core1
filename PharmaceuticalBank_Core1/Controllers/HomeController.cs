@@ -111,7 +111,7 @@ namespace PharmaceuticalBank_Core1.Controllers
                             Shipment = new
                             {
                                 Id = s.Id,
-                                Date = s.Date.HasValue ? s.Date.Value.ToString("MM/dd/yyyy") : null,
+                                Date = s.Date,
                                 Description = s.GoodsShipped
                             }
                         });
@@ -139,7 +139,7 @@ namespace PharmaceuticalBank_Core1.Controllers
                             Shipment = new
                             {
                                 Id = s.Id,
-                                Date = s.Date.HasValue ? s.Date.Value.ToString("MM/dd/yyyy") : null,
+                                Date = s.Date,
                                 Description = s.GoodsShipped
                             }
                         });
