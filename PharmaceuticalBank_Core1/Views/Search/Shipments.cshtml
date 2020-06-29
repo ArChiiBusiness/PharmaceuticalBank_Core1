@@ -57,7 +57,7 @@
     <div class="container">
         <div class="row mb-3">
             <div class="col-12 mt-4">
-                <h4>Found @String.Format("{0:n0}", ViewData["TotalShipments"]) shipments</h4>
+                <h4>Found {{searchData.totalShipments}} shipments</h4>
             </div>
             @*<div class="col-12">
                     <span>Our last Shipment is on  @ViewData["LastShipmentData"] and we add 'New" badge for all shipments from last 30 days</span>
@@ -80,263 +80,248 @@
                             <option value="2016">2016</option>
                             <option value="2015">2015</option>
                         </select>
-                        @*@Html.DropDownList("Year", new List<SelectListItem>
-                            {
-                               new SelectListItem{ Text="All", Value = ""},
-                               new SelectListItem{ Text="2020", Value = "2020", Selected = Context.Request.Query["Year"] == "2020" },
-                               new SelectListItem{ Text="2019", Value = "2019", Selected = Context.Request.Query["Year"] == "2019"},
-                               new SelectListItem{ Text="2018", Value = "2018", Selected = Context.Request.Query["Year"] == "2018"},
-                               new SelectListItem{ Text="2017", Value = "2017", Selected = Context.Request.Query["Year"] == "2017"},
-                               new SelectListItem{ Text="2016", Value = "2016", Selected = Context.Request.Query["Year"] == "2016"},
-                               new SelectListItem{ Text="2015", Value = "2015", Selected = Context.Request.Query["Year"] == "2015"},
-
-                            }, null, new { @class = "form-control" })*@
                     </div>
                     <div class="col">
                         From country:
-                        @Html.DropDownList("FromCountry", new List<SelectListItem>
-                            {
-                               new SelectListItem{ Text="All", Value = ""},
-                               new SelectListItem{ Text="American Samoa", Value = "American Samoa", Selected = Context.Request.Query["FromCountry"] == "American%20Samoa" },
-                            new SelectListItem{ Text="Anguilla", Value = "Anguilla", Selected = Context.Request.Query["FromCountry"] == "Anguilla" },
-                            new SelectListItem{ Text="Argentina", Value = "Argentina", Selected = Context.Request.Query["FromCountry"] == "Argentina" },
-                            new SelectListItem{ Text="Aruba", Value = "Aruba", Selected = Context.Request.Query["FromCountry"] == "Aruba" },
-                            new SelectListItem{ Text="Australia", Value = "Australia", Selected = Context.Request.Query["FromCountry"] == "Australia" },
-                            new SelectListItem{ Text="Austria", Value = "Austria", Selected = Context.Request.Query["FromCountry"] == "Austria" },
-                            new SelectListItem{ Text="Bahamas", Value = "Bahamas", Selected = Context.Request.Query["FromCountry"] == "Bahamas" },
-                            new SelectListItem{ Text="Bangladesh", Value = "Bangladesh", Selected = Context.Request.Query["FromCountry"] == "Bangladesh" },
-                            new SelectListItem{ Text="Barbados", Value = "Barbados", Selected = Context.Request.Query["FromCountry"] == "Barbados" },
-                            new SelectListItem{ Text="Belgium", Value = "Belgium", Selected = Context.Request.Query["FromCountry"] == "Belgium" },
-                            new SelectListItem{ Text="Belize", Value = "Belize", Selected = Context.Request.Query["FromCountry"] == "Belize" },
-                            new SelectListItem{ Text="Bermuda", Value = "Bermuda", Selected = Context.Request.Query["FromCountry"] == "Bermuda" },
-                            new SelectListItem{ Text="Bolivia", Value = "Bolivia", Selected = Context.Request.Query["FromCountry"] == "Bolivia" },
-                            new SelectListItem{ Text="Brazil", Value = "Brazil", Selected = Context.Request.Query["FromCountry"] == "Brazil" },
-                            new SelectListItem{ Text="Cambodia", Value = "Cambodia", Selected = Context.Request.Query["FromCountry"] == "Cambodia" },
-                            new SelectListItem{ Text="Canada", Value = "Canada", Selected = Context.Request.Query["FromCountry"] == "Canada" },
-                            new SelectListItem{ Text="Cayman Islands", Value = "Cayman Islands", Selected = Context.Request.Query["FromCountry"] == "Cayman%20Islands" },
-                            new SelectListItem{ Text="Chile", Value = "Chile", Selected = Context.Request.Query["FromCountry"] == "Chile" },
-                            new SelectListItem{ Text="China", Value = "China", Selected = Context.Request.Query["FromCountry"] == "China" },
-                            new SelectListItem{ Text="Colombia", Value = "Colombia", Selected = Context.Request.Query["FromCountry"] == "Colombia" },
-                            new SelectListItem{ Text="Comoros", Value = "Comoros", Selected = Context.Request.Query["FromCountry"] == "Comoros" },
-                            new SelectListItem{ Text="Costa Rica", Value = "Costa Rica", Selected = Context.Request.Query["FromCountry"] == "Costa%20Rica" },
-                            new SelectListItem{ Text="Croatia", Value = "Croatia", Selected = Context.Request.Query["FromCountry"] == "Croatia" },
-                            new SelectListItem{ Text="Cyprus", Value = "Cyprus", Selected = Context.Request.Query["FromCountry"] == "Cyprus" },
-                            new SelectListItem{ Text="Czech Republic", Value = "Czech Republic", Selected = Context.Request.Query["FromCountry"] == "Czech%20Republic" },
-                            new SelectListItem{ Text="Denmark", Value = "Denmark", Selected = Context.Request.Query["FromCountry"] == "Denmark" },
-                            new SelectListItem{ Text="Dominica", Value = "Dominica", Selected = Context.Request.Query["FromCountry"] == "Dominica" },
-                            new SelectListItem{ Text="Dominican Republic", Value = "Dominican Republic", Selected = Context.Request.Query["FromCountry"] == "Dominican%20Republic" },
-                            new SelectListItem{ Text="Ecuador", Value = "Ecuador", Selected = Context.Request.Query["FromCountry"] == "Ecuador" },
-                            new SelectListItem{ Text="Egypt", Value = "Egypt", Selected = Context.Request.Query["FromCountry"] == "Egypt" },
-                            new SelectListItem{ Text="El Salvador", Value = "El Salvador", Selected = Context.Request.Query["FromCountry"] == "El%20Salvador" },
-                            new SelectListItem{ Text="Estonia", Value = "Estonia", Selected = Context.Request.Query["FromCountry"] == "Estonia" },
-                            new SelectListItem{ Text="Ethiopia", Value = "Ethiopia", Selected = Context.Request.Query["FromCountry"] == "Ethiopia" },
-                            new SelectListItem{ Text="Finland", Value = "Finland", Selected = Context.Request.Query["FromCountry"] == "Finland" },
-                            new SelectListItem{ Text="France", Value = "France", Selected = Context.Request.Query["FromCountry"] == "France" },
-                            new SelectListItem{ Text="French Polynesia", Value = "French Polynesia", Selected = Context.Request.Query["FromCountry"] == "French%20Polynesia" },
-                            new SelectListItem{ Text="Georgia", Value = "Georgia", Selected = Context.Request.Query["FromCountry"] == "Georgia" },
-                            new SelectListItem{ Text="Germany", Value = "Germany", Selected = Context.Request.Query["FromCountry"] == "Germany" },
-                            new SelectListItem{ Text="Ghana", Value = "Ghana", Selected = Context.Request.Query["FromCountry"] == "Ghana" },
-                            new SelectListItem{ Text="Grenada", Value = "Grenada", Selected = Context.Request.Query["FromCountry"] == "Grenada" },
-                            new SelectListItem{ Text="Guam", Value = "Guam", Selected = Context.Request.Query["FromCountry"] == "Guam" },
-                            new SelectListItem{ Text="Guatemala", Value = "Guatemala", Selected = Context.Request.Query["FromCountry"] == "Guatemala" },
-                            new SelectListItem{ Text="Guyana", Value = "Guyana", Selected = Context.Request.Query["FromCountry"] == "Guyana" },
-                            new SelectListItem{ Text="Haiti", Value = "Haiti", Selected = Context.Request.Query["FromCountry"] == "Haiti" },
-                            new SelectListItem{ Text="Honduras", Value = "Honduras", Selected = Context.Request.Query["FromCountry"] == "Honduras" },
-                            new SelectListItem{ Text="Hong Kong", Value = "Hong Kong", Selected = Context.Request.Query["FromCountry"] == "Hong%20Kong" },
-                            new SelectListItem{ Text="Hungary", Value = "Hungary", Selected = Context.Request.Query["FromCountry"] == "Hungary" },
-                            new SelectListItem{ Text="Iceland", Value = "Iceland", Selected = Context.Request.Query["FromCountry"] == "Iceland" },
-                            new SelectListItem{ Text="India", Value = "India", Selected = Context.Request.Query["FromCountry"] == "India" },
-                            new SelectListItem{ Text="Indonesia", Value = "Indonesia", Selected = Context.Request.Query["FromCountry"] == "Indonesia" },
-                            new SelectListItem{ Text="Iran", Value = "Iran", Selected = Context.Request.Query["FromCountry"] == "Iran" },
-                            new SelectListItem{ Text="Iraq", Value = "Iraq", Selected = Context.Request.Query["FromCountry"] == "Iraq" },
-                            new SelectListItem{ Text="Ireland", Value = "Ireland", Selected = Context.Request.Query["FromCountry"] == "Ireland" },
-                            new SelectListItem{ Text="Israel", Value = "Israel", Selected = Context.Request.Query["FromCountry"] == "Israel" },
-                            new SelectListItem{ Text="Italy", Value = "Italy", Selected = Context.Request.Query["FromCountry"] == "Italy" },
-                            new SelectListItem{ Text="Jamaica", Value = "Jamaica", Selected = Context.Request.Query["FromCountry"] == "Jamaica" },
-                            new SelectListItem{ Text="Japan", Value = "Japan", Selected = Context.Request.Query["FromCountry"] == "Japan" },
-                            new SelectListItem{ Text="Jersey", Value = "Jersey", Selected = Context.Request.Query["FromCountry"] == "Jersey" },
-                            new SelectListItem{ Text="Kuwait", Value = "Kuwait", Selected = Context.Request.Query["FromCountry"] == "Kuwait" },
-                            new SelectListItem{ Text="Latvia", Value = "Latvia", Selected = Context.Request.Query["FromCountry"] == "Latvia" },
-                            new SelectListItem{ Text="Lebanon", Value = "Lebanon", Selected = Context.Request.Query["FromCountry"] == "Lebanon" },
-                            new SelectListItem{ Text="Libya", Value = "Libya", Selected = Context.Request.Query["FromCountry"] == "Libya" },
-                            new SelectListItem{ Text="Lithuania", Value = "Lithuania", Selected = Context.Request.Query["FromCountry"] == "Lithuania" },
-                            new SelectListItem{ Text="Luxembourg", Value = "Luxembourg", Selected = Context.Request.Query["FromCountry"] == "Luxembourg" },
-                            new SelectListItem{ Text="Macau", Value = "Macau", Selected = Context.Request.Query["FromCountry"] == "Macau" },
-                            new SelectListItem{ Text="Madagascar", Value = "Madagascar", Selected = Context.Request.Query["FromCountry"] == "Madagascar" },
-                            new SelectListItem{ Text="Malaysia", Value = "Malaysia", Selected = Context.Request.Query["FromCountry"] == "Malaysia" },
-                            new SelectListItem{ Text="Malta", Value = "Malta", Selected = Context.Request.Query["FromCountry"] == "Malta" },
-                            new SelectListItem{ Text="Mauritius", Value = "Mauritius", Selected = Context.Request.Query["FromCountry"] == "Mauritius" },
-                            new SelectListItem{ Text="Mexico", Value = "Mexico", Selected = Context.Request.Query["FromCountry"] == "Mexico" },
-                            new SelectListItem{ Text="Monaco", Value = "Monaco", Selected = Context.Request.Query["FromCountry"] == "Monaco" },
-                            new SelectListItem{ Text="Netherlands", Value = "Netherlands", Selected = Context.Request.Query["FromCountry"] == "Netherlands" },
-                            new SelectListItem{ Text="New Caledonia", Value = "New Caledonia", Selected = Context.Request.Query["FromCountry"] == "New%20Caledonia" },
-                            new SelectListItem{ Text="New Zealand", Value = "New Zealand", Selected = Context.Request.Query["FromCountry"] == "New%20Zealand" },
-                            new SelectListItem{ Text="Nicaragua", Value = "Nicaragua", Selected = Context.Request.Query["FromCountry"] == "Nicaragua" },
-                            new SelectListItem{ Text="Nigeria", Value = "Nigeria", Selected = Context.Request.Query["FromCountry"] == "Nigeria" },
-                            new SelectListItem{ Text="Norway", Value = "Norway", Selected = Context.Request.Query["FromCountry"] == "Norway" },
-                            new SelectListItem{ Text="NULL", Value = "NULL", Selected = Context.Request.Query["FromCountry"] == "NULL" },
-                            new SelectListItem{ Text="Pakistan", Value = "Pakistan", Selected = Context.Request.Query["FromCountry"] == "Pakistan" },
-                            new SelectListItem{ Text="Palestine", Value = "Palestine", Selected = Context.Request.Query["FromCountry"] == "Palestine" },
-                            new SelectListItem{ Text="Panama", Value = "Panama", Selected = Context.Request.Query["FromCountry"] == "Panama" },
-                            new SelectListItem{ Text="Paraguay", Value = "Paraguay", Selected = Context.Request.Query["FromCountry"] == "Paraguay" },
-                            new SelectListItem{ Text="Peru", Value = "Peru", Selected = Context.Request.Query["FromCountry"] == "Peru" },
-                            new SelectListItem{ Text="Philippines", Value = "Philippines", Selected = Context.Request.Query["FromCountry"] == "Philippines" },
-                            new SelectListItem{ Text="Poland", Value = "Poland", Selected = Context.Request.Query["FromCountry"] == "Poland" },
-                            new SelectListItem{ Text="Portugal", Value = "Portugal", Selected = Context.Request.Query["FromCountry"] == "Portugal" },
-                            new SelectListItem{ Text="Puerto Rico", Value = "Puerto Rico", Selected = Context.Request.Query["FromCountry"] == "Puerto%20Rico" },
-                            new SelectListItem{ Text="Russia", Value = "Russia", Selected = Context.Request.Query["FromCountry"] == "Russia" },
-                            new SelectListItem{ Text="Saint Kitts and Nevis", Value = "Saint Kitts and Nevis", Selected = Context.Request.Query["FromCountry"] == "Saint%20Kitts%20and%20Nevis" },
-                            new SelectListItem{ Text="Saint Martin", Value = "Saint Martin", Selected = Context.Request.Query["FromCountry"] == "Saint%20Martin" },
-                            new SelectListItem{ Text="Saint Vincent and the Grenadines", Value = "Saint Vincent and the Grenadines", Selected = Context.Request.Query["FromCountry"] == "Saint%20Vincent%20and%20the%20Grenadines" },
-                            new SelectListItem{ Text="Saudi Arabia", Value = "Saudi Arabia", Selected = Context.Request.Query["FromCountry"] == "Saudi%20Arabia" },
-                            new SelectListItem{ Text="Serbia", Value = "Serbia", Selected = Context.Request.Query["FromCountry"] == "Serbia" },
-                            new SelectListItem{ Text="Sierra Leone", Value = "Sierra Leone", Selected = Context.Request.Query["FromCountry"] == "Sierra%20Leone" },
-                            new SelectListItem{ Text="Singapore", Value = "Singapore", Selected = Context.Request.Query["FromCountry"] == "Singapore" },
-                            new SelectListItem{ Text="Slovakia", Value = "Slovakia", Selected = Context.Request.Query["FromCountry"] == "Slovakia" },
-                            new SelectListItem{ Text="Slovenia", Value = "Slovenia", Selected = Context.Request.Query["FromCountry"] == "Slovenia" },
-                            new SelectListItem{ Text="South Africa", Value = "South Africa", Selected = Context.Request.Query["FromCountry"] == "South%20Africa" },
-                            new SelectListItem{ Text="South Korea", Value = "South Korea", Selected = Context.Request.Query["FromCountry"] == "South%20Korea" },
-                            new SelectListItem{ Text="Spain", Value = "Spain", Selected = Context.Request.Query["FromCountry"] == "Spain" },
-                            new SelectListItem{ Text="Sri Lanka", Value = "Sri Lanka", Selected = Context.Request.Query["FromCountry"] == "Sri%20Lanka" },
-                            new SelectListItem{ Text="Sweden", Value = "Sweden", Selected = Context.Request.Query["FromCountry"] == "Sweden" },
-                            new SelectListItem{ Text="Switzerland", Value = "Switzerland", Selected = Context.Request.Query["FromCountry"] == "Switzerland" },
-                            new SelectListItem{ Text="Taiwan", Value = "Taiwan", Selected = Context.Request.Query["FromCountry"] == "Taiwan" },
-                            new SelectListItem{ Text="Thailand", Value = "Thailand", Selected = Context.Request.Query["FromCountry"] == "Thailand" },
-                            new SelectListItem{ Text="Trinidad and Tobago", Value = "Trinidad and Tobago", Selected = Context.Request.Query["FromCountry"] == "Trinidad%20and%20Tobago" },
-                            new SelectListItem{ Text="Turkey", Value = "Turkey", Selected = Context.Request.Query["FromCountry"] == "Turkey" },
-                            new SelectListItem{ Text="Ukraine", Value = "Ukraine", Selected = Context.Request.Query["FromCountry"] == "Ukraine" },
-                            new SelectListItem{ Text="United Arab Emirates", Value = "United Arab Emirates", Selected = Context.Request.Query["FromCountry"] == "United%20Arab%20Emirates" },
-                            new SelectListItem{ Text="United Kingdom", Value = "United Kingdom", Selected = Context.Request.Query["FromCountry"] == "United%20Kingdom" },
-                            new SelectListItem{ Text="United States", Value = "United States", Selected = Context.Request.Query["FromCountry"] == "United%20States" },
-                            new SelectListItem{ Text="Uruguay", Value = "Uruguay", Selected = Context.Request.Query["FromCountry"] == "Uruguay" },
-                            new SelectListItem{ Text="Venezuela", Value = "Venezuela", Selected = Context.Request.Query["FromCountry"] == "Venezuela" },
-                            new SelectListItem{ Text="Vietnam", Value = "Vietnam", Selected = Context.Request.Query["FromCountry"] == "Vietnam" },
-                            new SelectListItem{ Text="Zimbabwe", Value = "Zimbabwe", Selected = Context.Request.Query["FromCountry"] == "Zimbabwe" }
-
-                            }, null, new { @class = "form-control" })
+                        <select v-model="filter.fromCountry" name="FromCountry" class="form-control">
+                            <option value="">All</option>
+                            <option value="American Samoa">American Samoa</option>
+                            <option value="Anguilla">Anguilla</option>
+                            <option value="Argentina">Argentina</option>
+                            <option value="Aruba">Aruba</option>
+                            <option value="Australia">Australia</option>
+                            <option value="Austria">Austria</option>
+                            <option value="Bahamas">Bahamas</option>
+                            <option value="Bangladesh">Bangladesh</option>
+                            <option value="Barbados">Barbados</option>
+                            <option value="Belgium">Belgium</option>
+                            <option value="Belize">Belize</option>
+                            <option value="Bermuda">Bermuda</option>
+                            <option value="Bolivia">Bolivia</option>
+                            <option value="Brazil">Brazil</option>
+                            <option value="Cambodia">Cambodia</option>
+                            <option value="Canada">Canada</option>
+                            <option value="Cayman Islands">Cayman Islands</option>
+                            <option value="Chile">Chile</option>
+                            <option value="China">China</option>
+                            <option value="Colombia">Colombia</option>
+                            <option value="Comoros">Comoros</option>
+                            <option value="Costa Rica">Costa Rica</option>
+                            <option value="Croatia">Croatia</option>
+                            <option value="Cyprus">Cyprus</option>
+                            <option value="Czech Republic">Czech Republic</option>
+                            <option value="Denmark">Denmark</option>
+                            <option value="Dominica">Dominica</option>
+                            <option value="Dominican Republic">Dominican Republic</option>
+                            <option value="Ecuador">Ecuador</option>
+                            <option value="Egypt">Egypt</option>
+                            <option value="El Salvador">El Salvador</option>
+                            <option value="Estonia">Estonia</option>
+                            <option value="Ethiopia">Ethiopia</option>
+                            <option value="Finland">Finland</option>
+                            <option value="France">France</option>
+                            <option value="French Polynesia">French Polynesia</option>
+                            <option value="Georgia">Georgia</option>
+                            <option value="Germany">Germany</option>
+                            <option value="Ghana">Ghana</option>
+                            <option value="Grenada">Grenada</option>
+                            <option value="Guam">Guam</option>
+                            <option value="Guatemala">Guatemala</option>
+                            <option value="Guyana">Guyana</option>
+                            <option value="Haiti">Haiti</option>
+                            <option value="Honduras">Honduras</option>
+                            <option value="Hong Kong">Hong Kong</option>
+                            <option value="Hungary">Hungary</option>
+                            <option value="Iceland">Iceland</option>
+                            <option value="India">India</option>
+                            <option value="Indonesia">Indonesia</option>
+                            <option value="Iran">Iran</option>
+                            <option value="Iraq">Iraq</option>
+                            <option value="Ireland">Ireland</option>
+                            <option value="Israel">Israel</option>
+                            <option value="Italy">Italy</option>
+                            <option value="Jamaica">Jamaica</option>
+                            <option value="Japan">Japan</option>
+                            <option value="Jersey">Jersey</option>
+                            <option value="Kuwait">Kuwait</option>
+                            <option value="Latvia">Latvia</option>
+                            <option value="Lebanon">Lebanon</option>
+                            <option value="Libya">Libya</option>
+                            <option value="Lithuania">Lithuania</option>
+                            <option value="Luxembourg">Luxembourg</option>
+                            <option value="Macau">Macau</option>
+                            <option value="Madagascar">Madagascar</option>
+                            <option value="Malaysia">Malaysia</option>
+                            <option value="Malta">Malta</option>
+                            <option value="Mauritius">Mauritius</option>
+                            <option value="Mexico">Mexico</option>
+                            <option value="Monaco">Monaco</option>
+                            <option value="Netherlands">Netherlands</option>
+                            <option value="New Caledonia">New Caledonia</option>
+                            <option value="New Zealand">New Zealand</option>
+                            <option value="Nicaragua">Nicaragua</option>
+                            <option value="Nigeria">Nigeria</option>
+                            <option value="Norway">Norway</option>
+                            <option value="NULL">NULL</option>
+                            <option value="Pakistan">Pakistan</option>
+                            <option value="Palestine">Palestine</option>
+                            <option value="Panama">Panama</option>
+                            <option value="Paraguay">Paraguay</option>
+                            <option value="Peru">Peru</option>
+                            <option value="Philippines">Philippines</option>
+                            <option value="Poland">Poland</option>
+                            <option value="Portugal">Portugal</option>
+                            <option value="Puerto Rico">Puerto Rico</option>
+                            <option value="Russia">Russia</option>
+                            <option value="Saint Kitts and Nevis">Saint Kitts and Nevis</option>
+                            <option value="Saint Martin">Saint Martin</option>
+                            <option value="Saint Vincent and the Grenadines">Saint Vincent and the Grenadines</option>
+                            <option value="Saudi Arabia">Saudi Arabia</option>
+                            <option value="Serbia">Serbia</option>
+                            <option value="Sierra Leone">Sierra Leone</option>
+                            <option value="Singapore">Singapore</option>
+                            <option value="Slovakia">Slovakia</option>
+                            <option value="Slovenia">Slovenia</option>
+                            <option value="South Africa">South Africa</option>
+                            <option value="South Korea">South Korea</option>
+                            <option value="Spain">Spain</option>
+                            <option value="Sri Lanka">Sri Lanka</option>
+                            <option value="Sweden">Sweden</option>
+                            <option value="Switzerland">Switzerland</option>
+                            <option value="Taiwan">Taiwan</option>
+                            <option value="Thailand">Thailand</option>
+                            <option value="Trinidad and Tobago">Trinidad and Tobago</option>
+                            <option value="Turkey">Turkey</option>
+                            <option value="Ukraine">Ukraine</option>
+                            <option value="United Arab Emirates">United Arab Emirates</option>
+                            <option value="United Kingdom">United Kingdom</option>
+                            <option value="United States">United States</option>
+                            <option value="Uruguay">Uruguay</option>
+                            <option value="Venezuela">Venezuela</option>
+                            <option value="Vietnam">Vietnam</option>
+                            <option value="Zimbabwe">Zimbabwe</option>
+                        </select>
                     </div>
                     <div class="col">
                         To country:
-                        @Html.DropDownList("ToCountry", new List<SelectListItem>
-                            {
-                               new SelectListItem{ Text="All", Value = ""},
-                               new SelectListItem{ Text="American Samoa", Value = "American Samoa", Selected = Context.Request.Query["ToCountry"] == "American%20Samoa" },
-                            new SelectListItem{ Text="Anguilla", Value = "Anguilla", Selected = Context.Request.Query["ToCountry"] == "Anguilla" },
-                            new SelectListItem{ Text="Argentina", Value = "Argentina", Selected = Context.Request.Query["ToCountry"] == "Argentina" },
-                            new SelectListItem{ Text="Aruba", Value = "Aruba", Selected = Context.Request.Query["ToCountry"] == "Aruba" },
-                            new SelectListItem{ Text="Australia", Value = "Australia", Selected = Context.Request.Query["ToCountry"] == "Australia" },
-                            new SelectListItem{ Text="Austria", Value = "Austria", Selected = Context.Request.Query["ToCountry"] == "Austria" },
-                            new SelectListItem{ Text="Bahamas", Value = "Bahamas", Selected = Context.Request.Query["ToCountry"] == "Bahamas" },
-                            new SelectListItem{ Text="Bangladesh", Value = "Bangladesh", Selected = Context.Request.Query["ToCountry"] == "Bangladesh" },
-                            new SelectListItem{ Text="Barbados", Value = "Barbados", Selected = Context.Request.Query["ToCountry"] == "Barbados" },
-                            new SelectListItem{ Text="Belgium", Value = "Belgium", Selected = Context.Request.Query["ToCountry"] == "Belgium" },
-                            new SelectListItem{ Text="Belize", Value = "Belize", Selected = Context.Request.Query["ToCountry"] == "Belize" },
-                            new SelectListItem{ Text="Bermuda", Value = "Bermuda", Selected = Context.Request.Query["ToCountry"] == "Bermuda" },
-                            new SelectListItem{ Text="Bolivia", Value = "Bolivia", Selected = Context.Request.Query["ToCountry"] == "Bolivia" },
-                            new SelectListItem{ Text="Brazil", Value = "Brazil", Selected = Context.Request.Query["ToCountry"] == "Brazil" },
-                            new SelectListItem{ Text="Cambodia", Value = "Cambodia", Selected = Context.Request.Query["ToCountry"] == "Cambodia" },
-                            new SelectListItem{ Text="Canada", Value = "Canada", Selected = Context.Request.Query["ToCountry"] == "Canada" },
-                            new SelectListItem{ Text="Cayman Islands", Value = "Cayman Islands", Selected = Context.Request.Query["ToCountry"] == "Cayman%20Islands" },
-                            new SelectListItem{ Text="Chile", Value = "Chile", Selected = Context.Request.Query["ToCountry"] == "Chile" },
-                            new SelectListItem{ Text="China", Value = "China", Selected = Context.Request.Query["ToCountry"] == "China" },
-                            new SelectListItem{ Text="Colombia", Value = "Colombia", Selected = Context.Request.Query["ToCountry"] == "Colombia" },
-                            new SelectListItem{ Text="Comoros", Value = "Comoros", Selected = Context.Request.Query["ToCountry"] == "Comoros" },
-                            new SelectListItem{ Text="Costa Rica", Value = "Costa Rica", Selected = Context.Request.Query["ToCountry"] == "Costa%20Rica" },
-                            new SelectListItem{ Text="Croatia", Value = "Croatia", Selected = Context.Request.Query["ToCountry"] == "Croatia" },
-                            new SelectListItem{ Text="Cyprus", Value = "Cyprus", Selected = Context.Request.Query["ToCountry"] == "Cyprus" },
-                            new SelectListItem{ Text="Czech Republic", Value = "Czech Republic", Selected = Context.Request.Query["ToCountry"] == "Czech%20Republic" },
-                            new SelectListItem{ Text="Denmark", Value = "Denmark", Selected = Context.Request.Query["ToCountry"] == "Denmark" },
-                            new SelectListItem{ Text="Dominica", Value = "Dominica", Selected = Context.Request.Query["ToCountry"] == "Dominica" },
-                            new SelectListItem{ Text="Dominican Republic", Value = "Dominican Republic", Selected = Context.Request.Query["ToCountry"] == "Dominican%20Republic" },
-                            new SelectListItem{ Text="Ecuador", Value = "Ecuador", Selected = Context.Request.Query["ToCountry"] == "Ecuador" },
-                            new SelectListItem{ Text="Egypt", Value = "Egypt", Selected = Context.Request.Query["ToCountry"] == "Egypt" },
-                            new SelectListItem{ Text="El Salvador", Value = "El Salvador", Selected = Context.Request.Query["ToCountry"] == "El%20Salvador" },
-                            new SelectListItem{ Text="Estonia", Value = "Estonia", Selected = Context.Request.Query["ToCountry"] == "Estonia" },
-                            new SelectListItem{ Text="Ethiopia", Value = "Ethiopia", Selected = Context.Request.Query["ToCountry"] == "Ethiopia" },
-                            new SelectListItem{ Text="Finland", Value = "Finland", Selected = Context.Request.Query["ToCountry"] == "Finland" },
-                            new SelectListItem{ Text="France", Value = "France", Selected = Context.Request.Query["ToCountry"] == "France" },
-                            new SelectListItem{ Text="French Polynesia", Value = "French Polynesia", Selected = Context.Request.Query["ToCountry"] == "French%20Polynesia" },
-                            new SelectListItem{ Text="Georgia", Value = "Georgia", Selected = Context.Request.Query["ToCountry"] == "Georgia" },
-                            new SelectListItem{ Text="Germany", Value = "Germany", Selected = Context.Request.Query["ToCountry"] == "Germany" },
-                            new SelectListItem{ Text="Ghana", Value = "Ghana", Selected = Context.Request.Query["ToCountry"] == "Ghana" },
-                            new SelectListItem{ Text="Grenada", Value = "Grenada", Selected = Context.Request.Query["ToCountry"] == "Grenada" },
-                            new SelectListItem{ Text="Guam", Value = "Guam", Selected = Context.Request.Query["ToCountry"] == "Guam" },
-                            new SelectListItem{ Text="Guatemala", Value = "Guatemala", Selected = Context.Request.Query["ToCountry"] == "Guatemala" },
-                            new SelectListItem{ Text="Guyana", Value = "Guyana", Selected = Context.Request.Query["ToCountry"] == "Guyana" },
-                            new SelectListItem{ Text="Haiti", Value = "Haiti", Selected = Context.Request.Query["ToCountry"] == "Haiti" },
-                            new SelectListItem{ Text="Honduras", Value = "Honduras", Selected = Context.Request.Query["ToCountry"] == "Honduras" },
-                            new SelectListItem{ Text="Hong Kong", Value = "Hong Kong", Selected = Context.Request.Query["ToCountry"] == "Hong%20Kong" },
-                            new SelectListItem{ Text="Hungary", Value = "Hungary", Selected = Context.Request.Query["ToCountry"] == "Hungary" },
-                            new SelectListItem{ Text="Iceland", Value = "Iceland", Selected = Context.Request.Query["ToCountry"] == "Iceland" },
-                            new SelectListItem{ Text="India", Value = "India", Selected = Context.Request.Query["ToCountry"] == "India" },
-                            new SelectListItem{ Text="Indonesia", Value = "Indonesia", Selected = Context.Request.Query["ToCountry"] == "Indonesia" },
-                            new SelectListItem{ Text="Iran", Value = "Iran", Selected = Context.Request.Query["ToCountry"] == "Iran" },
-                            new SelectListItem{ Text="Iraq", Value = "Iraq", Selected = Context.Request.Query["ToCountry"] == "Iraq" },
-                            new SelectListItem{ Text="Ireland", Value = "Ireland", Selected = Context.Request.Query["ToCountry"] == "Ireland" },
-                            new SelectListItem{ Text="Israel", Value = "Israel", Selected = Context.Request.Query["ToCountry"] == "Israel" },
-                            new SelectListItem{ Text="Italy", Value = "Italy", Selected = Context.Request.Query["ToCountry"] == "Italy" },
-                            new SelectListItem{ Text="Jamaica", Value = "Jamaica", Selected = Context.Request.Query["ToCountry"] == "Jamaica" },
-                            new SelectListItem{ Text="Japan", Value = "Japan", Selected = Context.Request.Query["ToCountry"] == "Japan" },
-                            new SelectListItem{ Text="Jersey", Value = "Jersey", Selected = Context.Request.Query["ToCountry"] == "Jersey" },
-                            new SelectListItem{ Text="Kuwait", Value = "Kuwait", Selected = Context.Request.Query["ToCountry"] == "Kuwait" },
-                            new SelectListItem{ Text="Latvia", Value = "Latvia", Selected = Context.Request.Query["ToCountry"] == "Latvia" },
-                            new SelectListItem{ Text="Lebanon", Value = "Lebanon", Selected = Context.Request.Query["ToCountry"] == "Lebanon" },
-                            new SelectListItem{ Text="Libya", Value = "Libya", Selected = Context.Request.Query["ToCountry"] == "Libya" },
-                            new SelectListItem{ Text="Lithuania", Value = "Lithuania", Selected = Context.Request.Query["ToCountry"] == "Lithuania" },
-                            new SelectListItem{ Text="Luxembourg", Value = "Luxembourg", Selected = Context.Request.Query["ToCountry"] == "Luxembourg" },
-                            new SelectListItem{ Text="Macau", Value = "Macau", Selected = Context.Request.Query["ToCountry"] == "Macau" },
-                            new SelectListItem{ Text="Madagascar", Value = "Madagascar", Selected = Context.Request.Query["ToCountry"] == "Madagascar" },
-                            new SelectListItem{ Text="Malaysia", Value = "Malaysia", Selected = Context.Request.Query["ToCountry"] == "Malaysia" },
-                            new SelectListItem{ Text="Malta", Value = "Malta", Selected = Context.Request.Query["ToCountry"] == "Malta" },
-                            new SelectListItem{ Text="Mauritius", Value = "Mauritius", Selected = Context.Request.Query["ToCountry"] == "Mauritius" },
-                            new SelectListItem{ Text="Mexico", Value = "Mexico", Selected = Context.Request.Query["ToCountry"] == "Mexico" },
-                            new SelectListItem{ Text="Monaco", Value = "Monaco", Selected = Context.Request.Query["ToCountry"] == "Monaco" },
-                            new SelectListItem{ Text="Netherlands", Value = "Netherlands", Selected = Context.Request.Query["ToCountry"] == "Netherlands" },
-                            new SelectListItem{ Text="New Caledonia", Value = "New Caledonia", Selected = Context.Request.Query["ToCountry"] == "New%20Caledonia" },
-                            new SelectListItem{ Text="New Zealand", Value = "New Zealand", Selected = Context.Request.Query["ToCountry"] == "New%20Zealand" },
-                            new SelectListItem{ Text="Nicaragua", Value = "Nicaragua", Selected = Context.Request.Query["ToCountry"] == "Nicaragua" },
-                            new SelectListItem{ Text="Nigeria", Value = "Nigeria", Selected = Context.Request.Query["ToCountry"] == "Nigeria" },
-                            new SelectListItem{ Text="Norway", Value = "Norway", Selected = Context.Request.Query["ToCountry"] == "Norway" },
-                            new SelectListItem{ Text="NULL", Value = "NULL", Selected = Context.Request.Query["ToCountry"] == "NULL" },
-                            new SelectListItem{ Text="Pakistan", Value = "Pakistan", Selected = Context.Request.Query["ToCountry"] == "Pakistan" },
-                            new SelectListItem{ Text="Palestine", Value = "Palestine", Selected = Context.Request.Query["ToCountry"] == "Palestine" },
-                            new SelectListItem{ Text="Panama", Value = "Panama", Selected = Context.Request.Query["ToCountry"] == "Panama" },
-                            new SelectListItem{ Text="Paraguay", Value = "Paraguay", Selected = Context.Request.Query["ToCountry"] == "Paraguay" },
-                            new SelectListItem{ Text="Peru", Value = "Peru", Selected = Context.Request.Query["ToCountry"] == "Peru" },
-                            new SelectListItem{ Text="Philippines", Value = "Philippines", Selected = Context.Request.Query["ToCountry"] == "Philippines" },
-                            new SelectListItem{ Text="Poland", Value = "Poland", Selected = Context.Request.Query["ToCountry"] == "Poland" },
-                            new SelectListItem{ Text="Portugal", Value = "Portugal", Selected = Context.Request.Query["ToCountry"] == "Portugal" },
-                            new SelectListItem{ Text="Puerto Rico", Value = "Puerto Rico", Selected = Context.Request.Query["ToCountry"] == "Puerto%20Rico" },
-                            new SelectListItem{ Text="Russia", Value = "Russia", Selected = Context.Request.Query["ToCountry"] == "Russia" },
-                            new SelectListItem{ Text="Saint Kitts and Nevis", Value = "Saint Kitts and Nevis", Selected = Context.Request.Query["ToCountry"] == "Saint%20Kitts%20and%20Nevis" },
-                            new SelectListItem{ Text="Saint Martin", Value = "Saint Martin", Selected = Context.Request.Query["ToCountry"] == "Saint%20Martin" },
-                            new SelectListItem{ Text="Saint Vincent and the Grenadines", Value = "Saint Vincent and the Grenadines", Selected = Context.Request.Query["ToCountry"] == "Saint%20Vincent%20and%20the%20Grenadines" },
-                            new SelectListItem{ Text="Saudi Arabia", Value = "Saudi Arabia", Selected = Context.Request.Query["ToCountry"] == "Saudi%20Arabia" },
-                            new SelectListItem{ Text="Serbia", Value = "Serbia", Selected = Context.Request.Query["ToCountry"] == "Serbia" },
-                            new SelectListItem{ Text="Sierra Leone", Value = "Sierra Leone", Selected = Context.Request.Query["ToCountry"] == "Sierra%20Leone" },
-                            new SelectListItem{ Text="Singapore", Value = "Singapore", Selected = Context.Request.Query["ToCountry"] == "Singapore" },
-                            new SelectListItem{ Text="Slovakia", Value = "Slovakia", Selected = Context.Request.Query["ToCountry"] == "Slovakia" },
-                            new SelectListItem{ Text="Slovenia", Value = "Slovenia", Selected = Context.Request.Query["ToCountry"] == "Slovenia" },
-                            new SelectListItem{ Text="South Africa", Value = "South Africa", Selected = Context.Request.Query["ToCountry"] == "South%20Africa" },
-                            new SelectListItem{ Text="South Korea", Value = "South Korea", Selected = Context.Request.Query["ToCountry"] == "South%20Korea" },
-                            new SelectListItem{ Text="Spain", Value = "Spain", Selected = Context.Request.Query["ToCountry"] == "Spain" },
-                            new SelectListItem{ Text="Sri Lanka", Value = "Sri Lanka", Selected = Context.Request.Query["ToCountry"] == "Sri%20Lanka" },
-                            new SelectListItem{ Text="Sweden", Value = "Sweden", Selected = Context.Request.Query["ToCountry"] == "Sweden" },
-                            new SelectListItem{ Text="Switzerland", Value = "Switzerland", Selected = Context.Request.Query["ToCountry"] == "Switzerland" },
-                            new SelectListItem{ Text="Taiwan", Value = "Taiwan", Selected = Context.Request.Query["ToCountry"] == "Taiwan" },
-                            new SelectListItem{ Text="Thailand", Value = "Thailand", Selected = Context.Request.Query["ToCountry"] == "Thailand" },
-                            new SelectListItem{ Text="Trinidad and Tobago", Value = "Trinidad and Tobago", Selected = Context.Request.Query["ToCountry"] == "Trinidad%20and%20Tobago" },
-                            new SelectListItem{ Text="Turkey", Value = "Turkey", Selected = Context.Request.Query["ToCountry"] == "Turkey" },
-                            new SelectListItem{ Text="Ukraine", Value = "Ukraine", Selected = Context.Request.Query["ToCountry"] == "Ukraine" },
-                            new SelectListItem{ Text="United Arab Emirates", Value = "United Arab Emirates", Selected = Context.Request.Query["ToCountry"] == "United%20Arab%20Emirates" },
-                            new SelectListItem{ Text="United Kingdom", Value = "United Kingdom", Selected = Context.Request.Query["ToCountry"] == "United%20Kingdom" },
-                            new SelectListItem{ Text="United States", Value = "United States", Selected = Context.Request.Query["ToCountry"] == "United%20States" },
-                            new SelectListItem{ Text="Uruguay", Value = "Uruguay", Selected = Context.Request.Query["ToCountry"] == "Uruguay" },
-                            new SelectListItem{ Text="Venezuela", Value = "Venezuela", Selected = Context.Request.Query["ToCountry"] == "Venezuela" },
-                            new SelectListItem{ Text="Vietnam", Value = "Vietnam", Selected = Context.Request.Query["ToCountry"] == "Vietnam" },
-                            new SelectListItem{ Text="Zimbabwe", Value = "Zimbabwe", Selected = Context.Request.Query["ToCountry"] == "Zimbabwe" }
-
-                            }, null, new { @class = "form-control" })
+                        <select v-model="filter.toCountry" name="ToCountry" class="form-control">
+                            <option value="">All</option>
+                            <option value="American Samoa">American Samoa</option>
+                            <option value="Anguilla">Anguilla</option>
+                            <option value="Argentina">Argentina</option>
+                            <option value="Aruba">Aruba</option>
+                            <option value="Australia">Australia</option>
+                            <option value="Austria">Austria</option>
+                            <option value="Bahamas">Bahamas</option>
+                            <option value="Bangladesh">Bangladesh</option>
+                            <option value="Barbados">Barbados</option>
+                            <option value="Belgium">Belgium</option>
+                            <option value="Belize">Belize</option>
+                            <option value="Bermuda">Bermuda</option>
+                            <option value="Bolivia">Bolivia</option>
+                            <option value="Brazil">Brazil</option>
+                            <option value="Cambodia">Cambodia</option>
+                            <option value="Canada">Canada</option>
+                            <option value="Cayman Islands">Cayman Islands</option>
+                            <option value="Chile">Chile</option>
+                            <option value="China">China</option>
+                            <option value="Colombia">Colombia</option>
+                            <option value="Comoros">Comoros</option>
+                            <option value="Costa Rica">Costa Rica</option>
+                            <option value="Croatia">Croatia</option>
+                            <option value="Cyprus">Cyprus</option>
+                            <option value="Czech Republic">Czech Republic</option>
+                            <option value="Denmark">Denmark</option>
+                            <option value="Dominica">Dominica</option>
+                            <option value="Dominican Republic">Dominican Republic</option>
+                            <option value="Ecuador">Ecuador</option>
+                            <option value="Egypt">Egypt</option>
+                            <option value="El Salvador">El Salvador</option>
+                            <option value="Estonia">Estonia</option>
+                            <option value="Ethiopia">Ethiopia</option>
+                            <option value="Finland">Finland</option>
+                            <option value="France">France</option>
+                            <option value="French Polynesia">French Polynesia</option>
+                            <option value="Georgia">Georgia</option>
+                            <option value="Germany">Germany</option>
+                            <option value="Ghana">Ghana</option>
+                            <option value="Grenada">Grenada</option>
+                            <option value="Guam">Guam</option>
+                            <option value="Guatemala">Guatemala</option>
+                            <option value="Guyana">Guyana</option>
+                            <option value="Haiti">Haiti</option>
+                            <option value="Honduras">Honduras</option>
+                            <option value="Hong Kong">Hong Kong</option>
+                            <option value="Hungary">Hungary</option>
+                            <option value="Iceland">Iceland</option>
+                            <option value="India">India</option>
+                            <option value="Indonesia">Indonesia</option>
+                            <option value="Iran">Iran</option>
+                            <option value="Iraq">Iraq</option>
+                            <option value="Ireland">Ireland</option>
+                            <option value="Israel">Israel</option>
+                            <option value="Italy">Italy</option>
+                            <option value="Jamaica">Jamaica</option>
+                            <option value="Japan">Japan</option>
+                            <option value="Jersey">Jersey</option>
+                            <option value="Kuwait">Kuwait</option>
+                            <option value="Latvia">Latvia</option>
+                            <option value="Lebanon">Lebanon</option>
+                            <option value="Libya">Libya</option>
+                            <option value="Lithuania">Lithuania</option>
+                            <option value="Luxembourg">Luxembourg</option>
+                            <option value="Macau">Macau</option>
+                            <option value="Madagascar">Madagascar</option>
+                            <option value="Malaysia">Malaysia</option>
+                            <option value="Malta">Malta</option>
+                            <option value="Mauritius">Mauritius</option>
+                            <option value="Mexico">Mexico</option>
+                            <option value="Monaco">Monaco</option>
+                            <option value="Netherlands">Netherlands</option>
+                            <option value="New Caledonia">New Caledonia</option>
+                            <option value="New Zealand">New Zealand</option>
+                            <option value="Nicaragua">Nicaragua</option>
+                            <option value="Nigeria">Nigeria</option>
+                            <option value="Norway">Norway</option>
+                            <option value="NULL">NULL</option>
+                            <option value="Pakistan">Pakistan</option>
+                            <option value="Palestine">Palestine</option>
+                            <option value="Panama">Panama</option>
+                            <option value="Paraguay">Paraguay</option>
+                            <option value="Peru">Peru</option>
+                            <option value="Philippines">Philippines</option>
+                            <option value="Poland">Poland</option>
+                            <option value="Portugal">Portugal</option>
+                            <option value="Puerto Rico">Puerto Rico</option>
+                            <option value="Russia">Russia</option>
+                            <option value="Saint Kitts and Nevis">Saint Kitts and Nevis</option>
+                            <option value="Saint Martin">Saint Martin</option>
+                            <option value="Saint Vincent and the Grenadines">Saint Vincent and the Grenadines</option>
+                            <option value="Saudi Arabia">Saudi Arabia</option>
+                            <option value="Serbia">Serbia</option>
+                            <option value="Sierra Leone">Sierra Leone</option>
+                            <option value="Singapore">Singapore</option>
+                            <option value="Slovakia">Slovakia</option>
+                            <option value="Slovenia">Slovenia</option>
+                            <option value="South Africa">South Africa</option>
+                            <option value="South Korea">South Korea</option>
+                            <option value="Spain">Spain</option>
+                            <option value="Sri Lanka">Sri Lanka</option>
+                            <option value="Sweden">Sweden</option>
+                            <option value="Switzerland">Switzerland</option>
+                            <option value="Taiwan">Taiwan</option>
+                            <option value="Thailand">Thailand</option>
+                            <option value="Trinidad and Tobago">Trinidad and Tobago</option>
+                            <option value="Turkey">Turkey</option>
+                            <option value="Ukraine">Ukraine</option>
+                            <option value="United Arab Emirates">United Arab Emirates</option>
+                            <option value="United Kingdom">United Kingdom</option>
+                            <option value="United States">United States</option>
+                            <option value="Uruguay">Uruguay</option>
+                            <option value="Venezuela">Venezuela</option>
+                            <option value="Vietnam">Vietnam</option>
+                            <option value="Zimbabwe">Zimbabwe</option>
+                        </select>
                     </div>
                     <div class="d-flex align-self-end">
                         <input type="submit" class="btn btn-primary" value="Filter" />
@@ -382,12 +367,14 @@
                                 </td>
                                 <td scope="col">
                                     <span>
-                                        {{shipment.seller.name}}
+                                        <a v-bind:href="'/companies/details/' + shipment.seller.id">{{shipment.seller.name}}</a><br />
+                                        {{shipment.seller.country}}
                                     </span>
                                 </td>
                                 <td scope="col">
                                     <span>
-                                        {{shipment.buyer.name}}
+                                        <a v-bind:href="'/companies/details/' + shipment.buyer.id">{{shipment.buyer.name}}</a><br />
+                                        {{shipment.buyer.country}}
                                     </span>
                                 </td>
                                 <td scope="col">
@@ -476,7 +463,9 @@
                 searchData: { totalPages: 1, shipments: [], totalShipments: 0 },
                 searching: true,
                 filter: {
-                    year: '@Context.Request.Query["year"]'
+                    year: '@Context.Request.Query["year"]',
+                    fromCountry: '@Context.Request.Query["fromCountry"]',
+                    toCountry:'@Context.Request.Query["toCountry"]'
                 }
             },
             methods: {
@@ -529,7 +518,12 @@
                     $.ajax({
                         method: "get",
                         url: '@Url.Action("ShipmentsData", "Search")',
-                        data: { q: '@Context.Request.Query["q"]',page:'@Context.Request.Query["page"]',year:'@Context.Request.Query["year"]' },
+                        data: {
+                            q: '@Context.Request.Query["q"]',
+                            page: '@Context.Request.Query["page"]',
+                            fromCountry: '@Context.Request.Query["fromCountry"]',
+                            toCountry: '@Context.Request.Query["toCountry"]'
+                        },
                         success: function (result) {
                             console.log(result);
                             self.searchData.shipments = result.shipments;
