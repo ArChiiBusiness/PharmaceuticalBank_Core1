@@ -71,7 +71,7 @@
                 <div class="form-row">
                     <div class="col">
                         Year:
-                        <select name="Year">
+                        <select v-model="filter.year" name="Year" class="form-control">
                             <option value="">All</option>
                             <option value="2020">2020</option>
                             <option value="2019">2019</option>
@@ -80,7 +80,7 @@
                             <option value="2016">2016</option>
                             <option value="2015">2015</option>
                         </select>
-                        @Html.DropDownList("Year", new List<SelectListItem>
+                        @*@Html.DropDownList("Year", new List<SelectListItem>
                             {
                                new SelectListItem{ Text="All", Value = ""},
                                new SelectListItem{ Text="2020", Value = "2020", Selected = Context.Request.Query["Year"] == "2020" },
@@ -90,7 +90,7 @@
                                new SelectListItem{ Text="2016", Value = "2016", Selected = Context.Request.Query["Year"] == "2016"},
                                new SelectListItem{ Text="2015", Value = "2015", Selected = Context.Request.Query["Year"] == "2015"},
 
-                            }, null, new { @class = "form-control" })
+                            }, null, new { @class = "form-control" })*@
                     </div>
                     <div class="col">
                         From country:
@@ -474,7 +474,10 @@
                 isAuthenticated: @(User.Identity.IsAuthenticated ? "true" : "false"),
                 recOpened: true,
                 searchData: { totalPages: 1, shipments: [], totalShipments: 0 },
-                searching: true
+                searching: true,
+                filter: {
+                    year: '@Context.Request.Query["year"]'
+                }
             },
             methods: {
                 clickCallback: function (pageNum) {
@@ -526,7 +529,7 @@
                     $.ajax({
                         method: "get",
                         url: '@Url.Action("ShipmentsData", "Search")',
-                        data: { q: '@Context.Request.Query["q"]',page:'@Context.Request.Query["page"]' },
+                        data: { q: '@Context.Request.Query["q"]',page:'@Context.Request.Query["page"]',year:'@Context.Request.Query["year"]' },
                         success: function (result) {
                             console.log(result);
                             self.searchData.shipments = result.shipments;
