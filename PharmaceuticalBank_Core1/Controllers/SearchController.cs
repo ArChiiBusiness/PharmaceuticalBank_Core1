@@ -23,10 +23,11 @@ namespace PharmaceuticalBank_Core1.Controllers
         }
 
         [HttpPost]
-        public IActionResult Filter(string q,string Year, string FromCountry, string ToCountry, int page)
+        public IActionResult Filter(string q, string Year, string FromCountry, string ToCountry, int page)
         {
-            return RedirectToAction("Shipments", "Search", new { 
-                q = q, 
+            return RedirectToAction("Shipments", "Search", new
+            {
+                q = q,
                 page = page,
                 year = Year,
                 FromCountry = FromCountry,
@@ -34,17 +35,17 @@ namespace PharmaceuticalBank_Core1.Controllers
             });
         }
 
-        public IActionResult Shipments(string q, int page, int? Year, string? FromCountry, string? ToCountry)
+        public IActionResult ShipmentsData(string q, int page, int? Year, string? FromCountry, string? ToCountry)
         {
-            ViewData["TotalShipments"] = 1463415; // db.Shipments.AsNoTracking().Count(); // db.Shipments.Where(s => s.GoodsShipped != null).Count();
-            ViewData["TotalBuyers"] = 64734;// db.Shipments.AsNoTracking().Where(c => c.ConsigneeCompanyId != null).Select(c => c.ConsigneeCompanyId).ToList().Distinct().Count(); // db.Shipments.Where(s => s.GoodsShipped != null).Select(b => b.ConsigneeCompanyId).Distinct().Count();
-            ViewData["TotalSuppliers"] = 84005; // db.Shipments.AsNoTracking().Where(c => c.ShipperCompanyId != null).Select(c => c.ShipperCompanyId).ToList().Distinct().Count(); // db.Shipments.Where(s => s.GoodsShipped != null).Select(b => b.ShipperCompanyId).Distinct().Count();
-
             var pageSize = 10;
             var skip = (page - 1) * pageSize;
-            ViewData["LastShipmentData"] = db.Shipments.Include(c => c.ShipperCompany).Include(c => c.ConsigneeCompany).AsNoTracking().OrderByDescending(d => d.Date).First().Date.ToString();
 
-            if (q != null || page >= 1)
+            if (q == null )
+            {
+                q = "";
+            }
+
+            if (q != null && page >= 1)
             {
                 var Shipments = db.Shipments.Include(c => c.ShipperCompany).Include(c => c.ConsigneeCompany).AsNoTracking().Where(
                     s => EF.Functions.Like(s.GoodsShipped, "%" + q + "%") && s.GoodsShipped != null
@@ -63,8 +64,8 @@ namespace PharmaceuticalBank_Core1.Controllers
                 }
                 Shipments = Shipments.OrderByDescending(d => d.Date);
                 var sCount = Shipments.Count();
-                ViewData["TotalShipments"] = sCount;
-                ViewData["TotalPages"] = Math.Ceiling(double.Parse(sCount.ToString()) / pageSize);
+                int totalShipments = sCount;
+                double totalPages = Math.Ceiling(double.Parse(sCount.ToString()) / pageSize);
                 var ShipmentsBOL = Shipments.Select(s => new Models.ShipmentViewModel
                 {
                     Id = s.Id,
@@ -86,15 +87,84 @@ namespace PharmaceuticalBank_Core1.Controllers
                     Date = s.Date
                 }).Skip((pageSize) * (page - 1)).Take(pageSize).ToList();
 
-                return View(ShipmentsBOL);
+                return Json(new { shipments = ShipmentsBOL, totalShipments = totalShipments, totalPages = totalPages});
             }
             else
             {
-                return View();
+                if (q != null)
+                {
+                    return View();
+                }
+                else
+                {
+                    return View();
+                }
             }
         }
 
-        public IActionResult Buyers(string q = default(string), int page = 1)
+        public IActionResult Shipments()
+        {
+            ViewData["TotalShipments"] = 1463415; // db.Shipments.AsNoTracking().Count(); // db.Shipments.Where(s => s.GoodsShipped != null).Count();
+            ViewData["TotalBuyers"] = 64734;// db.Shipments.AsNoTracking().Where(c => c.ConsigneeCompanyId != null).Select(c => c.ConsigneeCompanyId).ToList().Distinct().Count(); // db.Shipments.Where(s => s.GoodsShipped != null).Select(b => b.ConsigneeCompanyId).Distinct().Count();
+            ViewData["TotalSuppliers"] = 84005; // db.Shipments.AsNoTracking().Where(c => c.ShipperCompanyId != null).Select(c => c.ShipperCompanyId).ToList().Distinct().Count(); // db.Shipments.Where(s => s.GoodsShipped != null).Select(b => b.ShipperCompanyId).Distinct().Count();
+
+            return View();
+
+            //var pageSize = 10;
+            //var skip = (page - 1) * pageSize;
+            //ViewData["LastShipmentData"] = db.Shipments.Include(c => c.ShipperCompany).Include(c => c.ConsigneeCompany).AsNoTracking().OrderByDescending(d => d.Date).First().Date.ToString();
+
+            //if (q != null || page >= 1)
+            //{
+            //    var Shipments = db.Shipments.Include(c => c.ShipperCompany).Include(c => c.ConsigneeCompany).AsNoTracking().Where(
+            //        s => EF.Functions.Like(s.GoodsShipped, "%" + q + "%") && s.GoodsShipped != null
+            //        && (s.ConsigneeCompanyId != null || s.ShipperCompanyId != null));
+            //    if (Year != null)
+            //    {
+            //        Shipments = Shipments.Where(s => s.Date.Year == Year);
+            //    }
+            //    if (FromCountry != null)
+            //    {
+            //        Shipments = Shipments.Where(s => s.ShipperCompany.Country == FromCountry);
+            //    }
+            //    if (ToCountry != null)
+            //    {
+            //        Shipments = Shipments.Where(s => s.ConsigneeCompany.Country == ToCountry);
+            //    }
+            //    Shipments = Shipments.OrderByDescending(d => d.Date);
+            //    var sCount = Shipments.Count();
+            //    ViewData["TotalShipments"] = sCount;
+            //    ViewData["TotalPages"] = Math.Ceiling(double.Parse(sCount.ToString()) / pageSize);
+            //    var ShipmentsBOL = Shipments.Select(s => new Models.ShipmentViewModel
+            //    {
+            //        Id = s.Id,
+            //        Buyer = new Models.CompanyViewModel
+            //        {
+            //            Id = s.ConsigneeCompany.Id,
+            //            Address = s.ConsigneeCompany.Address,
+            //            Name = s.ConsigneeCompany.Name,
+            //            Country = s.ConsigneeCompany.Country
+            //        },
+            //        Seller = new Models.CompanyViewModel
+            //        {
+            //            Id = s.ShipperCompany.Id,
+            //            Address = s.ShipperCompany.Address,
+            //            Name = s.ShipperCompany.Name,
+            //            Country = s.ShipperCompany.Country
+            //        },
+            //        Description = Strings.StrConv(s.GoodsShipped.Replace("\"", "'"), VbStrConv.ProperCase, 0),
+            //        Date = s.Date
+            //    }).Skip((pageSize) * (page - 1)).Take(pageSize).ToList();
+
+            //    return Json(ShipmentsBOL);
+            //}
+            //else
+            //{
+            //    return View();
+            //}
+        }
+
+        public IActionResult Buyers(string q = default(string), int page = 1, int Year = 2020)
         {
             ViewData["TotalShipments"] = 1463415; // db.Shipments.AsNoTracking().Count(); // db.Shipments.Where(s => s.GoodsShipped != null).Count();
             ViewData["TotalBuyers"] = 64734;// db.Shipments.AsNoTracking().Where(c => c.ConsigneeCompanyId != null).Select(c => c.ConsigneeCompanyId).ToList().Distinct().Count(); // db.Shipments.Where(s => s.GoodsShipped != null).Select(b => b.ConsigneeCompanyId).Distinct().Count();
@@ -103,14 +173,14 @@ namespace PharmaceuticalBank_Core1.Controllers
             var pageSize = 10;
             var skip = (page - 1) * pageSize;
 
-            var query = db.Shipments.Where(s => EF.Functions.Like(s.GoodsShipped, "%" + q + "%") && s.ConsigneeCompanyId != null);
+            var query = db.Shipments.Where(d => d.Date.Year == Year).Where(s => EF.Functions.Like(s.GoodsShipped, "%" + q + "%") && s.ConsigneeCompanyId != null);
             var CompaniesDAL = (from c in query.Select(cm => new SearchResultViewModel.CompanyViewModel
             {
                 Id = cm.ConsigneeCompany.Id,
                 Name = cm.ConsigneeCompany.Name,
                 Address = cm.ConsigneeCompany.Address + ", " + cm.ConsigneeCompany.City + ", " + cm.ConsigneeCompany.StateRegion,
                 Country = cm.ConsigneeCompany.Country,
-                Phone = cm.ConsigneeCompany.Phone1
+                Phone = ""
             }).Distinct()
                                 orderby query.Where(s => s.ConsigneeCompany.Id == c.Id).Count() descending
                                 select new SearchResultViewModel.SearchResultViewModelCompany { Company = c, Count = query.Where(s => s.ConsigneeCompanyId == c.Id).Count() });
@@ -120,7 +190,7 @@ namespace PharmaceuticalBank_Core1.Controllers
             return View(new SearchResultViewModel { Companies = CompaniesDAL.Skip((pageSize) * (page - 1)).Take(pageSize).ToList(), TotalCount = CompaniesDAL.Count() });
         }
 
-        public IActionResult Suppliers(string q = default(string), int page = 1)
+        public IActionResult Suppliers(string q = default(string), int page = 1, int Year = 2020)
         {
             ViewData["TotalShipments"] = 1463415; // db.Shipments.AsNoTracking().Count(); // db.Shipments.Where(s => s.GoodsShipped != null).Count();
             ViewData["TotalBuyers"] = 64734;// db.Shipments.AsNoTracking().Where(c => c.ConsigneeCompanyId != null).Select(c => c.ConsigneeCompanyId).ToList().Distinct().Count(); // db.Shipments.Where(s => s.GoodsShipped != null).Select(b => b.ConsigneeCompanyId).Distinct().Count();
@@ -129,7 +199,8 @@ namespace PharmaceuticalBank_Core1.Controllers
             var pageSize = 10;
             var skip = (page - 1) * pageSize;
 
-            var query = db.Shipments.Where(s => EF.Functions.Like(s.GoodsShipped, "%" + q + "%") && s.ShipperCompanyId != null);
+            var query = db.Shipments.Where(d => d.Date.Year == Year).Where(s => EF.Functions.Like(s.GoodsShipped, "%" + q + "%") && s.ShipperCompanyId != null);
+
             var CompaniesDAL = (from c in query.Select(cm => new SearchResultViewModel.CompanyViewModel
             {
                 Id = cm.ShipperCompany.Id,

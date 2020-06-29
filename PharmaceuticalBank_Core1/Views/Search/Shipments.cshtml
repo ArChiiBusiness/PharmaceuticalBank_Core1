@@ -4,7 +4,7 @@
 
 @model List<ShipmentViewModel>;
 @using Microsoft.VisualBasic;
-@{ var db = new PharmaceuticalBank_Core1.Models.DAL.excelpro_pharmabankContext(); }
+@{ var db = new PharmaceuticalBank_Core1.Models.DAL4.pharmabank1Context(); }
 
 <div id="MainFrame" class="pb-5" v-on:click="recOpened = false">
     <div class="jumbotron jumbotron-fluid m-0 pl-0 pr-0 py-3">
@@ -14,10 +14,10 @@
                     @Html.ActionLink("Looking for shipments (" + String.Format("{0:n0}", ViewData["TotalShipments"]) + ")", "Shipments", "Search", new { q = Context.Request.Query["q"], page = 1 }, new { @class = "btn btn-outline-primary btn-block active rounded-0", @style = "border-radius:0.25em !important;" })
                 </div>
                 <div class="col-4 p-1">
-                    @Html.ActionLink("Looking for suppliers (" + String.Format("{0:n0}", ViewData["TotalSuppliers"]) + ")", "Suppliers", "Search", new { q = Context.Request.Query["q"], page = 1 }, new { @class = "btn btn-outline-primary btn-block", @style = "border-radius:0.25em !important;" })
+                    @Html.ActionLink("Looking for suppliers (" + String.Format("{0:n0}", ViewData["TotalSuppliers"]) + ")", "Suppliers", "Search", new { q = Context.Request.Query["q"], page = 1, Year = 2020 }, new { @class = "btn btn-outline-primary btn-block", @style = "border-radius:0.25em !important;" })
                 </div>
                 <div class="col-4 p-1">
-                    @Html.ActionLink("Looking for buyers (" + String.Format("{0:n0}", ViewData["TotalBuyers"]) + ")", "Buyers", "Search", new { q = Context.Request.Query["q"], page = 1 }, new { @class = "btn btn-outline-primary btn-block", @style = "border-radius:0.25em !important;" })
+                    @Html.ActionLink("Looking for buyers (" + String.Format("{0:n0}", ViewData["TotalBuyers"]) + ")", "Buyers", "Search", new { q = Context.Request.Query["q"], page = 1, Year = 2020 }, new { @class = "btn btn-outline-primary btn-block", @style = "border-radius:0.25em !important;" })
                 </div>
             </div>
 
@@ -71,6 +71,15 @@
                 <div class="form-row">
                     <div class="col">
                         Year:
+                        <select name="Year">
+                            <option value="">All</option>
+                            <option value="2020">2020</option>
+                            <option value="2019">2019</option>
+                            <option value="2018">2018</option>
+                            <option value="2017">2017</option>
+                            <option value="2016">2016</option>
+                            <option value="2015">2015</option>
+                        </select>
                         @Html.DropDownList("Year", new List<SelectListItem>
                             {
                                new SelectListItem{ Text="All", Value = ""},
@@ -349,46 +358,87 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var shipment in Model)
+                            <tr v-if="searching == true">
+                                <td colspan="4">
+                                    <div class="text-center">
+                                        <div class="spinner-border" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr v-if="searching == false && searchData.totalShipments == 0">
+                                <td colspan="4">
+                                    <div class="text-center">
+                                        No shipments found
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr v-for="shipment in searchData.shipments">
+                                <td scope="col">
+                                    <span>
+                                        {{shipment.date}}
+                                    </span>
+                                </td>
+                                <td scope="col">
+                                    <span>
+                                        {{shipment.seller.name}}
+                                    </span>
+                                </td>
+                                <td scope="col">
+                                    <span>
+                                        {{shipment.buyer.name}}
+                                    </span>
+                                </td>
+                                <td scope="col">
+                                    <span v-html="getMarkedHTML(shipment.description,150)">
+                                    </span>
+                                </td>
+                            </tr>
+
+                            @if (false)
                             {
-                                <tr>
-                                    <td scope="col">
-                                        <span>
-                                            @shipment.Date.ToShortDateString()
-                                            @if (shipment.Date > DateTime.Now.AddDays(-30))
-                                            {@Html.Raw("<span class='badge badge-primary'>New</span>");
+                                @foreach (var shipment in Model)
+                                {
+                                    <tr>
+                                        <td scope="col">
+                                            <span>
+                                                @shipment.Date.ToShortDateString()
+                                                @if (shipment.Date > DateTime.Now.AddDays(-30))
+                                                {@Html.Raw("<span class='badge badge-primary'>New</span>");
+                                            }
+                                            </span>
+                                        </td>
+                                        @if (shipment.Seller.Name == null)
+                                        {
+                                            <td scope="col">-</td>
                                         }
-                                        </span>
-                                    </td>
-                                    @if (shipment.Seller.Name == null)
-                                    {
-                                        <td scope="col">-</td>
-                                    }
-                                    else
-                                    {
-                                        <td scope="col">@Html.ActionLink(shipment.Seller.Name, "Details", "Companies", new { Id = shipment.Seller.Id }) <br />@shipment.Seller.Country </td>
-                                    }
-                                    @if (shipment.Buyer.Name == null)
-                                    {
-                                        <td scope="col">-</td>
-                                    }
-                                    else
-                                    {
-                                        <td scope="col">@Html.ActionLink(shipment.Buyer.Name, "Details", "Companies", new { Id = shipment.Buyer.Id }) <br />@shipment.Buyer.Country</td>
-                                    }
-                                    <td scope="col">
-                                        <a class="text-dark" href="@Url.Action("Details","Shipments", new { id = shipment.Id, q = Context.Request.Query["q"]})">
-                                            <span v-html='getMarkedHTML("@System.Text.RegularExpressions.Regex.Replace(shipment.Description, "[^a-zA-Z0-9 -]", " ")",150)'></span>
-                                        </a>
-                                        @*@Html.ActionLink(shipment.Description.Replace("Pharma","<b>Pharma</b>"), "Details", "Shipments", new { Id = shipment.Id })*@
-                                    </td>
-                                </tr>
+                                        else
+                                        {
+                                            <td scope="col">@Html.ActionLink(shipment.Seller.Name, "Details", "Companies", new { Id = shipment.Seller.Id }) <br />@shipment.Seller.Country </td>
+                                        }
+                                        @if (shipment.Buyer.Name == null)
+                                        {
+                                            <td scope="col">-</td>
+                                        }
+                                        else
+                                        {
+                                            <td scope="col">@Html.ActionLink(shipment.Buyer.Name, "Details", "Companies", new { Id = shipment.Buyer.Id }) <br />@shipment.Buyer.Country</td>
+                                        }
+                                        <td scope="col">
+                                            <a class="text-dark" href="@Url.Action("Details","Shipments", new { id = shipment.Id, q = Context.Request.Query["q"]})">
+                                                <span v-html='getMarkedHTML("@System.Text.RegularExpressions.Regex.Replace(shipment.Description, "[^a-zA-Z0-9 -]", " ")",150)'></span>
+                                            </a>
+                                            @*@Html.ActionLink(shipment.Description.Replace("Pharma","<b>Pharma</b>"), "Details", "Shipments", new { Id = shipment.Id })*@
+                                        </td>
+                                    </tr>
+                                }
                             }
                         </tbody>
                     </table>
                 </div>
 
-                <paginate :page-count="@ViewData["TotalPages"]"
+                <paginate v-if="searching == false && searchData.totalPages > 0" :page-count="searchData.totalPages"
                           :page-range="5"
                           :margin-pages="2"
                           :page-link-class="'page-link'"
@@ -422,7 +472,9 @@
                 searchText: '@Context.Request.Query["q"]',
                 searchRecommendations: [],
                 isAuthenticated: @(User.Identity.IsAuthenticated ? "true" : "false"),
-                recOpened: true
+                recOpened: true,
+                searchData: { totalPages: 1, shipments: [], totalShipments: 0 },
+                searching: true
             },
             methods: {
                 clickCallback: function (pageNum) {
@@ -467,11 +519,31 @@
                         console.log(startPos);
                         return text.replace(reg, function (str) { return '<strong style="color:#4C8BF5;">' + str + '</strong>' }).substr(startPos, len);
                     }
+                },
+                loadSearchData: function () {
+                    let self = this;
+                    self.searching = true;
+                    $.ajax({
+                        method: "get",
+                        url: '@Url.Action("ShipmentsData", "Search")',
+                        data: { q: '@Context.Request.Query["q"]',page:'@Context.Request.Query["page"]' },
+                        success: function (result) {
+                            console.log(result);
+                            self.searchData.shipments = result.shipments;
+                            self.searchData.totalPages = result.totalPages;
+                            self.searchData.totalShipments = result.totalShipments;
+                            self.searching = false;
+                        },
+                        error: function () {
+                            self.searching = false;
+                        }
+                    });
                 }
             },
             created: function () {
                 this.presearch();
                 this.recOpened = false;
+                this.loadSearchData();
             },
             watch: {
             }

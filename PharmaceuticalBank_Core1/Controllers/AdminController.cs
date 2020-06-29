@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using Hangfire;
 using Microsoft.AspNetCore.Identity.UI.V3.Pages.Internal.Account;
 using Microsoft.AspNetCore.StaticFiles.Infrastructure;
+using PB.Core.DE;
 
 namespace PharmaceuticalBank_Core1.Controllers
 {
@@ -177,6 +178,28 @@ namespace PharmaceuticalBank_Core1.Controllers
             PhrasesDAL.ForEach(p => p.SellerPopularity = ShipmentsBOL.Where(s => s.Contains(p.Phrase.ToLower())).Count());
 
             db.SaveChanges();
+        }
+
+        public IActionResult DEUpdateNeededCount()
+        {
+            var DataEverywhereProcessor = new DataEverywhereProcessor();
+            return Content(DataEverywhereProcessor.GetUpdateCount().ToString());
+        }
+
+        public IActionResult DEUpdateFeeds()
+        {
+            DataEverywhereProcessor DEProcessor = new DataEverywhereProcessor();
+            var feeds = DEProcessor.GetFeeds();
+
+            foreach (var feed in feeds)
+            {
+                if (DEProcessor.PendingUpdate(feed))
+                {
+                    DEProcessor.UpdateFeed(feed);
+                }
+            }
+
+            return Ok();
         }
 
     }
