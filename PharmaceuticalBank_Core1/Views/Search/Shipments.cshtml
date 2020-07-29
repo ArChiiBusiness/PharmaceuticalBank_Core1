@@ -6,7 +6,13 @@
 @using Microsoft.VisualBasic;
 @{ var db = new PharmaceuticalBank_Core1.Models.DAL4.pharmabank1Context(); }
 
-<div id="MainFrame" class="pb-5" v-on:click="recOpened = false">
+@{if(!User.Identity.IsAuthenticated) {
+    <p>
+        <a href="~/Identity/Account/Login">You are not allowed to view this page, please login.</a>
+    </p>
+}}
+
+<div id="MainFrame" class="pb-5" v-on:click="recOpened = false" v-if="auhorized == 'True'">
     <div class="jumbotron jumbotron-fluid m-0 pl-0 pr-0 py-3">
         <div class="container">
             <div class="row mt-3 mb-2 p-3">
@@ -23,7 +29,7 @@
 
             <div class="row no-gutters border-0">
                 <div class="col">
-                    <input v-on:click.stop="recOpened = true" v-model="searchText" v-on:input="presearch(); recOpened = true" class="form-control" type="search" placeholder="Enter a product, product type">
+                    <input v-on:click.stop="recOpened = true" v-model="searchText" v-on:keyup.enter="search()" v-on:input="presearch(); recOpened = true" class="form-control" type="search" placeholder="Enter a product, product type">
                 </div>
                 <div class="col-auto">
                     <button v-on:click="search();" class="btn btn-outline-primary rounded-0 ml-2" type="button">
@@ -362,7 +368,7 @@
                             <tr v-for="shipment in searchData.shipments">
                                 <td scope="col">
                                     <span>
-                                        {{shipment.date}}
+                                        {{shipment.date.split("T")[0]}}
                                     </span>
                                 </td>
                                 <td scope="col">
@@ -378,47 +384,47 @@
                                     </span>
                                 </td>
                                 <td scope="col">
-                                    <span v-html="getMarkedHTML(shipment.description,150)">
-                                    </span>
+                                    <a style="color:inherit" v-bind:href="'/shipments/details/' + shipment.id" v-html="getMarkedHTML(shipment.description,150)">
+                                    </a>
                                 </td>
                             </tr>
 
                             @if (false)
                             {
-                                @foreach (var shipment in Model)
+                            @foreach (var shipment in Model)
                                 {
-                                    <tr>
-                                        <td scope="col">
-                                            <span>
-                                                @shipment.Date.ToShortDateString()
-                                                @if (shipment.Date > DateTime.Now.AddDays(-30))
+                            <tr>
+                                <td scope="col">
+                                    <span>
+                                        @shipment.Date.ToShortDateString()
+                                        @if (shipment.Date > DateTime.Now.AddDays(-30))
                                                 {@Html.Raw("<span class='badge badge-primary'>New</span>");
                                             }
-                                            </span>
-                                        </td>
-                                        @if (shipment.Seller.Name == null)
+                                    </span>
+                                </td>
+                                @if (shipment.Seller.Name == null)
                                         {
-                                            <td scope="col">-</td>
+                                <td scope="col">-</td>
                                         }
                                         else
                                         {
-                                            <td scope="col">@Html.ActionLink(shipment.Seller.Name, "Details", "Companies", new { Id = shipment.Seller.Id }) <br />@shipment.Seller.Country </td>
+                                <td scope="col">@Html.ActionLink(shipment.Seller.Name, "Details", "Companies", new { Id = shipment.Seller.Id }) <br />@shipment.Seller.Country </td>
                                         }
-                                        @if (shipment.Buyer.Name == null)
+                                @if (shipment.Buyer.Name == null)
                                         {
-                                            <td scope="col">-</td>
+                                <td scope="col">-</td>
                                         }
                                         else
                                         {
-                                            <td scope="col">@Html.ActionLink(shipment.Buyer.Name, "Details", "Companies", new { Id = shipment.Buyer.Id }) <br />@shipment.Buyer.Country</td>
+                                <td scope="col">@Html.ActionLink(shipment.Buyer.Name, "Details", "Companies", new { Id = shipment.Buyer.Id }) <br />@shipment.Buyer.Country</td>
                                         }
-                                        <td scope="col">
-                                            <a class="text-dark" href="@Url.Action("Details","Shipments", new { id = shipment.Id, q = Context.Request.Query["q"]})">
-                                                <span v-html='getMarkedHTML("@System.Text.RegularExpressions.Regex.Replace(shipment.Description, "[^a-zA-Z0-9 -]", " ")",150)'></span>
-                                            </a>
-                                            @*@Html.ActionLink(shipment.Description.Replace("Pharma","<b>Pharma</b>"), "Details", "Shipments", new { Id = shipment.Id })*@
-                                        </td>
-                                    </tr>
+                                <td scope="col">
+                                    <a class="text-dark" href="@Url.Action("Details","Shipments", new { id = shipment.Id, q = Context.Request.Query["q"]})">
+                                        <span v-html='getMarkedHTML("@System.Text.RegularExpressions.Regex.Replace(shipment.Description, "[^a-zA-Z0-9 -]", " ")",150)'></span>
+                                    </a>
+                                    @*@Html.ActionLink(shipment.Description.Replace("Pharma","<b>Pharma</b>"), "Details", "Shipments", new { Id = shipment.Id })*@
+                                </td>
+                            </tr>
                                 }
                             }
                         </tbody>
@@ -462,6 +468,7 @@
                 recOpened: true,
                 searchData: { totalPages: 1, shipments: [], totalShipments: 0 },
                 searching: true,
+                auhorized: '@User.Identity.IsAuthenticated',
                 filter: {
                     year: '@Context.Request.Query["year"]',
                     fromCountry: '@Context.Request.Query["fromCountry"]',
@@ -521,6 +528,7 @@
                         data: {
                             q: '@Context.Request.Query["q"]',
                             page: '@Context.Request.Query["page"]',
+                            year:'@Context.Request.Query["year"]',
                             fromCountry: '@Context.Request.Query["fromCountry"]',
                             toCountry: '@Context.Request.Query["toCountry"]'
                         },
@@ -528,7 +536,7 @@
                             console.log(result);
                             self.searchData.shipments = result.shipments;
                             self.searchData.totalPages = result.totalPages;
-                            self.searchData.totalShipments = result.totalShipments;
+                            self.searchData.totalShipments = result.totalShipments.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
                             self.searching = false;
                         },
                         error: function () {

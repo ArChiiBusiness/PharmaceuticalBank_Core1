@@ -14,9 +14,11 @@ using PharmaceuticalBank_Core1.Models.DAL3;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PharmaceuticalBank_Core1.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

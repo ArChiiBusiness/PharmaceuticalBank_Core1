@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using PharmaceuticalBank_Core1.Models.DAL4;
 
 namespace PharmaceuticalBank_Core1.Controllers
 {
+    [Authorize]
     public class CompaniesController : Controller
     {
         private pharmabank1Context db = new pharmabank1Context();
@@ -41,12 +43,22 @@ namespace PharmaceuticalBank_Core1.Controllers
                 .Select(c => new CompanyViewModel
                 {
                     Id = c.Id,
-                    Address = c.Address + ", " + c.City + ", " + c.StateRegion,
+                    Address = string.Join(",", c.Address,c.City,c.StateRegion).Replace(",,",","),
                     Email = c.Email1,
                     Name = c.Name,
                     Country = c.Country
                 }
                 ).FirstOrDefaultAsync();
+
+            if (CompanyBOL.Address.Substring(0,1) == ",")
+            {
+                CompanyBOL.Address = CompanyBOL.Address.Substring(1, CompanyBOL.Address.Length - 1);
+            }
+
+            if (CompanyBOL.Address == "," || CompanyBOL.Address == null || CompanyBOL.Address == "")
+            {
+                CompanyBOL.Address = "-";
+            }
 
             if (CompanyBOL.Email == null)
             {

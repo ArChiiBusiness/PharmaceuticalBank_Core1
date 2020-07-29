@@ -36,7 +36,7 @@ namespace PB.Core.DE
 
         public bool PendingUpdate(FeedModel feed)
         {
-            return feed.Description == "ClientRequest";
+            return (feed.Description == "ClientBuyRequest" || feed.Description == "ClientSellRequest");
         }
 
         public bool UpdateFeed(FeedModel feed)
@@ -50,46 +50,75 @@ namespace PB.Core.DE
             {
                 bool toAdd = false;
                 var newRow = new JObject();
-                newRow["Looking to buy"] = "";
-                newRow["Results [Buy]"] = "";
-                newRow["Companies  [Buy]"] = "";
-                newRow["Date  [Buy]"] = "";
-                newRow["Looking to sell"] = "";
-                newRow["Results [Sell]"] = "";
-                newRow["Companies  [Sell]"] = "";
-                newRow["Date  [Sell]"] = "";
 
-                foreach (var col in row)
+                if (feed.Description == "ClientBuyRequest")
                 {
-                    string columnName = col.Key;
-                    string getValue = col.Value.ToString();
+                    newRow["Looking to buy"] = "";
+                    newRow["Strenght"] = "";
+                    newRow["Quantity"] = "";
+                    newRow["Results"] = "";
+                    newRow["Companies"] = "";
+                    newRow["Date"] = "";
 
-
-                    if (columnName == "Looking to buy" && getValue != "")
+                    foreach (var col in row)
                     {
-                        toAdd = true;
-                        newRow["Looking to buy"] = getValue;
-                        newRow["Results [Buy]"] = db.Shipments.FromSqlRaw("SELECT Date FROM Shipments WHERE[Goods Shipped] LIKE '%" + getValue + "%' AND ShipperCompanyId IS NOT NULL").Count() + " Results";
-                        newRow["Companies  [Buy]"] = db.Shipments.FromSqlRaw("SELECT DISTINCT(ShipperCompanyId) FROM Shipments WHERE[Goods Shipped] LIKE '%" + getValue + "%' AND ShipperCompanyId IS NOT NULL").Count() + " Company";
-                        newRow["Date  [Buy]"] = db.Shipments.FromSqlRaw("SELECT Date FROM Shipments WHERE[Goods Shipped] LIKE '%" + getValue + "%' AND ShipperCompanyId IS NOT NULL AND Date IS NOT NULL").Select(d => d.Date).Max();
+                        string columnName = col.Key;
+                        string getValue = col.Value.ToString();
+
+                        if (columnName == "Looking to buy" && getValue != "")
+                        {
+                            toAdd = true;
+                            newRow["Looking to buy"] = getValue;
+                            newRow["Strenght"] = "";
+                            newRow["Quantity"] = "";
+                            newRow["Results"] = String.Format("{0:n0}",db.Shipments.FromSqlRaw("SELECT Date FROM Shipments WHERE Contains([Goods Shipped],'" + getValue + "') AND ShipperCompanyId IS NOT NULL").Count()) + " Results";
+                            newRow["Companies"] = String.Format("{0:n0}",db.Shipments.FromSqlRaw("SELECT DISTINCT(ShipperCompanyId) FROM Shipments WHERE Contains([Goods Shipped],'" + getValue + "') AND ShipperCompanyId IS NOT NULL").Count()) + " Companies";
+                            newRow["Date"] = db.Shipments.FromSqlRaw("SELECT Date FROM Shipments WHERE Contains([Goods Shipped],'" + getValue + "') AND ShipperCompanyId IS NOT NULL AND Date IS NOT NULL").Select(d => d.Date).Max();
+                        }
                     }
 
-                    if (columnName == "Looking to sell" && getValue != "")
+                    if (toAdd)
                     {
-                        toAdd = true;
-                        newRow["Looking to sell"] = getValue;
-                        newRow["Results [Sell]"] = db.Shipments.FromSqlRaw("SELECT Date FROM Shipments WHERE[Goods Shipped] LIKE '%" + getValue + "%' AND ConsigneeCompanyId IS NOT NULL").Count() + " Results";
-                        newRow["Companies  [Sell]"] = db.Shipments.FromSqlRaw("SELECT DISTINCT(ConsigneeCompanyId) FROM Shipments WHERE[Goods Shipped] LIKE '%" + getValue + "%' AND ConsigneeCompanyId IS NOT NULL").Count() + " Company";
-                        newRow["Date  [Sell]"] = db.Shipments.FromSqlRaw("SELECT Date FROM Shipments WHERE[Goods Shipped] LIKE '%" + getValue + "%' AND ConsigneeCompanyId IS NOT NULL AND Date IS NOT NULL").Select(d => d.Date).Max();
+                        newFeedData.Add(newRow);
                     }
+
+                    toAdd = false;
+
                 }
 
-                if (toAdd)
+                if (feed.Description == "ClientSellRequest")
                 {
-                    newFeedData.Add(newRow);
-                }
+                    newRow["Looking to sell"] = "";
+                    newRow["Strenght"] = "";
+                    newRow["Quantity"] = "";
+                    newRow["Results"] = "";
+                    newRow["Companies"] = "";
+                    newRow["Date"] = "";
+                    foreach (var col in row)
+                    {
+                        string columnName = col.Key;
+                        string getValue = col.Value.ToString();
 
-                toAdd = false;
+                        if (columnName == "Looking to sell" && getValue != "")
+                        {
+                            toAdd = true;
+                            newRow["Looking to sell"] = getValue;
+                            newRow["Strenght"] = "";
+                            newRow["Quantity"] = "";
+                            newRow["Results"] = String.Format("{0:n0}",db.Shipments.FromSqlRaw("SELECT Date FROM Shipments WHERE Contains([Goods Shipped],'" + getValue + "') AND ConsigneeCompanyId IS NOT NULL").Count()) + " Results";
+                            newRow["Companies"] = String.Format("{0:n0}",db.Shipments.FromSqlRaw("SELECT DISTINCT(ConsigneeCompanyId) FROM Shipments WHERE Contains([Goods Shipped],'" + getValue + "') AND ConsigneeCompanyId IS NOT NULL").Count()) + " Companies";
+                            newRow["Date"] = db.Shipments.FromSqlRaw("SELECT Date FROM Shipments WHERE Contains([Goods Shipped],'" + getValue + "') AND ConsigneeCompanyId IS NOT NULL AND Date IS NOT NULL").Select(d => d.Date).Max();
+                        }
+                    }
+
+                    if (toAdd)
+                    {
+                        newFeedData.Add(newRow);
+                    }
+
+                    toAdd = false;
+                }
+                
             }
 
             if (newFeedData.Count > 0)

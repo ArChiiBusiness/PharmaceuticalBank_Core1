@@ -51,14 +51,14 @@
             @{
                 var ShipmentsQuery = db.Shipments.Where(s => s.ShipperCompanyId == Model.Id || s.ConsigneeCompanyId == Model.Id);
             }
-            <h5>Total shipments: @ShipmentsQuery.Count()</h5>
+            <h5>Total shipments: @ShipmentsQuery.Count().ToString("N0")</h5>
             <ul class="list-unstyled">
-                <li>2020: @ShipmentsQuery.Where(s => s.Date.Year == 2020).Count()</li>
-                <li>2019: @ShipmentsQuery.Where(s => s.Date.Year == 2019).Count()</li>
-                <li>2018: @ShipmentsQuery.Where(s => s.Date.Year == 2018).Count()</li>
-                <li>2017: @ShipmentsQuery.Where(s => s.Date.Year == 2017).Count()</li>
-                <li>2016: @ShipmentsQuery.Where(s => s.Date.Year == 2016).Count()</li>
-                <li>2015: @ShipmentsQuery.Where(s => s.Date.Year == 2015).Count()</li>
+                <li>2020: @ShipmentsQuery.Where(s => s.Date.Year == 2020).Count().ToString("N0")</li>
+                <li>2019: @ShipmentsQuery.Where(s => s.Date.Year == 2019).Count().ToString("N0")</li>
+                <li>2018: @ShipmentsQuery.Where(s => s.Date.Year == 2018).Count().ToString("N0")</li>
+                <li>2017: @ShipmentsQuery.Where(s => s.Date.Year == 2017).Count().ToString("N0")</li>
+                <li>2016: @ShipmentsQuery.Where(s => s.Date.Year == 2016).Count().ToString("N0")</li>
+                <li>2015: @ShipmentsQuery.Where(s => s.Date.Year == 2015).Count().ToString("N0")</li>
             </ul>
             <div>
                 <input type="button" class="btn btn-outline-success contactBtn" value="Connect with company" />
@@ -98,7 +98,7 @@
                         @Html.ActionLink(partner.Partner.Name, "Details", "Companies", new { Id = partner.PartnerId }) @partner.Partner.Country
                     </dt>
                         <dd class="col-sm-4">
-                            @partner.Count shipments
+                            @partner.Count.ToString("N0") shipments
                         </dd>
                     }
                 </dl>
@@ -112,7 +112,7 @@
                             @Html.ActionLink(partner.Partner.Name, "Details", "Companies", new { Id = partner.PartnerId }) @partner.Partner.Country
                         </dt>
                         <dd class="col-sm-4">
-                            @partner.Count shipments
+                            @partner.Count.ToString("N0") shipments
                         </dd>
                     }
                 </dl>
