@@ -46,11 +46,11 @@
         <div class="row mb-3">
             <div class="col-12 mt-4">
                 Year:
-                <a href="/Search/Buyers?page=1&Year=2016" class="@(Context.Request.Query["Year"] == "2016" ? "btn btn-sm btn-primary" : "btn btn-sm btn-outline-primary")">2016</a> |
-                <a href="/Search/Buyers?page=1&Year=2017" class="@(Context.Request.Query["Year"] == "2017" ? "btn btn-sm btn-primary" : "btn btn-sm btn-outline-primary")">2017</a> |
-                <a href="/Search/Buyers?page=1&Year=2018" class="@(Context.Request.Query["Year"] == "2018" ? "btn btn-sm btn-primary" : "btn btn-sm btn-outline-primary")">2018</a> |
-                <a href="/Search/Buyers?page=1&Year=2019" class="@(Context.Request.Query["Year"] == "2019" ? "btn btn-sm btn-primary" : "btn btn-sm btn-outline-primary")">2019</a> |
-                <a href="/Search/Buyers?page=1&Year=2020" class="@(Context.Request.Query["Year"] == "2020" ? "btn btn-sm btn-primary" : "btn btn-sm btn-outline-primary")">2020</a>
+                <a href="/Search/Buyers?page=1&Year=2016&q=@Context.Request.Query["q"]" class="@(Context.Request.Query["Year"] == "2016" ? "btn btn-sm btn-primary" : "btn btn-sm btn-outline-primary")">2016</a> |
+                <a href="/Search/Buyers?page=1&Year=2017&q=@Context.Request.Query["q"]" class="@(Context.Request.Query["Year"] == "2017" ? "btn btn-sm btn-primary" : "btn btn-sm btn-outline-primary")">2017</a> |
+                <a href="/Search/Buyers?page=1&Year=2018&q=@Context.Request.Query["q"]" class="@(Context.Request.Query["Year"] == "2018" ? "btn btn-sm btn-primary" : "btn btn-sm btn-outline-primary")">2018</a> |
+                <a href="/Search/Buyers?page=1&Year=2019&q=@Context.Request.Query["q"]" class="@(Context.Request.Query["Year"] == "2019" ? "btn btn-sm btn-primary" : "btn btn-sm btn-outline-primary")">2019</a> |
+                <a href="/Search/Buyers?page=1&Year=2020&q=@Context.Request.Query["q"]" class="@(Context.Request.Query["Year"] == "2020" ? "btn btn-sm btn-primary" : "btn btn-sm btn-outline-primary")">2020</a>
             </div>
         </div>
         <div class="row mb-3">
@@ -157,7 +157,7 @@
                     };
                 },
                 search: function () {
-                    window.location.href = '?q=' + encodeURI(this.searchText) + '&page=1';
+                    window.location.href = '?q=' + encodeURI(this.searchText) + '&page=1&Year=@Context.Request.Query["Year"]';
                 },
                 sendRequest: function () {
                     alert("Request sent. Thank you!");
