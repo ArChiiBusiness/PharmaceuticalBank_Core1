@@ -201,7 +201,7 @@ namespace PharmaceuticalBank_Core1.Controllers
                 Name = cm.ConsigneeCompany.Name,
                 Address = cm.ConsigneeCompany.Address + "," + cm.ConsigneeCompany.City + "," + cm.ConsigneeCompany.StateRegion,
                 Country = cm.ConsigneeCompany.Country,
-                Phone = ""
+                Phone = cm.ConsigneeCompany.Phone1
             }).Distinct()
                                 //orderby query.Where(s => s.ConsigneeCompany.Id == c.Id).Count() descending
                                 select new SearchResultViewModel.SearchResultViewModelCompany { Company = c, Count = 0 });

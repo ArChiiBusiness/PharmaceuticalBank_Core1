@@ -20,10 +20,10 @@
                     @Html.ActionLink("Looking for shipments (" + String.Format("{0:n0}", ViewData["TotalShipments"]) + ")", "Shipments", "Search", new { q = Context.Request.Query["q"], page = 1 }, new { @class = "btn btn-outline-primary btn-block active rounded-0", @style = "border-radius:0.25em !important;" })
                 </div>
                 <div class="col-4 p-1">
-                    @Html.ActionLink("Looking for suppliers (" + String.Format("{0:n0}", ViewData["TotalSuppliers"]) + ")", "Suppliers", "Search", new { q = Context.Request.Query["q"], page = 1, Year = 2020 }, new { @class = "btn btn-outline-primary btn-block", @style = "border-radius:0.25em !important;" })
+                    @Html.ActionLink("Looking for suppliers", "Suppliers", "Search", new { q = Context.Request.Query["q"], page = 1, Year = 2020 }, new { @class = "btn btn-outline-primary btn-block", @style = "border-radius:0.25em !important;" })
                 </div>
                 <div class="col-4 p-1">
-                    @Html.ActionLink("Looking for buyers (" + String.Format("{0:n0}", ViewData["TotalBuyers"]) + ")", "Buyers", "Search", new { q = Context.Request.Query["q"], page = 1, Year = 2020 }, new { @class = "btn btn-outline-primary btn-block", @style = "border-radius:0.25em !important;" })
+                    @Html.ActionLink("Looking for buyers", "Buyers", "Search", new { q = Context.Request.Query["q"], page = 1, Year = 2020 }, new { @class = "btn btn-outline-primary btn-block", @style = "border-radius:0.25em !important;" })
                 </div>
             </div>
 
@@ -368,7 +368,7 @@
                             <tr v-for="shipment in searchData.shipments">
                                 <td scope="col">
                                     <span>
-                                        {{shipment.date.split("T")[0]}}
+                                        {{convertDate(shipment.date.split("T")[0])}}
                                     </span>
                                 </td>
                                 <td scope="col">
@@ -396,7 +396,7 @@
                             <tr>
                                 <td scope="col">
                                     <span>
-                                        @shipment.Date.ToShortDateString()
+                                        @shipment.Date.ToString("MM/dd/yyyy");
                                         @if (shipment.Date > DateTime.Now.AddDays(-30))
                                                 {@Html.Raw("<span class='badge badge-primary'>New</span>");
                                             }
@@ -515,7 +515,6 @@
                         if (startPos < 0) {
                             startPos = 0;
                         };
-                        console.log(startPos);
                         return text.replace(reg, function (str) { return '<strong style="color:#4C8BF5;">' + str + '</strong>' }).substr(startPos, len);
                     }
                 },
@@ -533,7 +532,6 @@
                             toCountry: '@Context.Request.Query["toCountry"]'
                         },
                         success: function (result) {
-                            console.log(result);
                             self.searchData.shipments = result.shipments;
                             self.searchData.totalPages = result.totalPages;
                             self.searchData.totalShipments = result.totalShipments.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
@@ -543,6 +541,9 @@
                             self.searching = false;
                         }
                     });
+                },
+                convertDate: function (dt) {
+                    return moment(dt).format("MM/DD/YYYY");
                 }
             },
             created: function () {
