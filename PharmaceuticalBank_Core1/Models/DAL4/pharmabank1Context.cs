@@ -43,7 +43,7 @@ namespace PharmaceuticalBank_Core1.Models.DAL4
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Data Source=pharmabank.czzyzybsig59.us-east-1.rds.amazonaws.com;Initial Catalog=pb2;User ID=admin;Password=pharma111;Connection Timeout=1000");
+                optionsBuilder.UseSqlServer("Data Source=pharmabank.cerq8sfrnx31.us-east-1.rds.amazonaws.com;Initial Catalog=pb2;User ID=admin;Password=pharma111;Connection Timeout=1000");
             }
         }
 

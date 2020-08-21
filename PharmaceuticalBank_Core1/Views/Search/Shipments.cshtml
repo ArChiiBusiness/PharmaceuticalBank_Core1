@@ -63,7 +63,7 @@
     <div class="container">
         <div class="row mb-3">
             <div class="col-12 mt-4">
-                <h4>Found {{searchData.totalShipments}} shipments</h4>
+                <h4 v-if="parseFloat(searchData.totalShipments) > 0">Found {{searchData.totalShipments}} shipments</h4>
             </div>
             @*<div class="col-12">
                     <span>Our last Shipment is on  @ViewData["LastShipmentData"] and we add 'New" badge for all shipments from last 30 days</span>

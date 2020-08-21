@@ -55,7 +55,12 @@
         </div>
         <div class="row mb-3">
             <div class="col-12 mt-4">
-                <h4>Found @String.Format("{0:n0}", Model.TotalCount) companies</h4>
+                @{
+                    if (Model.TotalCount > 0)
+                    {
+                        <h4>Found @String.Format("{0:n0}", Model.TotalCount) companies</h4>
+                    }
+                }
             </div>
         </div>
 
